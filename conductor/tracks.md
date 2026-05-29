@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Update existing PDF with new chapters**
+- [~] **Track: Update existing PDF with new chapters**
   *Link: [./tracks/pdf_update_20260529/](./tracks/pdf_update_20260529/)*
