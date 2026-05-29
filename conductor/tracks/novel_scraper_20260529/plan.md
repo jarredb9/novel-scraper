@@ -24,9 +24,9 @@ This plan outlines the task breakdown following a strict Test-Driven Development
 - [x] Task: Basic PDF Layout and Chapter Flow (7dcf6c9)
     - [x] Write unit tests for the PDF document structure (checking page layout, margins, page-number footer format, and chapter page-breaks).
     - [x] Implement basic PDF generation with ReportLab, applying the ereader margin styles (0.5 in) and page flow.
-- [ ] Task: Clickable TOC and Sidebar Bookmarks
-    - [ ] Write unit tests for Table of Contents layout (verifying anchor target generation and hyperlink routing within the PDF document).
-    - [ ] Implement clickable Table of Contents (TOC) page and outline bookmark generation in the final PDF.
+- [x] Task: Clickable TOC and Sidebar Bookmarks (62f2b31)
+    - [x] Write unit tests for Table of Contents layout (verifying anchor target generation and hyperlink routing within the PDF document).
+    - [x] Implement clickable Table of Contents (TOC) page and outline bookmark generation in the final PDF.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: PDF Generation & Navigation Module' (Protocol in workflow.md)
 
 ## Phase 4: CLI and Main Orchestrator
