@@ -17,13 +17,13 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: PDF Bookmark and Outline Parsing' (Protocol in workflow.md)
 
 ## Phase 3: Update Orchestrator and Range Determination
-- [ ] Task: Write failing unit tests for update orchestration
-    - [ ] Add unit tests verifying range comparison logic (comparing PDF outline chapters vs. target start/end CLI range)
-    - [ ] Test the download planning output (figuring out exactly which chapters need to be fetched)
-- [ ] Task: Implement range selection and orchestrator logic
-    - [ ] Update `src/orchestrator.py` to compare PDF chapters with CLI range and determine which are missing
-    - [ ] Update `src/cli.py` to support the new `--update-pdf` (and optional alias `--merge-pdf`) CLI argument
-    - [ ] Run the tests and ensure they pass (Green phase)
+- [x] Task: Write failing unit tests for update orchestration [d0ec36f]
+    - [x] Add unit tests verifying range comparison logic (comparing PDF outline chapters vs. target start/end CLI range)
+    - [x] Test the download planning output (figuring out exactly which chapters need to be fetched)
+- [x] Task: Implement range selection and orchestrator logic [d0ec36f]
+    - [x] Update `src/orchestrator.py` to compare PDF chapters with CLI range and determine which are missing
+    - [x] Update `src/cli.py` to support the new `--update-pdf` (and optional alias `--merge-pdf`) CLI argument
+    - [x] Run the tests and ensure they pass (Green phase)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Update Orchestrator and Range Determination' (Protocol in workflow.md)
 
 ## Phase 4: Sequential Merging, Compilation, and Final Quality Check
