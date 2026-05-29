@@ -15,29 +15,10 @@ class NumberedCanvas(canvas.Canvas):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.pages = []
         self.bookmark_map = {}
 
     def showPage(self):
-        self.pages.append(dict(self.__dict__))
-        self._startPage()
-
-    def save(self):
-        page_count = len(self.pages)
-        for page in self.pages:
-            self.__dict__.update(page)
-            self.draw_page_number(page_count)
-            super().showPage()
-        super().save()
-
-    def draw_page_number(self, page_count: int):
-        self.saveState()
-        self.setFont("Helvetica", 9)
-        # Check if we should draw page number (starting after the TOC page(s))
-        # Since TOC page count can vary, we check if the current page has a chapter/TOC link or starts numbering.
-        # Generally, we start numbering pages after the last TOC page.
-        # To make it simple and reliable, let's find the page number where the first chapter starts.
-        # If not known yet, default to page numbers > 1.
+        # Draw page number footer before showing page
         first_chap_page = 2
         for k, v in self.bookmark_map.items():
             if k == "chap_0":
@@ -45,13 +26,17 @@ class NumberedCanvas(canvas.Canvas):
                 break
         
         if self._pageNumber >= first_chap_page:
+            self.saveState()
+            self.setFont("Helvetica", 9)
             page_text = f"{self._pageNumber}"
             width, height = letter
             self.drawCentredString(width / 2.0, 36, page_text)
-        self.restoreState()
+            self.restoreState()
 
-    def bookmarkPage(self, key):
-        super().bookmarkPage(key)
+        super().showPage()
+
+    def bookmarkPage(self, key, *args, **kwargs):
+        super().bookmarkPage(key, *args, **kwargs)
         self.bookmark_map[key] = self._pageNumber
 
 
@@ -187,7 +172,7 @@ class PDFCompiler:
 
         # Bookmark target for the top of the Table of Contents
         toc_key = "table_of_contents"
-        story.append(BookmarkedParagraph("Table of Contents", toc_title_style, key=toc_key, level=0))
+        story.append(BookmarkedParagraph(f'<a name="{toc_key}"/>Table of Contents', toc_title_style, key=toc_key, level=0))
         story.append(Spacer(1, 15))
 
         # Build TOC page contents
@@ -216,7 +201,7 @@ class PDFCompiler:
             key = f"chap_{i}"
 
             # Chapter heading with bookmark & outline inclusion
-            story.append(BookmarkedParagraph(title, title_style, key=key, level=1))
+            story.append(BookmarkedParagraph(f'<a name="{key}"/>{title}', title_style, key=key, level=1))
             story.append(Spacer(1, 10))
 
             # Paragraph contents
