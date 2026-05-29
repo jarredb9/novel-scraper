@@ -1,9 +1,14 @@
-import os
+"""PDF generation and compilation module for the web novel scraper.
+
+This module provides classes to compile sanitized novel chapters into a
+single PDF with a Table of Contents (TOC) and PDF sidebar outline entries,
+optimized for ereader margins and typography.
+"""
+
 import logging
 from typing import List, Dict, Any
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
 from reportlab.pdfgen import canvas
 
@@ -11,8 +16,11 @@ logger = logging.getLogger("novel_scraper")
 
 
 class NumberedCanvas(canvas.Canvas):
-    """Custom canvas that tracks page numbers, registers bookmarks, and draws footers."""
-    
+    """Custom canvas that tracks page numbers, registers bookmarks, and draws
+
+    footers on pages starting after the Table of Contents.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.bookmark_map = {}
@@ -24,7 +32,7 @@ class NumberedCanvas(canvas.Canvas):
             if k == "chap_0":
                 first_chap_page = v
                 break
-        
+
         if self._pageNumber >= first_chap_page:
             self.saveState()
             self.setFont("Helvetica", 9)
@@ -41,25 +49,41 @@ class NumberedCanvas(canvas.Canvas):
 
 
 class BookmarkedParagraph(Paragraph):
-    """Paragraph subclass that automatically creates a PDF bookmark and sidebar outline entry."""
-    
-    def __init__(self, text: str, style: ParagraphStyle, key: str, level: int = 0, *args, **kwargs):
+    """Paragraph subclass that automatically creates a PDF bookmark
+
+    and a sidebar outline entry.
+    """
+
+    def __init__(
+        self,
+        text: str,
+        style: ParagraphStyle,
+        key: str,
+        level: int = 0,
+        *args,
+        **kwargs,
+    ):
         super().__init__(text, style, *args, **kwargs)
         self.key = key
         self.level = level
 
     def draw(self):
         super().draw()
-        canvas = self.canv
+        canv = self.canv
         # Add bookmark destination on the canvas
-        canvas.bookmarkPage(self.key)
+        canv.bookmarkPage(self.key)
         # Clean tags from text for clean outline representation
         clean_title = self.getPlainText().strip()
-        canvas.addOutlineEntry(clean_title, self.key, level=self.level, closed=False)
+        canv.addOutlineEntry(
+            clean_title, self.key, level=self.level, closed=False
+        )
 
 
 class PDFCompiler:
-    """Compiles sanitized chapter lists into a single PDF document with a clickable TOC and bookmarks."""
+    """Compiles sanitized chapter lists into a single PDF document
+
+    with a clickable Table of Contents and PDF outline bookmarks.
+    """
 
     def __init__(self, output_path: str = "output.pdf"):
         """Initializes the PDF compiler.
@@ -73,10 +97,13 @@ class PDFCompiler:
         self.bookmark_map = {}
 
     def compile(self, chapters: List[Dict[str, Any]]) -> None:
-        """Compiles a list of chapters into the PDF, stabilizing page numbers for the TOC.
+        """Compiles a list of chapters into the PDF.
+
+        Runs a multi-pass stabilization loop to handle dynamic TOC size.
 
         Args:
-            chapters (List[Dict[str, Any]]): A list of dicts, each with keys 'title' and 'paragraphs'.
+            chapters (List[Dict[str, Any]]): List of dicts, each with keys
+                'title' and 'paragraphs'.
         """
         if not chapters:
             logger.warning("No chapters provided to compile.")
@@ -88,7 +115,7 @@ class PDFCompiler:
 
         for pass_num in range(max_passes):
             previous_map = dict(self.bookmark_map)
-            
+
             # Reset temporary map during compilation of this pass
             current_map = {}
 
@@ -114,12 +141,20 @@ class PDFCompiler:
 
             # Check if page locations have stabilized
             if self.bookmark_map == previous_map:
-                logger.info(f"PDF layout and TOC page numbers stabilized after pass {pass_num + 1}.")
+                logger.info(
+                    f"PDF layout and TOC page numbers stabilized after "
+                    f"pass {pass_num + 1}."
+                )
                 break
         else:
-            logger.warning("PDF layout did not fully stabilize but finished maximum passes.")
+            logger.warning(
+                "PDF layout did not fully stabilize but finished "
+                "maximum passes."
+            )
 
-    def _generate_story(self, chapters: List[Dict[str, Any]], pass_num: int) -> List[Any]:
+    def _generate_story(
+        self, chapters: List[Dict[str, Any]], pass_num: int = 0
+    ) -> List[Any]:
         """Generates the document flow list (story).
 
         Args:
@@ -135,7 +170,7 @@ class PDFCompiler:
         title_style = ParagraphStyle(
             name="ChapterTitle",
             parent=styles["Heading1"],
-            fontName="Helvetica-Bold",
+            fontName="Times-Bold",
             fontSize=18,
             leading=22,
             spaceAfter=15,
@@ -145,9 +180,9 @@ class PDFCompiler:
         body_style = ParagraphStyle(
             name="ChapterBody",
             parent=styles["Normal"],
-            fontName="Helvetica",
-            fontSize=10,
-            leading=15,
+            fontName="Times-Roman",
+            fontSize=11,
+            leading=16.5,
             spaceAfter=8,
         )
 
@@ -172,19 +207,26 @@ class PDFCompiler:
 
         # Bookmark target for the top of the Table of Contents
         toc_key = "table_of_contents"
-        story.append(BookmarkedParagraph(f'<a name="{toc_key}"/>Table of Contents', toc_title_style, key=toc_key, level=0))
+        story.append(
+            BookmarkedParagraph(
+                f'<a name="{toc_key}"/>Table of Contents',
+                toc_title_style,
+                key=toc_key,
+                level=0,
+            )
+        )
         story.append(Spacer(1, 15))
 
         # Build TOC page contents
         for i, chapter in enumerate(chapters):
             title = chapter.get("title", f"Chapter {i+1}").strip()
             key = f"chap_{i}"
-            
+
             # Fetch target page number if known, otherwise placeholder
             page_num = self.bookmark_map.get(key, "--")
-            
-            # Calculate dots to align page numbers nicely. Assumes roughly 80 char width.
-            # Max width is constrained, so we use dot leader formatting.
+
+            # Calculate dots to align page numbers nicely.
+            # Assumes roughly 80 char width.
             dots_count = max(5, 75 - len(title))
             dots = "." * dots_count
 
@@ -201,7 +243,14 @@ class PDFCompiler:
             key = f"chap_{i}"
 
             # Chapter heading with bookmark & outline inclusion
-            story.append(BookmarkedParagraph(f'<a name="{key}"/>{title}', title_style, key=key, level=1))
+            story.append(
+                BookmarkedParagraph(
+                    f'<a name="{key}"/>{title}',
+                    title_style,
+                    key=key,
+                    level=1,
+                )
+            )
             story.append(Spacer(1, 10))
 
             # Paragraph contents

@@ -1,3 +1,9 @@
+"""Orchestrator for the web novel scraper.
+
+Combines the caching, scraping, parsing, sanitizing, and PDF compilation
+sub-components into a single unified extraction and assembly workflow.
+"""
+
 import logging
 from tqdm import tqdm
 from src.cache import CachingManager
@@ -9,18 +15,24 @@ from src.pdf_compiler import PDFCompiler
 # Retrieve the same logger configured in scraper.py
 logger = logging.getLogger("novel_scraper")
 
-def run_orchestrator(start: int, end: int, delay: float, cache_dir: str, output: str) -> None:
-    """Orchestrates the caching, scraping, parsing, sanitizing, and compiling of novel chapters.
+
+def run_orchestrator(
+    start: int, end: int, delay: float, cache_dir: str, output: str
+) -> None:
+    """Orchestrates novel scraping and PDF compilation.
 
     Args:
         start (int): Start chapter number.
         end (int): End chapter number.
-        delay (float): Politeness delay in seconds between network requests.
+        delay (float): Politeness delay in seconds.
         cache_dir (str): Cache directory for HTML files.
-        output (str): Filename for the compiled PDF output.
+        output (str): Filename for compiled PDF output.
     """
     logger.info(f"Starting orchestration flow: chapters {start} to {end}")
-    logger.info(f"Parameters: delay={delay}s, cache_dir='{cache_dir}', output='{output}'")
+    logger.info(
+        f"Parameters: delay={delay}s, cache_dir='{cache_dir}', "
+        f"output='{output}'"
+    )
 
     cache_manager = CachingManager(cache_dir=cache_dir)
     scraper = NovelScraper(cache_manager=cache_manager, delay=delay)
@@ -36,29 +48,34 @@ def run_orchestrator(start: int, end: int, delay: float, cache_dir: str, output:
         try:
             # Step 1: Download & Cache
             html_content = scraper.fetch_chapter_html(chap_num)
-            
+
             # Step 2: Parse
             title, raw_body = parser.parse(html_content)
-            
+
             # Step 3: Sanitize
             paragraphs = sanitizer.sanitize(raw_body)
-            
+
             # Save processed data
-            chapters_data.append({
-                "title": title,
-                "paragraphs": paragraphs
-            })
-            
+            chapters_data.append({"title": title, "paragraphs": paragraphs})
+
         except Exception as e:
-            logger.error(f"Error processing chapter {chap_num}: {str(e)}", exc_info=True)
-            # We can re-raise or handle it. Based on the flow, we should fail fast or log. Let's raise the exception to let the user know.
+            logger.error(
+                f"Error processing chapter {chap_num}: {str(e)}",
+                exc_info=True,
+            )
+            # Re-raise the exception to abort the execution cleanly
             raise
 
     # Step 4: Compile PDF
-    logger.info("All chapters successfully downloaded, parsed, and sanitized. Compiling PDF...")
+    logger.info(
+        "All chapters successfully downloaded, parsed, and sanitized. "
+        "Compiling PDF..."
+    )
     try:
         compiler.compile(chapters_data)
-        logger.info(f"PDF compilation completed successfully. Saved to {output}")
+        logger.info(
+            f"PDF compilation completed successfully. Saved to {output}"
+        )
     except Exception as e:
         logger.error(f"Failed to compile PDF: {str(e)}", exc_info=True)
         raise

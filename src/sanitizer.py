@@ -1,18 +1,26 @@
-import re
+"""Content sanitization engine for web novel chapters.
+
+This module parses raw chapter HTML text, strips unwanted elements (like ads,
+boilerplate text, script, style, and iframe tags), and returns a list of
+cleaned paragraphs.
+"""
+
 import logging
+import re
 from typing import List
 from lxml import html
 
 logger = logging.getLogger("novel_scraper")
 
+
 class ContentSanitizer:
-    """Cleans and sanitizes raw HTML chapter content into plain text paragraphs."""
+    """Cleans raw HTML chapter content into plain text paragraphs."""
 
     def __init__(self, boilerplate_patterns: List[str] = None):
         """Initializes the sanitizer.
 
         Args:
-            boilerplate_patterns (List[str]): Regex patterns or substrings matching ads/boilerplate.
+            boilerplate_patterns (List[str]): Regex patterns to match ads.
         """
         if boilerplate_patterns is None:
             # Default patterns seen on freewebnovel.com
@@ -34,7 +42,7 @@ class ContentSanitizer:
             text (str): Cleaned text paragraph.
 
         Returns:
-            bool: True if the text should be excluded, False otherwise.
+            bool: True if text should be excluded, False otherwise.
         """
         lower_text = text.lower()
         for pattern in self.boilerplate_patterns:
@@ -55,15 +63,23 @@ class ContentSanitizer:
             return []
 
         try:
-            # Parse HTML element wrapped in a div container to ensure all input tags are descendants
+            # Parse HTML wrapped in a div container to ensure proper fragment
             fragment = html.fromstring(f"<div>{raw_html}</div>")
         except Exception as e:
-            logger.warning(f"Could not parse HTML segment in sanitizer: {str(e)}. Treating as raw text.")
-            # Fallback to simple string-based element creation
-            fragment = html.fragment_fromstring(f"<div>{raw_html}</div>", create_parent=True)
+            logger.warning(
+                f"Could not parse HTML segment in sanitizer: {str(e)}. "
+                f"Treating as raw text."
+            )
+            # Fallback to simple parent element creation
+            fragment = html.fragment_fromstring(
+                f"<div>{raw_html}</div>", create_parent=True
+            )
 
-        # Remove script and style tags completely while preserving their tails
-        for bad_tag in fragment.xpath(".//script | .//style | .//iframe | .//noscript"):
+        # Remove script/style/iframe/noscript tags while preserving tail text
+        bad_tags_xpath = (
+            ".//script | .//style | .//iframe | .//noscript"
+        )
+        for bad_tag in fragment.xpath(bad_tags_xpath):
             parent = bad_tag.getparent()
             if parent is not None:
                 if bad_tag.tail:
@@ -76,7 +92,7 @@ class ContentSanitizer:
 
         paragraphs = []
 
-        # Find all paragraph tags, or line breaks. If no <p> tags, split by <br> or newlines.
+        # Find all paragraph tags, or split by line breaks if none exist
         p_elements = fragment.xpath(".//p")
 
         if p_elements:
@@ -86,8 +102,7 @@ class ContentSanitizer:
                 if cleaned and not self._should_exclude(cleaned):
                     paragraphs.append(cleaned)
         else:
-            # Fallback: split by newlines or block elements if no <p> tags are present
-            # We can traverse the tree and extract block-like texts or split text_content by newlines
+            # Fallback: split text content by lines
             text_content = fragment.text_content()
             for line in text_content.splitlines():
                 cleaned = self.clean_text(line)
