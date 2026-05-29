@@ -46,7 +46,7 @@ def test_parse_pdf_outline_corrupted(tmp_path):
 def test_parse_pdf_outline_no_bookmarks(tmp_path):
     output_pdf = tmp_path / "no_bookmarks.pdf"
     # Create simple file, we can mock PdfReader outline as empty
-    with patch("src.pdf_reader.PdfReader") as MockReader:
+    with patch("src.pdf_reader.pypdf.PdfReader") as MockReader:
         mock_reader = MockReader.return_value
         mock_reader.outline = None
         

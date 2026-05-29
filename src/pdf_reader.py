@@ -1,11 +1,16 @@
 import os
 import re
-from pypdf import PdfReader
+from typing import Optional, List, Dict, Any
+import pypdf
 
-def extract_chapter_number(title: str):
-    """
-    Extracts the first continuous block of digits from the title as the chapter number.
-    e.g., 'Chapter 776: Middle' -> 776
+def extract_chapter_number(title: str) -> Optional[int]:
+    """Extracts the first continuous block of digits from the title.
+
+    Args:
+        title: The string title to extract the chapter number from.
+
+    Returns:
+        The extracted chapter number as an integer, or None if not found.
     """
     if not title:
         return None
@@ -19,16 +24,21 @@ def extract_chapter_number(title: str):
         return int(match.group())
     return None
 
-def parse_pdf_outline(pdf_path: str):
-    """
-    Extracts the outline (bookmarks) of the PDF and returns a list of dicts with:
-    - 'title': The bookmark title.
-    - 'number': The parsed chapter number (int) or None.
+def parse_pdf_outline(pdf_path: str) -> List[Dict[str, Any]]:
+    """Extracts the outline (bookmarks) of the PDF.
+
+    Args:
+        pdf_path: Path to the PDF file.
+
+    Returns:
+        A list of dicts representing chapter bookmarks, each containing:
+            - 'title': The bookmark title.
+            - 'number': The parsed chapter number (int) or None.
     """
     if not os.path.exists(pdf_path):
         return []
     try:
-        reader = PdfReader(pdf_path)
+        reader = pypdf.PdfReader(pdf_path)
         outline = reader.outline
         if not outline:
             return []
@@ -57,3 +67,4 @@ def parse_pdf_outline(pdf_path: str):
         return chapters
     except Exception:
         return []
+
