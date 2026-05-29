@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.coverage
+scraper.log
+.pytest_cache/
+test_cache/
+cache/
