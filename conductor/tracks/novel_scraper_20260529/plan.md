@@ -20,14 +20,14 @@ This plan outlines the task breakdown following a strict Test-Driven Development
     - [x] Implement the sanitizer module to clean raw parsed HTML text into readable plain text paragraphs.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: HTML Parser Module' (Protocol in workflow.md) (58620c5)
 
-## Phase 3: PDF Generation & Navigation Module
+## Phase 3: PDF Generation & Navigation Module [checkpoint: f67bfce]
 - [x] Task: Basic PDF Layout and Chapter Flow (7dcf6c9)
     - [x] Write unit tests for the PDF document structure (checking page layout, margins, page-number footer format, and chapter page-breaks).
     - [x] Implement basic PDF generation with ReportLab, applying the ereader margin styles (0.5 in) and page flow.
 - [x] Task: Clickable TOC and Sidebar Bookmarks (62f2b31)
     - [x] Write unit tests for Table of Contents layout (verifying anchor target generation and hyperlink routing within the PDF document).
     - [x] Implement clickable Table of Contents (TOC) page and outline bookmark generation in the final PDF.
-- [~] Task: Conductor - User Manual Verification 'Phase 3: PDF Generation & Navigation Module' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: PDF Generation & Navigation Module' (Protocol in workflow.md) (f67bfce)
 
 ## Phase 4: CLI and Main Orchestrator
 - [ ] Task: CLI Configuration
