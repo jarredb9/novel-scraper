@@ -29,11 +29,11 @@ This plan outlines the task breakdown following a strict Test-Driven Development
     - [x] Implement clickable Table of Contents (TOC) page and outline bookmark generation in the final PDF.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: PDF Generation & Navigation Module' (Protocol in workflow.md) (f67bfce)
 
-## Phase 4: CLI and Main Orchestrator
+## Phase 4: CLI and Main Orchestrator [checkpoint: ea2a68c]
 - [x] Task: CLI Configuration (81d16f4)
     - [x] Write unit tests for CLI argument parser (checking default values and custom inputs for range, delay, cache directory, and output filename).
     - [x] Implement the command-line interface argument parser.
 - [x] Task: Progress Tracker and Main Orchestrator (f19582e)
     - [x] Write unit tests for the main orchestration flow (verifying flow of download -> cache -> parse -> compile -> log).
     - [x] Implement orchestrator combining caching, scraping, parsing, PDF generation, progress bar (tqdm), and file logging.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: CLI and Main Orchestrator' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: CLI and Main Orchestrator' (Protocol in workflow.md) (ea2a68c)
