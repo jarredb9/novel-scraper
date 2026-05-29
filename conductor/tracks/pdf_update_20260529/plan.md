@@ -1,11 +1,11 @@
 # Implementation Plan - PDF Update and Chapter Integration
 
 ## Phase 1: Setup and Dependency Integration
-- [ ] Task: Update project dependencies and stack documentation
+- [x] Task: Update project dependencies and stack documentation [5162c1a]
     - [ ] Update `conductor/tech-stack.md` to document the addition of `pypdf`
     - [ ] Add `pypdf` to `requirements.txt`
     - [ ] Install the new dependency using pip
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup and Dependency Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Setup and Dependency Integration' (Protocol in workflow.md)
 
 ## Phase 2: PDF Bookmark and Outline Parsing
 - [ ] Task: Write failing unit tests for PDF metadata outline parser
