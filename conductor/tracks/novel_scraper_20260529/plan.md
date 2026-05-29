@@ -18,7 +18,7 @@ This plan outlines the task breakdown following a strict Test-Driven Development
 - [x] Task: Content Sanitizer (233df08)
     - [x] Write unit tests for text sanitization (verifying removal of ads, HTML tags, excess whitespace, and paragraph formatting).
     - [x] Implement the sanitizer module to clean raw parsed HTML text into readable plain text paragraphs.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: HTML Parser Module' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: HTML Parser Module' (Protocol in workflow.md)
 
 ## Phase 3: PDF Generation & Navigation Module
 - [ ] Task: Basic PDF Layout and Chapter Flow
