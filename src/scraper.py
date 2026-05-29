@@ -21,7 +21,7 @@ class NovelScraper:
     def __init__(
         self,
         cache_manager: CachingManager,
-        base_url: str = "https://freewebnovel.com/novel/the-first-legendary-beast-",
+        base_url: str = "https://freewebnovel.com/the-first-legendary-beast-master/chapter-",
         delay: float = 1.0,
         timeout: int = 10,
         retries: int = 3,
@@ -61,7 +61,7 @@ class NovelScraper:
         # The requirements say: https://freewebnovel.com/novel/the-first-legendary-beast-X.html
         # We append .html to match the pattern or just let the base url guide it.
         if self.base_url.endswith("/"):
-            return f"{self.base_url}the-first-legendary-beast-{chapter_num}.html"
+            return f"{self.base_url}chapter-{chapter_num}.html"
         return f"{self.base_url}{chapter_num}.html"
 
     def fetch_chapter_html(self, chapter_num: int) -> str:

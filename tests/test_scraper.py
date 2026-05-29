@@ -44,7 +44,7 @@ def test_scraper_cache_miss_success(mock_cache):
         # Verify requests.get was called with headers and timeout
         mock_get.assert_called_once()
         args, kwargs = mock_get.call_args
-        assert args[0] == f"https://freewebnovel.com/novel/the-first-legendary-beast-{chapter_num}.html" # Let's check format. Wait, is it beast-X or beast-X.html? The requirement says: https://freewebnovel.com/novel/the-first-legendary-beast-X or similar. Let's make base URL configurable or just match what's requested. Let's make it match: base_url + str(chapter_num) + ".html" or similar. Wait! Spec says: "Scraping URLs in the format `https://freewebnovel.com/novel/the-first-legendary-beast-X` (where X is 776 to 1780)". But wait, the actual URL on freewebnovel could have .html or not. Let's look at the spec: https://freewebnovel.com/novel/the-first-legendary-beast-X. So we will default to `https://freewebnovel.com/novel/the-first-legendary-beast-{chapter_num}.html`. Let's support both or just append .html. Let's check the spec: "https://freewebnovel.com/novel/the-first-legendary-beast-X". Let's support base url as `https://freewebnovel.com/novel/the-first-legendary-beast-{chapter_num}.html`.
+        assert args[0] == f"https://freewebnovel.com/the-first-legendary-beast-master/chapter-{chapter_num}.html"
         assert "User-Agent" in kwargs["headers"]
         assert kwargs["timeout"] == 10
 
@@ -83,7 +83,7 @@ def test_scraper_politeness_delay(mock_cache):
         assert pytest.approx(sleep_args, abs=0.05) == 1.5
 
 def test_scraper_base_url_format(mock_cache):
-    scraper = NovelScraper(cache_manager=mock_cache, base_url="https://freewebnovel.com/novel/", delay=0.0)
+    scraper = NovelScraper(cache_manager=mock_cache, base_url="https://freewebnovel.com/the-first-legendary-beast-master/", delay=0.0)
     with patch("requests.get") as mock_get:
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -94,5 +94,5 @@ def test_scraper_base_url_format(mock_cache):
         
         mock_get.assert_called_once()
         args, kwargs = mock_get.call_args
-        assert args[0] == "https://freewebnovel.com/novel/the-first-legendary-beast-776.html"
+        assert args[0] == "https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html"
 
