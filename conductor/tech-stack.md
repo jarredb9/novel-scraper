@@ -15,6 +15,7 @@ This document specifies the chosen technology stack, development environments, a
 ### PDF Compilation
 - **`reportlab`**: Programmatic PDF layout generation.
   - Utilized for building flowing text documents, embedding page numbers, and generating clickable anchors (for the Table of Contents and PDF bookmarks sidebar).
+- **`pypdf`**: Reading and manipulating PDF outline/bookmarks structures to detect already-compiled chapters.
 
 ### Developer UX & Tooling
 - **`tqdm`**: Command-line visual progress bar framework.
