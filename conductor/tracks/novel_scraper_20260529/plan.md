@@ -27,7 +27,7 @@ This plan outlines the task breakdown following a strict Test-Driven Development
 - [x] Task: Clickable TOC and Sidebar Bookmarks (62f2b31)
     - [x] Write unit tests for Table of Contents layout (verifying anchor target generation and hyperlink routing within the PDF document).
     - [x] Implement clickable Table of Contents (TOC) page and outline bookmark generation in the final PDF.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: PDF Generation & Navigation Module' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 3: PDF Generation & Navigation Module' (Protocol in workflow.md)
 
 ## Phase 4: CLI and Main Orchestrator
 - [ ] Task: CLI Configuration
