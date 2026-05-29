@@ -11,6 +11,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
 from reportlab.pdfgen import canvas
+from src.pdf_reader import extract_chapter_number
 
 logger = logging.getLogger("novel_scraper")
 
@@ -152,6 +153,11 @@ class PDFCompiler:
                 "maximum passes."
             )
 
+    def _chapter_sort_key(self, chapter: Dict[str, Any]):
+        title = chapter.get("title", "")
+        num = extract_chapter_number(title)
+        return (num if num is not None else float("inf"), title)
+
     def _generate_story(
         self, chapters: List[Dict[str, Any]], pass_num: int = 0
     ) -> List[Any]:
@@ -164,6 +170,7 @@ class PDFCompiler:
         Returns:
             List[Any]: Document flowables.
         """
+        sorted_chapters = sorted(chapters, key=self._chapter_sort_key)
         styles = getSampleStyleSheet()
 
         # Styles
@@ -218,7 +225,7 @@ class PDFCompiler:
         story.append(Spacer(1, 15))
 
         # Build TOC page contents
-        for i, chapter in enumerate(chapters):
+        for i, chapter in enumerate(sorted_chapters):
             title = chapter.get("title", f"Chapter {i+1}").strip()
             key = f"chap_{i}"
 
@@ -237,7 +244,7 @@ class PDFCompiler:
         story.append(PageBreak())
 
         # Build Chapters
-        for i, chapter in enumerate(chapters):
+        for i, chapter in enumerate(sorted_chapters):
             title = chapter.get("title", f"Chapter {i+1}").strip()
             paragraphs = chapter.get("paragraphs", [])
             key = f"chap_{i}"
@@ -258,7 +265,7 @@ class PDFCompiler:
                 if para.strip():
                     story.append(Paragraph(para, body_style))
 
-            if i < len(chapters) - 1:
+            if i < len(sorted_chapters) - 1:
                 story.append(PageBreak())
 
         return story

@@ -60,3 +60,29 @@ def test_compiler_toc_and_bookmarks(tmp_path):
     assert compiler.bookmark_map.get("chap_0") == 2
 
 
+def test_compiler_sorting(tmp_path):
+    output_pdf = tmp_path / "test_sorted.pdf"
+    compiler = PDFCompiler(output_path=str(output_pdf))
+    
+    # Chapters passed out of order
+    chapters = [
+        {"title": "Chapter 2: Middle", "paragraphs": ["Para 2"]},
+        {"title": "Chapter 1: Start", "paragraphs": ["Para 1"]},
+    ]
+    
+    # Generate story
+    story = compiler._generate_story(chapters)
+    
+    # Check the order of chapters in the generated story.
+    # BookmarkedParagraph for chapters should be in sorted numerical order.
+    # Chapter headings start after the TOC PageBreak.
+    # We find flowables that are BookmarkedParagraphs and have keys like "chap_0", "chap_1", etc.
+    headings = [f for f in story if hasattr(f, "key") and f.key.startswith("chap_")]
+    
+    # We expect Chapter 1 to be first, Chapter 2 to be second
+    assert "Chapter 1: Start" in headings[0].text
+    assert "Chapter 2: Middle" in headings[1].text
+
+
+
+
