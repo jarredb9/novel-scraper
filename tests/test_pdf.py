@@ -41,3 +41,22 @@ def test_compiler_empty_chapters(tmp_path):
     compiler.compile([])
     assert not output_pdf.exists()
 
+def test_compiler_toc_and_bookmarks(tmp_path):
+    output_pdf = tmp_path / "test_toc.pdf"
+    compiler = PDFCompiler(output_path=str(output_pdf))
+    
+    chapters = [
+        {"title": "Chapter 1: Start", "paragraphs": ["Para 1"]},
+        {"title": "Chapter 2: Middle", "paragraphs": ["Para 2"]},
+    ]
+    
+    compiler.compile(chapters)
+    assert output_pdf.exists()
+    
+    # We can inspect the internal data structure of the compiler if we store page map or verify outline
+    # Let's verify that the compiler successfully populated the bookmark map
+    assert hasattr(compiler, "bookmark_map")
+    # Chapter 1 starts after TOC (page 2)
+    assert compiler.bookmark_map.get("chap_0") == 2
+
+
