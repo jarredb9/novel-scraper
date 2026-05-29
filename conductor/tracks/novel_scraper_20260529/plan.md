@@ -9,7 +9,7 @@ This plan outlines the task breakdown following a strict Test-Driven Development
 - [x] Task: Scraping Engine with Rate-Limiting (7e43409)
     - [x] Write unit tests for the scraper helper (verifying HTTP requests, custom headers, timeout handling, retries, and sleep delays).
     - [x] Implement the scraper utility to fetch URLs (`https://freewebnovel.com/novel/the-first-legendary-beast-X`) and store them in the cache folder.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Project Setup and Scraper & Cache Implementation' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 1: Project Setup and Scraper & Cache Implementation' (Protocol in workflow.md)
 
 ## Phase 2: HTML Parser Module
 - [ ] Task: XPath Parser

@@ -1,0 +1,104 @@
+2026-05-29 12:17:48,263 - INFO - Cache hit for chapter 776
+2026-05-29 12:17:48,266 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:17:48,266 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-776.html (Attempt 1/3)
+2026-05-29 12:17:48,266 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:17:48,269 - INFO - Cache miss for chapter 777. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-777.html
+2026-05-29 12:17:48,269 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-777.html (Attempt 1/2)
+2026-05-29 12:17:48,269 - WARNING - Error fetching chapter 777 (attempt 1): Connection error
+2026-05-29 12:17:48,269 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-777.html (Attempt 2/2)
+2026-05-29 12:17:48,269 - WARNING - Error fetching chapter 777 (attempt 2): Connection error
+2026-05-29 12:17:48,269 - ERROR - Failed to fetch chapter 777 after 2 attempts.
+2026-05-29 12:17:48,273 - INFO - Cache miss for chapter 778. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-778.html
+2026-05-29 12:17:48,273 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-778.html (Attempt 1/3)
+2026-05-29 12:17:48,273 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-778.html
+2026-05-29 12:17:48,274 - INFO - Cache miss for chapter 779. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-779.html
+2026-05-29 12:17:48,274 - DEBUG - Sleeping for 1.50s to respect rate limits
+2026-05-29 12:17:48,275 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-779.html (Attempt 1/3)
+2026-05-29 12:17:48,275 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-779.html
+2026-05-29 12:17:52,014 - INFO - Cache hit for chapter 776
+2026-05-29 12:17:52,017 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:17:52,017 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-776.html (Attempt 1/3)
+2026-05-29 12:17:52,018 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:17:52,020 - INFO - Cache miss for chapter 777. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-777.html
+2026-05-29 12:17:52,021 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-777.html (Attempt 1/2)
+2026-05-29 12:17:52,021 - WARNING - Error fetching chapter 777 (attempt 1): Connection error
+2026-05-29 12:17:52,021 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-777.html (Attempt 2/2)
+2026-05-29 12:17:52,021 - WARNING - Error fetching chapter 777 (attempt 2): Connection error
+2026-05-29 12:17:52,021 - ERROR - Failed to fetch chapter 777 after 2 attempts.
+2026-05-29 12:17:52,025 - INFO - Cache miss for chapter 778. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-778.html
+2026-05-29 12:17:52,025 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-778.html (Attempt 1/3)
+2026-05-29 12:17:52,025 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-778.html
+2026-05-29 12:17:52,026 - INFO - Cache miss for chapter 779. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-779.html
+2026-05-29 12:17:52,026 - DEBUG - Sleeping for 1.50s to respect rate limits
+2026-05-29 12:17:52,026 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-779.html (Attempt 1/3)
+2026-05-29 12:17:52,026 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-779.html
+2026-05-29 12:17:56,385 - INFO - Cache hit for chapter 776
+2026-05-29 12:17:56,388 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:17:56,388 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-776.html (Attempt 1/3)
+2026-05-29 12:17:56,388 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:17:56,391 - INFO - Cache miss for chapter 777. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-777.html
+2026-05-29 12:17:56,391 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-777.html (Attempt 1/2)
+2026-05-29 12:17:56,391 - WARNING - Error fetching chapter 777 (attempt 1): Connection error
+2026-05-29 12:17:56,391 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-777.html (Attempt 2/2)
+2026-05-29 12:17:56,391 - WARNING - Error fetching chapter 777 (attempt 2): Connection error
+2026-05-29 12:17:56,391 - ERROR - Failed to fetch chapter 777 after 2 attempts.
+2026-05-29 12:17:56,396 - INFO - Cache miss for chapter 778. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-778.html
+2026-05-29 12:17:56,396 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-778.html (Attempt 1/3)
+2026-05-29 12:17:56,396 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-778.html
+2026-05-29 12:17:56,397 - INFO - Cache miss for chapter 779. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-779.html
+2026-05-29 12:17:56,397 - DEBUG - Sleeping for 1.50s to respect rate limits
+2026-05-29 12:17:56,397 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-779.html (Attempt 1/3)
+2026-05-29 12:17:56,397 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-779.html
+2026-05-29 12:17:56,399 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:17:56,399 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-776.html (Attempt 1/3)
+2026-05-29 12:17:56,400 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:18:11,305 - INFO - Cache hit for chapter 776
+2026-05-29 12:18:11,307 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:18:11,307 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-776.html (Attempt 1/3)
+2026-05-29 12:18:11,308 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:18:11,310 - INFO - Cache miss for chapter 777. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-777.html
+2026-05-29 12:18:11,310 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-777.html (Attempt 1/2)
+2026-05-29 12:18:11,311 - WARNING - Error fetching chapter 777 (attempt 1): Connection error
+2026-05-29 12:18:11,311 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-777.html (Attempt 2/2)
+2026-05-29 12:18:11,311 - WARNING - Error fetching chapter 777 (attempt 2): Connection error
+2026-05-29 12:18:11,311 - ERROR - Failed to fetch chapter 777 after 2 attempts.
+2026-05-29 12:18:11,313 - INFO - Cache miss for chapter 778. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-778.html
+2026-05-29 12:18:11,313 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-778.html (Attempt 1/3)
+2026-05-29 12:18:11,313 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-778.html
+2026-05-29 12:18:11,314 - INFO - Cache miss for chapter 779. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-779.html
+2026-05-29 12:18:11,314 - DEBUG - Sleeping for 1.50s to respect rate limits
+2026-05-29 12:18:11,314 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-779.html (Attempt 1/3)
+2026-05-29 12:18:11,314 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-779.html
+2026-05-29 12:18:11,317 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:18:11,317 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-776.html (Attempt 1/3)
+2026-05-29 12:18:11,317 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:22:28,387 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:22:28,387 - INFO - HTTP GET https://freewebnovel.com/novel/the-first-legendary-beast-776.html (Attempt 1/3)
+2026-05-29 12:22:28,748 - INFO - HTTP Status 200 for https://freewebnovel.com/novel/the-first-legendary-beast-776.html
+2026-05-29 12:25:33,599 - INFO - Cache hit for chapter 776
+2026-05-29 12:26:51,862 - INFO - Cache hit for chapter 776
+2026-05-29 12:26:51,865 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html
+2026-05-29 12:26:51,865 - INFO - HTTP GET https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html (Attempt 1/3)
+2026-05-29 12:26:51,865 - INFO - HTTP Status 200 for https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html
+2026-05-29 12:26:51,868 - INFO - Cache miss for chapter 777. Fetching from https://freewebnovel.com/the-first-legendary-beast-master/chapter-777.html
+2026-05-29 12:26:51,868 - INFO - HTTP GET https://freewebnovel.com/the-first-legendary-beast-master/chapter-777.html (Attempt 1/2)
+2026-05-29 12:26:51,868 - WARNING - Error fetching chapter 777 (attempt 1): Connection error
+2026-05-29 12:26:51,868 - INFO - HTTP GET https://freewebnovel.com/the-first-legendary-beast-master/chapter-777.html (Attempt 2/2)
+2026-05-29 12:26:51,868 - WARNING - Error fetching chapter 777 (attempt 2): Connection error
+2026-05-29 12:26:51,868 - ERROR - Failed to fetch chapter 777 after 2 attempts.
+2026-05-29 12:26:51,870 - INFO - Cache miss for chapter 778. Fetching from https://freewebnovel.com/the-first-legendary-beast-master/chapter-778.html
+2026-05-29 12:26:51,870 - INFO - HTTP GET https://freewebnovel.com/the-first-legendary-beast-master/chapter-778.html (Attempt 1/3)
+2026-05-29 12:26:51,871 - INFO - HTTP Status 200 for https://freewebnovel.com/the-first-legendary-beast-master/chapter-778.html
+2026-05-29 12:26:51,871 - INFO - Cache miss for chapter 779. Fetching from https://freewebnovel.com/the-first-legendary-beast-master/chapter-779.html
+2026-05-29 12:26:51,871 - DEBUG - Sleeping for 1.50s to respect rate limits
+2026-05-29 12:26:51,871 - INFO - HTTP GET https://freewebnovel.com/the-first-legendary-beast-master/chapter-779.html (Attempt 1/3)
+2026-05-29 12:26:51,872 - INFO - HTTP Status 200 for https://freewebnovel.com/the-first-legendary-beast-master/chapter-779.html
+2026-05-29 12:26:51,875 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html
+2026-05-29 12:26:51,875 - INFO - HTTP GET https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html (Attempt 1/3)
+2026-05-29 12:26:51,875 - INFO - HTTP Status 200 for https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html
+2026-05-29 12:26:54,490 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html
+2026-05-29 12:26:54,490 - INFO - HTTP GET https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html (Attempt 1/3)
+2026-05-29 12:26:55,243 - INFO - HTTP Status 200 for https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html
+2026-05-29 12:27:16,959 - INFO - Cache miss for chapter 776. Fetching from https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html
+2026-05-29 12:27:16,959 - INFO - HTTP GET https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html (Attempt 1/3)
+2026-05-29 12:27:17,700 - INFO - HTTP Status 200 for https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html
