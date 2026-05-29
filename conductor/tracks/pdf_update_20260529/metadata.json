@@ -1,0 +1,8 @@
+{
+  "track_id": "pdf_update_20260529",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-05-29T17:05:00Z",
+  "updated_at": "2026-05-29T17:05:00Z",
+  "description": "I need a new feature to update a currently existing PDF with new chapters. The new feature should be able to add earlier or later chapters. The idea is to be able to freely update the pdf without having to re-scrape all the existing content. If we could make it smart enough to tell what chapter currently exist and integrate it into a new pdf that would be ideal"
+}

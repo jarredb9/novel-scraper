@@ -1,0 +1,35 @@
+# Implementation Plan - PDF Update and Chapter Integration
+
+## Phase 1: Setup and Dependency Integration
+- [ ] Task: Update project dependencies and stack documentation
+    - [ ] Update `conductor/tech-stack.md` to document the addition of `pypdf`
+    - [ ] Add `pypdf` to `requirements.txt`
+    - [ ] Install the new dependency using pip
+- [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup and Dependency Integration' (Protocol in workflow.md)
+
+## Phase 2: PDF Bookmark and Outline Parsing
+- [ ] Task: Write failing unit tests for PDF metadata outline parser
+    - [ ] Create `tests/test_pdf_reader.py` with tests for extracting chapter titles and numbers from an existing PDF file using pypdf
+- [ ] Task: Implement PDF outline reader functionality
+    - [ ] Create `src/pdf_reader.py` and implement outline parser
+    - [ ] Run the tests and ensure they pass (Green phase)
+    - [ ] Verify test coverage for `src/pdf_reader.py` is >80%
+- [ ] Task: Conductor - User Manual Verification 'Phase 2: PDF Bookmark and Outline Parsing' (Protocol in workflow.md)
+
+## Phase 3: Update Orchestrator and Range Determination
+- [ ] Task: Write failing unit tests for update orchestration
+    - [ ] Add unit tests verifying range comparison logic (comparing PDF outline chapters vs. target start/end CLI range)
+    - [ ] Test the download planning output (figuring out exactly which chapters need to be fetched)
+- [ ] Task: Implement range selection and orchestrator logic
+    - [ ] Update `src/orchestrator.py` to compare PDF chapters with CLI range and determine which are missing
+    - [ ] Update `src/cli.py` to support the new `--update-pdf` (and optional alias `--merge-pdf`) CLI argument
+    - [ ] Run the tests and ensure they pass (Green phase)
+- [ ] Task: Conductor - User Manual Verification 'Phase 3: Update Orchestrator and Range Determination' (Protocol in workflow.md)
+
+## Phase 4: Sequential Merging, Compilation, and Final Quality Check
+- [ ] Task: Write unit tests for sorted PDF compilation
+    - [ ] Add tests to verify chapters are compiled in sorted numerical order regardless of their scraper/cache load order
+- [ ] Task: Update compilation behavior and final run
+    - [ ] Ensure `src/pdf_compiler.py` handles custom/arbitrary sorted inputs gracefully and generates matching bookmarks and TOC
+    - [ ] Verify all automated tests pass with >80% code coverage across the codebase
+- [ ] Task: Conductor - User Manual Verification 'Phase 4: Sequential Merging, Compilation, and Final Quality Check' (Protocol in workflow.md)
