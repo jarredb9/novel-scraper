@@ -60,4 +60,11 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         default="novel.pdf",
         help="Filename of the compiled output PDF (default: novel.pdf)",
     )
+    parser.add_argument(
+        "--update-pdf",
+        "--merge-pdf",
+        type=str,
+        default=None,
+        help="Path to an existing compiled PDF to update with new chapters",
+    )
     return parser.parse_args(args)

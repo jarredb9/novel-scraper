@@ -23,6 +23,7 @@ def main():
             delay=args.delay,
             cache_dir=args.cache_dir,
             output=args.output,
+            update_pdf=args.update_pdf,
         )
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)
