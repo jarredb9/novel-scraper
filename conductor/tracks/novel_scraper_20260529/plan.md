@@ -33,7 +33,7 @@ This plan outlines the task breakdown following a strict Test-Driven Development
 - [x] Task: CLI Configuration (81d16f4)
     - [x] Write unit tests for CLI argument parser (checking default values and custom inputs for range, delay, cache directory, and output filename).
     - [x] Implement the command-line interface argument parser.
-- [ ] Task: Progress Tracker and Main Orchestrator
-    - [ ] Write unit tests for the main orchestration flow (verifying flow of download -> cache -> parse -> compile -> log).
-    - [ ] Implement orchestrator combining caching, scraping, parsing, PDF generation, progress bar (tqdm), and file logging.
+- [x] Task: Progress Tracker and Main Orchestrator (f19582e)
+    - [x] Write unit tests for the main orchestration flow (verifying flow of download -> cache -> parse -> compile -> log).
+    - [x] Implement orchestrator combining caching, scraping, parsing, PDF generation, progress bar (tqdm), and file logging.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: CLI and Main Orchestrator' (Protocol in workflow.md)
