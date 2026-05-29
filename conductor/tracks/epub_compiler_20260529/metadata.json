@@ -1,0 +1,8 @@
+{
+  "track_id": "epub_compiler_20260529",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-05-29T17:42:00Z",
+  "updated_at": "2026-05-29T17:42:00Z",
+  "description": "add an EPUB compiler using a library like ebooklib to generate .epub files alongside or instead of the PDF. so that I can sync my reading progress across devices"
+}
