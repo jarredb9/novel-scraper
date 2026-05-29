@@ -27,9 +27,9 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Update Orchestrator and Range Determination' (Protocol in workflow.md)
 
 ## Phase 4: Sequential Merging, Compilation, and Final Quality Check
-- [ ] Task: Write unit tests for sorted PDF compilation
-    - [ ] Add tests to verify chapters are compiled in sorted numerical order regardless of their scraper/cache load order
-- [ ] Task: Update compilation behavior and final run
-    - [ ] Ensure `src/pdf_compiler.py` handles custom/arbitrary sorted inputs gracefully and generates matching bookmarks and TOC
-    - [ ] Verify all automated tests pass with >80% code coverage across the codebase
+- [x] Task: Write unit tests for sorted PDF compilation [94aa1c2]
+    - [x] Add tests to verify chapters are compiled in sorted numerical order regardless of their scraper/cache load order
+- [x] Task: Update compilation behavior and final run [94aa1c2]
+    - [x] Ensure `src/pdf_compiler.py` handles custom/arbitrary sorted inputs gracefully and generates matching bookmarks and TOC
+    - [x] Verify all automated tests pass with >80% code coverage across the codebase
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Sequential Merging, Compilation, and Final Quality Check' (Protocol in workflow.md)
