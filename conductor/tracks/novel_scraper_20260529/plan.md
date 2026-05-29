@@ -11,14 +11,14 @@ This plan outlines the task breakdown following a strict Test-Driven Development
     - [x] Implement the scraper utility to fetch URLs (`https://freewebnovel.com/novel/the-first-legendary-beast-X`) and store them in the cache folder.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Project Setup and Scraper & Cache Implementation' (Protocol in workflow.md) (d6e5ea4)
 
-## Phase 2: HTML Parser Module
+## Phase 2: HTML Parser Module [checkpoint: 58620c5]
 - [x] Task: XPath Parser (c589520)
     - [x] Write unit tests verifying XPath parsing accuracy (checking successful extraction of title and body text using the specified XPaths, and handling empty/missing elements).
     - [x] Implement the XPath parser module using the `lxml` library.
 - [x] Task: Content Sanitizer (233df08)
     - [x] Write unit tests for text sanitization (verifying removal of ads, HTML tags, excess whitespace, and paragraph formatting).
     - [x] Implement the sanitizer module to clean raw parsed HTML text into readable plain text paragraphs.
-- [~] Task: Conductor - User Manual Verification 'Phase 2: HTML Parser Module' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: HTML Parser Module' (Protocol in workflow.md) (58620c5)
 
 ## Phase 3: PDF Generation & Navigation Module
 - [ ] Task: Basic PDF Layout and Chapter Flow
