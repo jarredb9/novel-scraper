@@ -48,7 +48,7 @@ def test_sanitizer_custom_boilerplate():
     assert paragraphs == ["Keep this"]
 
 def test_sanitizer_removes_bad_tags():
-    raw_html = "<div><p><script>alert(1)</script>Keep <b>bold</b> <script>alert(1)</script>this <style>body{}</style>text</p></div>"
+    raw_html = "<div><p><script>alert(1)</script>Keep <b>bold</b> <script>alert(1)</script>this <style>body{}</style>text<subtxt>watermark</subtxt></p></div>"
     sanitizer = ContentSanitizer()
     paragraphs = sanitizer.sanitize(raw_html)
     assert paragraphs == ["Keep bold this text"]

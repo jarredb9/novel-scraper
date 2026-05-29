@@ -75,9 +75,9 @@ class ContentSanitizer:
                 f"<div>{raw_html}</div>", create_parent=True
             )
 
-        # Remove script/style/iframe/noscript tags while preserving tail text
+        # Remove script/style/iframe/noscript/subtxt tags while preserving tail text
         bad_tags_xpath = (
-            ".//script | .//style | .//iframe | .//noscript"
+            ".//script | .//style | .//iframe | .//noscript | .//subtxt"
         )
         for bad_tag in fragment.xpath(bad_tags_xpath):
             parent = bad_tag.getparent()
