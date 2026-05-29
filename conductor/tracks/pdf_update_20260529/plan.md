@@ -1,6 +1,6 @@
 # Implementation Plan - PDF Update and Chapter Integration
 
-## Phase 1: Setup and Dependency Integration
+## Phase 1: Setup and Dependency Integration [checkpoint: abc779a]
 - [x] Task: Update project dependencies and stack documentation [5162c1a]
     - [ ] Update `conductor/tech-stack.md` to document the addition of `pypdf`
     - [ ] Add `pypdf` to `requirements.txt`
