@@ -10,11 +10,11 @@
 ## Phase 2: PDF Bookmark and Outline Parsing
 - [x] Task: Write failing unit tests for PDF metadata outline parser [effb4b2]
     - [x] Create `tests/test_pdf_reader.py` with tests for extracting chapter titles and numbers from an existing PDF file using pypdf
-- [~] Task: Implement PDF outline reader functionality
-    - [ ] Create `src/pdf_reader.py` and implement outline parser
-    - [ ] Run the tests and ensure they pass (Green phase)
-    - [ ] Verify test coverage for `src/pdf_reader.py` is >80%
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: PDF Bookmark and Outline Parsing' (Protocol in workflow.md)
+- [x] Task: Implement PDF outline reader functionality [23e667e]
+    - [x] Create `src/pdf_reader.py` and implement outline parser
+    - [x] Run the tests and ensure they pass (Green phase)
+    - [x] Verify test coverage for `src/pdf_reader.py` is >80%
+- [~] Task: Conductor - User Manual Verification 'Phase 2: PDF Bookmark and Outline Parsing' (Protocol in workflow.md)
 
 ## Phase 3: Update Orchestrator and Range Determination
 - [ ] Task: Write failing unit tests for update orchestration
