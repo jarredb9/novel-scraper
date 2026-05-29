@@ -27,8 +27,9 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
    - Starts with a clickable Table of Contents (TOC) page mapping every chapter directly to its starting page in the document.
    - Embeds sidebar PDF bookmarks (document outline) for easy reader navigation.
    - Styles pages with a book/novel theme: standard margins, custom fonts, page numbers, and page breaks between chapters.
+   - Supports sorting chapters sequentially by chapter number regardless of compilation load order.
 4. **Command Line Interface (CLI)**:
-   - Configurable CLI parameters for start/end chapters, rate limiting, and output path.
+   - Configurable CLI parameters for start/end chapters, rate limiting, output path, and updating/merging existing PDF outline bookmark ranges using `--update-pdf` / `--merge-pdf`.
 
 ## Non-Functional Requirements
 - **Performance**: Graceful recovery on socket timeouts or 404 errors.
