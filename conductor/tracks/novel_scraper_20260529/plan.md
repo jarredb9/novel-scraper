@@ -2,14 +2,14 @@
 
 This plan outlines the task breakdown following a strict Test-Driven Development (TDD) cycle and Conductor verification protocols.
 
-## Phase 1: Project Setup and Scraper & Cache Implementation
+## Phase 1: Project Setup and Scraper & Cache Implementation [checkpoint: d6e5ea4]
 - [x] Task: Environment Setup and Caching Module (9f21ab2)
     - [x] Write unit tests for local caching (checking if directory exists, saving HTML files, reading cache hits, and handling cache misses).
     - [x] Create Python project structure, dependency manifest `requirements.txt`, and implement the caching manager class.
 - [x] Task: Scraping Engine with Rate-Limiting (7e43409)
     - [x] Write unit tests for the scraper helper (verifying HTTP requests, custom headers, timeout handling, retries, and sleep delays).
     - [x] Implement the scraper utility to fetch URLs (`https://freewebnovel.com/novel/the-first-legendary-beast-X`) and store them in the cache folder.
-- [~] Task: Conductor - User Manual Verification 'Phase 1: Project Setup and Scraper & Cache Implementation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Project Setup and Scraper & Cache Implementation' (Protocol in workflow.md) (d6e5ea4)
 
 ## Phase 2: HTML Parser Module
 - [ ] Task: XPath Parser
