@@ -15,8 +15,9 @@ A modular Python command-line application that scrapes a specified range of chap
   - Clickable Table of Contents page.
   - Document outline sidebar bookmarks for simple navigation.
   - Page numbers centered at the bottom of pages, beginning after the TOC page.
-- **CLI Configuration**: Fully configurable execution using arguments for start chapter, end chapter, delay, cache directory, and output filename.
-- **Verbose Logging**: Detailed network events, cache hits, HTTP statuses, and errors are written directly to `scraper.log` to keep standard console output clean.
+- **Incremental PDF Updating & Merging**: Scans bookmarks/outlines from an existing PDF (using `pypdf`), extracts existing chapter numbers, automatically determines which target chapters are missing, downloads/caches them, and compiles the entire combined set in correct sequential numerical order.
+- **CLI Configuration**: Fully configurable execution using arguments for start chapter, end chapter, delay, cache directory, output filename, and existing PDF merging.
+- **Verbose Logging**: Detailed network events, HTTP statuses, and errors are written directly to `scraper.log` to keep standard console output clean.
 - **Interactive UI**: CLI progress tracking is animated using `tqdm`.
 
 ---
@@ -32,6 +33,7 @@ A modular Python command-line application that scrapes a specified range of chap
 │   ├── orchestrator.py      # Unified workflow runner
 │   ├── parser.py            # XPathParser module using lxml
 │   ├── pdf_compiler.py      # ReportLab PDF compiler and canvas manager
+│   ├── pdf_reader.py        # PDF outline and bookmark parser
 │   ├── sanitizer.py         # ContentSanitizer for raw text extraction
 │   └── scraper.py           # HTTP Scraping engine with rate limiting
 ├── tests/                   # Python unit tests matching the src modules
@@ -82,6 +84,7 @@ Customize the scrape range, politeness delay, and output file path using the com
 | `--delay` | `float` | `1.0` | Delay in seconds between successive requests. |
 | `--cache-dir` | `str` | `./cache` | Local folder directory to store chapter cache. |
 | `--output` | `str` | `novel.pdf` | Filename of the compiled output PDF. |
+| `--update-pdf` | `str` | `None` | Path to an existing compiled PDF to update with new chapters (alias: `--merge-pdf`). |
 
 ### Example
 
@@ -89,6 +92,12 @@ To scrape chapters 800 through 850 with a 2-second rate-limiting delay and compi
 
 ```bash
 python3 main.py --start 800 --end 850 --delay 2.0 --output fantasy_novel.pdf
+```
+
+To update/merge an existing `fantasy_novel.pdf` by fetching chapters 851 through 860 and appending them sequentially:
+
+```bash
+python3 main.py --update-pdf fantasy_novel.pdf --start 851 --end 860 --output fantasy_novel.pdf
 ```
 
 ---
