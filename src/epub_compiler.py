@@ -137,4 +137,5 @@ class EPUBCompiler:
 
         # Write EPUB
         epub.write_epub(self.output_path, book, {})
+        print(f"EPUB successfully written to {self.output_path}")
         logger.info(f"EPUB successfully written to {self.output_path}")

@@ -13,12 +13,12 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
     - [x] Implement unit tests validating that the `EPUBCompiler` class initializes with an output path, formats chapters sequentially, handles metadata, embeds styles, and writes out a valid EPUB file
     - [x] Confirm tests fail as expected (Red phase)
 
-- [ ] Task: Implement EPUBCompiler
-    - [ ] Create `src/epub_compiler.py`
-    - [ ] Implement the `EPUBCompiler` class using `ebooklib.epub`
-    - [ ] Implement chapter creation, metadata injection, TOC generation, and custom CSS stylesheet styling
-    - [ ] Ensure all unit tests pass (Green phase)
-    - [ ] Verify test coverage is >80% for `src/epub_compiler.py`
+- [x] Task: Implement EPUBCompiler (5eb21a4)
+    - [x] Create `src/epub_compiler.py`
+    - [x] Implement the `EPUBCompiler` class using `ebooklib.epub`
+    - [x] Implement chapter creation, metadata injection, TOC generation, and custom CSS stylesheet styling
+    - [x] Ensure all unit tests pass (Green phase)
+    - [x] Verify test coverage is >80% for `src/epub_compiler.py`
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup & Core EPUB Compilation Engine' (Protocol in workflow.md)
 
