@@ -96,3 +96,28 @@ def test_scraper_base_url_format(mock_cache):
         args, kwargs = mock_get.call_args
         assert args[0] == "https://freewebnovel.com/the-first-legendary-beast-master/chapter-776.html"
 
+
+def test_scraper_exponential_backoff_on_429(mock_cache):
+    chapter_num = 777
+    scraper = NovelScraper(cache_manager=mock_cache, delay=0.0, retries=2)
+    
+    with patch("requests.get") as mock_get, patch("time.sleep") as mock_sleep:
+        # Mock a response that triggers raise_for_status to throw an HTTPError
+        mock_response = MagicMock()
+        mock_response.status_code = 429
+        mock_response.raise_for_status.side_effect = requests.HTTPError(
+            "Too Many Requests", response=mock_response
+        )
+        mock_get.return_value = mock_response
+        
+        with pytest.raises(requests.RequestException):
+            scraper.fetch_chapter_html(chapter_num)
+            
+        assert mock_get.call_count == 2
+        # Ensure sleep was called with backoff delays (e.g. 5.0s on first attempt)
+        assert mock_sleep.call_count == 1
+        # Verify the backoff sleep values: attempt 1 -> 5.0
+        sleep_args = [call[0][0] for call in mock_sleep.call_args_list]
+        assert 5.0 in sleep_args
+
+

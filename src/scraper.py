@@ -145,8 +145,23 @@ class NovelScraper:
                         f"{self.retries} attempts."
                     )
                     raise
-                # Short delay before retrying
-                time.sleep(1.0)
+                
+                # Check for HTTP 429 (Too Many Requests) and back off exponentially
+                is_rate_limited = (
+                    isinstance(e, requests.HTTPError)
+                    and e.response is not None
+                    and e.response.status_code == 429
+                )
+                if is_rate_limited:
+                    backoff_delay = 5.0 * (2 ** (attempt - 1))
+                    logger.warning(
+                        f"Rate limited (429) on chapter {chapter_num}. "
+                        f"Sleeping for {backoff_delay:.1f}s before retrying."
+                    )
+                    time.sleep(backoff_delay)
+                else:
+                    # Short delay before retrying
+                    time.sleep(1.0)
 
         raise requests.RequestException(
             f"Failed to fetch chapter {chapter_num}"
