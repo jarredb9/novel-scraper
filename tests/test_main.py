@@ -14,6 +14,7 @@ def test_main_execution():
         mock_args.cache_dir = "./cache"
         mock_args.output = "novel.pdf"
         mock_args.update_pdf = None
+        mock_args.format = "both"
         mock_parse_args.return_value = mock_args
 
         # Mock sys.argv
@@ -27,7 +28,8 @@ def test_main_execution():
             delay=1.0,
             cache_dir="./cache",
             output="novel.pdf",
-            update_pdf=None
+            update_pdf=None,
+            format="both"
         )
 
 def test_main_execution_error():

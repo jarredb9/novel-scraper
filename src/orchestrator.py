@@ -13,6 +13,8 @@ from src.parser import XPathParser
 from src.sanitizer import ContentSanitizer
 from src.pdf_compiler import PDFCompiler
 from src.pdf_reader import parse_pdf_outline
+from src.epub_compiler import EPUBCompiler
+import os
 
 # Retrieve the same logger configured in scraper.py
 logger = logging.getLogger("novel_scraper")
@@ -25,34 +27,47 @@ def run_orchestrator(
     cache_dir: str,
     output: str,
     update_pdf: Optional[str] = None,
+    format: str = "both",
 ) -> None:
-    """Orchestrates novel scraping and PDF compilation.
+    """Orchestrates novel scraping and PDF/EPUB compilation.
 
     Args:
         start (int): Start chapter number.
         end (int): End chapter number.
         delay (float): Politeness delay in seconds.
         cache_dir (str): Cache directory for HTML files.
-        output (str): Filename for compiled PDF output.
+        output (str): Filename for compiled PDF/EPUB output.
         update_pdf (str, optional): Path to existing PDF to update.
+        format (str): Compilation format ('pdf', 'epub', 'both').
     """
     logger.info(f"Starting orchestration flow: chapters {start} to {end}")
     logger.info(
         f"Parameters: delay={delay}s, cache_dir='{cache_dir}', "
-        f"output='{output}', update_pdf='{update_pdf}'"
+        f"output='{output}', update_pdf='{update_pdf}', format='{format}'"
     )
 
     cache_manager = CachingManager(cache_dir=cache_dir)
     scraper = NovelScraper(cache_manager=cache_manager, delay=delay)
     parser = XPathParser()
     sanitizer = ContentSanitizer()
-    compiler = PDFCompiler(output_path=output)
+
+    # Determine output paths
+    base, ext = os.path.splitext(output)
+    if ext.lower() == ".pdf":
+        pdf_output = output
+        epub_output = base + ".epub"
+    elif ext.lower() == ".epub":
+        pdf_output = base + ".pdf"
+        epub_output = output
+    else:
+        pdf_output = output + ".pdf"
+        epub_output = output + ".epub"
 
     # Determine the range of chapter numbers to compile
     target_chapters = set(range(start, end + 1))
     existing_chapters = set()
 
-    if update_pdf:
+    if update_pdf and (format == "pdf" or format == "both"):
         logger.info(f"Scanning outline of existing PDF: {update_pdf}")
         outline = parse_pdf_outline(update_pdf)
         for chap in outline:
@@ -90,16 +105,31 @@ def run_orchestrator(
             # Re-raise the exception to abort the execution cleanly
             raise
 
-    # Step 4: Compile PDF
+    # Step 4: Compile output
     logger.info(
         "All chapters successfully downloaded, parsed, and sanitized. "
-        "Compiling PDF..."
+        "Compiling output..."
     )
-    try:
-        compiler.compile(chapters_data)
-        logger.info(
-            f"PDF compilation completed successfully. Saved to {output}"
-        )
-    except Exception as e:
-        logger.error(f"Failed to compile PDF: {str(e)}", exc_info=True)
-        raise
+    
+    if format in ("pdf", "both"):
+        try:
+            compiler = PDFCompiler(output_path=pdf_output)
+            compiler.compile(chapters_data)
+            logger.info(
+                f"PDF compilation completed successfully. Saved to {pdf_output}"
+            )
+        except Exception as e:
+            logger.error(f"Failed to compile PDF: {str(e)}", exc_info=True)
+            raise
+
+    if format in ("epub", "both"):
+        try:
+            compiler = EPUBCompiler(output_path=epub_output)
+            compiler.compile(chapters_data)
+            logger.info(
+                f"EPUB compilation completed successfully. Saved to {epub_output}"
+            )
+        except Exception as e:
+            logger.error(f"Failed to compile EPUB: {str(e)}", exc_info=True)
+            raise
+

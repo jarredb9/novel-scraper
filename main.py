@@ -24,6 +24,7 @@ def main():
             cache_dir=args.cache_dir,
             output=args.output,
             update_pdf=args.update_pdf,
+            format=args.format,
         )
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)
