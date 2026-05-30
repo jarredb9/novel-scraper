@@ -39,3 +39,17 @@ def test_cli_invalid_delay_type():
     # delay should be a float
     with pytest.raises(SystemExit):
         parse_args(["--delay", "not-a-float"])
+
+def test_cli_format_default():
+    args = parse_args([])
+    assert args.format == "both"
+
+def test_cli_format_choices():
+    for fmt in ["pdf", "epub", "both"]:
+        args = parse_args(["--format", fmt])
+        assert args.format == fmt
+
+def test_cli_format_invalid():
+    with pytest.raises(SystemExit):
+        parse_args(["--format", "mobi"])
+
