@@ -12,10 +12,15 @@ This document specifies the chosen technology stack, development environments, a
 - **`lxml`**: High-performance XML/HTML parser that natively supports XPath querying.
   - Used for parsing `/html/body/div[3]/div[1]/div/div[1]/span` and `/html/body/div[3]/div[1]/div/div[5]/div[1]`.
 
+## Compilation & File Generation
 ### PDF Compilation
 - **`reportlab`**: Programmatic PDF layout generation.
   - Utilized for building flowing text documents, embedding page numbers, and generating clickable anchors (for the Table of Contents and PDF bookmarks sidebar).
 - **`pypdf`**: Reading and manipulating PDF outline/bookmarks structures to detect already-compiled chapters.
+
+### EPUB Compilation
+- **`ebooklib`**: Programmatic EPUB file generation and packaging.
+  - Utilized for building standard EPUB container structure, navigation, and layout.
 
 ### Developer UX & Tooling
 - **`tqdm`**: Command-line visual progress bar framework.
