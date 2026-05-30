@@ -22,7 +22,7 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
 
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup & Core EPUB Compilation Engine' (Protocol in workflow.md) (2e2c8d4)
 
-## Phase 2: CLI Integration and Orchestrator Update
+## Phase 2: CLI Integration and Orchestrator Update [checkpoint: 93e3fcd]
 
 - [x] Task: Write failing tests for CLI & Orchestrator with format flag (d2d49b6)
     - [x] Update `tests/test_cli.py` to assert new `--format` parameter behavior, default value, and validation
@@ -41,7 +41,7 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
     - [x] Run tests to verify all orchestrator, CLI, and compiler tests pass (Green phase)
     - [x] Verify overall test coverage is >80% for new code
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: CLI Integration and Orchestrator Update' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: CLI Integration and Orchestrator Update' (Protocol in workflow.md) (93e3fcd)
 
 ## Phase: Review Fixes
 - [x] Task: Apply review suggestions (8ec7e85)
