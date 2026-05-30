@@ -33,13 +33,13 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
     - [x] Update `src/cli.py` to add `--format` parameter with choices `['pdf', 'epub', 'both']` and default `both`
     - [x] Run tests to ensure CLI parser tests pass
 
-- [ ] Task: Update Orchestrator
-    - [ ] Update `src/orchestrator.py` to check the format option
-    - [ ] When format is `pdf` or `both`, run the `PDFCompiler`
-    - [ ] When format is `epub` or `both`, run the `EPUBCompiler`
-    - [ ] Ensure proper output file paths are derived (e.g. replacing/appending suffix)
-    - [ ] Run tests to verify all orchestrator, CLI, and compiler tests pass (Green phase)
-    - [ ] Verify overall test coverage is >80% for new code
+- [x] Task: Update Orchestrator (9c9fa83)
+    - [x] Update `src/orchestrator.py` to check the format option
+    - [x] When format is `pdf` or `both`, run the `PDFCompiler`
+    - [x] When format is `epub` or `both`, run the `EPUBCompiler`
+    - [x] Ensure proper output file paths are derived (e.g. replacing/appending suffix)
+    - [x] Run tests to verify all orchestrator, CLI, and compiler tests pass (Green phase)
+    - [x] Verify overall test coverage is >80% for new code
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: CLI Integration and Orchestrator Update' (Protocol in workflow.md)
 
