@@ -45,3 +45,4 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
 
 ## Phase: Review Fixes
 - [x] Task: Apply review suggestions (8ec7e85)
+- [x] Task: Apply review suggestions (b61023c)
