@@ -6,17 +6,14 @@ A modular Python command-line application that scrapes a specified range of chap
 
 ## Key Features
 
-- **Polite & Rate-Limited Scraping**: Employs browser headers and enforces a default 1-second delay between requests to be respectful of the hosting server.
+- **Polite & Rate-Limited Scraping**: Employs browser headers and enforces a default 1-second delay between requests. Automatically detects HTTP 429 rate-limiting status codes and backs off exponentially.
 - **Resume-Friendly Caching**: Automatically saves fetched chapter HTML files locally. If execution is interrupted, the system skips already-cached chapters and resumes where it left off.
 - **HTML Parsing & Sanitization**: Uses `lxml` to query specific elements via XPaths. Cleans raw HTML text, strips advertising/boilerplate code, and formats text into readable paragraphs.
-- **E-Reader Optimized PDF Layout**:
-  - Narrow margins (0.5 inches / 36 points) to maximize text area.
-  - Typography tuned with Times-Bold titles and Times-Roman 11pt body text with 1.5 line spacing (16.5pt leading).
-  - Clickable Table of Contents page.
-  - Document outline sidebar bookmarks for simple navigation.
-  - Page numbers centered at the bottom of pages, beginning after the TOC page.
+- **E-Reader Optimized PDF & EPUB Compilation**:
+  - **PDF Layout**: Narrow margins (0.5 inches / 36 points) to maximize text area, Times-Bold titles, Times-Roman 11pt body text with 1.5 line spacing (16.5pt leading), clickable Table of Contents, and document outline sidebar bookmarks.
+  - **EPUB Layout**: Generates standardized EPUB packages containing structured XHTML chapters, a Table of Contents, and custom CSS stylesheets for justified body text with indentation and 1.5 line spacing.
 - **Incremental PDF Updating & Merging**: Scans bookmarks/outlines from an existing PDF (using `pypdf`), extracts existing chapter numbers, automatically determines which target chapters are missing, downloads/caches them, and compiles the entire combined set in correct sequential numerical order.
-- **CLI Configuration**: Fully configurable execution using arguments for start chapter, end chapter, delay, cache directory, output filename, and existing PDF merging.
+- **CLI Configuration**: Fully configurable execution using arguments for start chapter, end chapter, delay, cache directory, output filename, compilation format, and existing PDF merging.
 - **Verbose Logging**: Detailed network events, HTTP statuses, and errors are written directly to `scraper.log` to keep standard console output clean.
 - **Interactive UI**: CLI progress tracking is animated using `tqdm`.
 
@@ -30,6 +27,7 @@ A modular Python command-line application that scrapes a specified range of chap
 │   ├── __init__.py
 │   ├── cache.py             # CachingManager for storing/retrieving HTML chapters
 │   ├── cli.py               # Argument parser for CLI flags
+│   ├── epub_compiler.py     # ebooklib EPUB compilation engine
 │   ├── orchestrator.py      # Unified workflow runner
 │   ├── parser.py            # XPathParser module using lxml
 │   ├── pdf_compiler.py      # ReportLab PDF compiler and canvas manager
@@ -83,8 +81,9 @@ Customize the scrape range, politeness delay, and output file path using the com
 | `--end` | `int` | `1780` | Chapter number to end scraping at. |
 | `--delay` | `float` | `1.0` | Delay in seconds between successive requests. |
 | `--cache-dir` | `str` | `./cache` | Local folder directory to store chapter cache. |
-| `--output` | `str` | `novel.pdf` | Filename of the compiled output PDF. |
+| `--output` | `str` | `novel.pdf` | Filename of the compiled output. |
 | `--update-pdf` | `str` | `None` | Path to an existing compiled PDF to update with new chapters (alias: `--merge-pdf`). |
+| `--format` | `str` | `both` | Output format choices: `pdf`, `epub`, or `both` (default: `both`). |
 
 ### Example
 
@@ -98,6 +97,12 @@ To update/merge an existing `fantasy_novel.pdf` by fetching chapters 851 through
 
 ```bash
 python3 main.py --update-pdf fantasy_novel.pdf --start 851 --end 860 --output fantasy_novel.pdf
+```
+
+To compile chapters 800 through 850 as an EPUB book only:
+
+```bash
+python3 main.py --start 800 --end 850 --output fantasy_novel.epub --format epub
 ```
 
 ---
