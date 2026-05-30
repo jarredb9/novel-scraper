@@ -67,4 +67,11 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         default=None,
         help="Path to an existing compiled PDF to update with new chapters",
     )
+    parser.add_argument(
+        "--format",
+        type=str,
+        choices=["pdf", "epub", "both"],
+        default="both",
+        help="Output compilation format: pdf, epub, or both (default: both)",
+    )
     return parser.parse_args(args)
