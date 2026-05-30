@@ -24,10 +24,10 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
 
 ## Phase 2: CLI Integration and Orchestrator Update
 
-- [ ] Task: Write failing tests for CLI & Orchestrator with format flag
-    - [ ] Update `tests/test_cli.py` to assert new `--format` parameter behavior, default value, and validation
-    - [ ] Update `tests/test_orchestrator.py` or create a new test case to test orchestration compiling both PDF and EPUB, just PDF, or just EPUB
-    - [ ] Confirm tests fail as expected (Red phase)
+- [x] Task: Write failing tests for CLI & Orchestrator with format flag (d2d49b6)
+    - [x] Update `tests/test_cli.py` to assert new `--format` parameter behavior, default value, and validation
+    - [x] Update `tests/test_orchestrator.py` or create a new test case to test orchestration compiling both PDF and EPUB, just PDF, or just EPUB
+    - [x] Confirm tests fail as expected (Red phase)
 
 - [ ] Task: Update CLI Parser
     - [ ] Update `src/cli.py` to add `--format` parameter with choices `['pdf', 'epub', 'both']` and default `both`
