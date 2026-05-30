@@ -20,7 +20,7 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
     - [x] Ensure all unit tests pass (Green phase)
     - [x] Verify test coverage is >80% for `src/epub_compiler.py`
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup & Core EPUB Compilation Engine' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup & Core EPUB Compilation Engine' (Protocol in workflow.md)
 
 ## Phase 2: CLI Integration and Orchestrator Update
 
@@ -42,3 +42,6 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
     - [ ] Verify overall test coverage is >80% for new code
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: CLI Integration and Orchestrator Update' (Protocol in workflow.md)
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions (8ec7e85)
