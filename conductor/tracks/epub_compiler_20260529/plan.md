@@ -2,7 +2,7 @@
 
 This plan outlines the steps required to implement the EPUB compiler feature, allowing compilation of scraped web novels to `.epub` format alongside or instead of PDF format.
 
-## Phase 1: Environment Setup & Core EPUB Compilation Engine
+## Phase 1: Environment Setup & Core EPUB Compilation Engine [checkpoint: 2e2c8d4]
 
 - [x] Task: Update Tech Stack and Requirements (5141c65)
     - [x] Add `ebooklib` to `requirements.txt`
@@ -20,7 +20,7 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
     - [x] Ensure all unit tests pass (Green phase)
     - [x] Verify test coverage is >80% for `src/epub_compiler.py`
 
-- [~] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup & Core EPUB Compilation Engine' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup & Core EPUB Compilation Engine' (Protocol in workflow.md) (2e2c8d4)
 
 ## Phase 2: CLI Integration and Orchestrator Update
 
