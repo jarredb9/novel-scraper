@@ -4,9 +4,9 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
 
 ## Phase 1: Environment Setup & Core EPUB Compilation Engine
 
-- [ ] Task: Update Tech Stack and Requirements
-    - [ ] Add `ebooklib` to `requirements.txt`
-    - [ ] Update `conductor/tech-stack.md` to reflect the new dependency and compile target
+- [x] Task: Update Tech Stack and Requirements (5141c65)
+    - [x] Add `ebooklib` to `requirements.txt`
+    - [x] Update `conductor/tech-stack.md` to reflect the new dependency and compile target
 
 - [ ] Task: Write failing tests for EPUBCompiler
     - [ ] Create `tests/test_epub_compiler.py`
