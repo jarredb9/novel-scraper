@@ -8,10 +8,10 @@ This plan outlines the steps required to implement the EPUB compiler feature, al
     - [x] Add `ebooklib` to `requirements.txt`
     - [x] Update `conductor/tech-stack.md` to reflect the new dependency and compile target
 
-- [ ] Task: Write failing tests for EPUBCompiler
-    - [ ] Create `tests/test_epub_compiler.py`
-    - [ ] Implement unit tests validating that the `EPUBCompiler` class initializes with an output path, formats chapters sequentially, handles metadata, embeds styles, and writes out a valid EPUB file
-    - [ ] Confirm tests fail as expected (Red phase)
+- [x] Task: Write failing tests for EPUBCompiler (dd1b566)
+    - [x] Create `tests/test_epub_compiler.py`
+    - [x] Implement unit tests validating that the `EPUBCompiler` class initializes with an output path, formats chapters sequentially, handles metadata, embeds styles, and writes out a valid EPUB file
+    - [x] Confirm tests fail as expected (Red phase)
 
 - [ ] Task: Implement EPUBCompiler
     - [ ] Create `src/epub_compiler.py`
