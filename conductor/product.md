@@ -4,10 +4,10 @@ A Python script that scrapes novel chapters from a website (specifically freeweb
 
 ---
 
-# Product Definition - Novel Scraper & PDF Compiler
+# Product Definition - Novel Scraper & PDF/EPUB Compiler
 
 ## Overview
-A robust Python utility to scrape chapters of a novel (specifically "The First Legendary Beast") from freewebnovel.com and compile them into a beautifully formatted, single ebook-style PDF document with clickable navigation.
+A robust Python utility to scrape chapters of a novel (specifically "The First Legendary Beast") from freewebnovel.com and compile them into beautifully formatted ebook-style PDF and/or EPUB documents.
 
 ## Product Vision
 For readers who want to enjoy web novels offline on their ereaders or PDF viewers without being interrupted by internet connectivity issues or site popups.
@@ -28,8 +28,11 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
    - Embeds sidebar PDF bookmarks (document outline) for easy reader navigation.
    - Styles pages with a book/novel theme: standard margins, custom fonts, page numbers, and page breaks between chapters.
    - Supports sorting chapters sequentially by chapter number regardless of compilation load order.
-4. **Command Line Interface (CLI)**:
-   - Configurable CLI parameters for start/end chapters, rate limiting, output path, and updating/merging existing PDF outline bookmark ranges using `--update-pdf` / `--merge-pdf`.
+4. **Ebook-Style EPUB Compiler**:
+   - Generates a standard `.epub` file using `ebooklib`.
+   - Includes navigation metadata, a Table of Contents (TOC), book spine, and styled pages using an embedded stylesheet.
+5. **Command Line Interface (CLI)**:
+   - Configurable CLI parameters for start/end chapters, rate limiting, output path, updating/merging existing PDF outline bookmark ranges using `--update-pdf` / `--merge-pdf`, and compiling to specific formats using `--format` (choices: `pdf`, `epub`, `both`).
 
 ## Non-Functional Requirements
 - **Performance**: Graceful recovery on socket timeouts or 404 errors.
