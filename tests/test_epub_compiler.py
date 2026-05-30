@@ -18,8 +18,17 @@ def test_compiler_build_epub(tmp_path):
     compiler = EPUBCompiler(output_path=str(output_epub))
     
     chapters = [
-        {"title": "Chapter 1: The Beginning", "paragraphs": ["This is the first paragraph.", "This is the second paragraph."]},
-        {"title": "Chapter 2: The Middle", "paragraphs": ["This is a paragraph in chapter two."]},
+        {
+            "title": "Chapter 1: The Beginning",
+            "paragraphs": [
+                "This is the first paragraph.",
+                "This is the second paragraph.",
+            ],
+        },
+        {
+            "title": "Chapter 2: The Middle",
+            "paragraphs": ["This is a paragraph in chapter two."],
+        },
     ]
     
     compiler.compile(chapters)
@@ -53,7 +62,11 @@ def test_compiler_sorting(tmp_path):
 
 def test_compiler_metadata(tmp_path):
     output_epub = tmp_path / "test_metadata.epub"
-    compiler = EPUBCompiler(output_path=str(output_epub), title="My Special Novel", author="Author Name")
+    compiler = EPUBCompiler(
+        output_path=str(output_epub),
+        title="My Special Novel",
+        author="Author Name",
+    )
     
     chapters = [
         {"title": "Chapter 1: Start", "paragraphs": ["Text."]},

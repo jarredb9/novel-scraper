@@ -15,7 +15,12 @@ logger = logging.getLogger("novel_scraper")
 class EPUBCompiler:
     """Compiles sanitized chapter lists into a single EPUB document."""
 
-    def __init__(self, output_path: str = "output.epub", title: str = "Compiled Novel", author: str = "Scraper"):
+    def __init__(
+        self,
+        output_path: str = "output.epub",
+        title: str = "Compiled Novel",
+        author: str = "Scraper",
+    ):
         """Initializes the EPUB compiler.
 
         Args:
@@ -87,7 +92,11 @@ class EPUBCompiler:
             paragraphs = chapter.get("paragraphs", [])
             
             # Format paragraph text to HTML
-            html_paragraphs = "".join(f"<p>{para.strip()}</p>" for para in paragraphs if para.strip())
+            html_paragraphs = "".join(
+                f"<p>{para.strip()}</p>"
+                for para in paragraphs
+                if para.strip()
+            )
             
             # Construct EpubHtml chapter
             file_name = f"chap_{i}.xhtml"
@@ -99,7 +108,8 @@ class EPUBCompiler:
             )
             
             # Set content with stylesheet link (omit xml declaration as it breaks get_body_content)
-            epub_chapter.content = f"""<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+            epub_chapter.content = f"""<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
 <head>
     <title>{title}</title>
     <link rel="stylesheet" href="style/nav.css" type="text/css" />
@@ -121,7 +131,9 @@ class EPUBCompiler:
 
         # Create navigation files
         nav = epub.EpubNav()
-        nav.content = '<html><body><h1>Table of Contents</h1></body></html>'  # Set content with child tag to prevent empty document parsing error in ebooklib
+        # Set content with child tag to prevent empty document parsing error
+        # in ebooklib
+        nav.content = '<html><body><h1>Table of Contents</h1></body></html>'
         book.add_item(nav)
         
         ncx = epub.EpubNcx()
