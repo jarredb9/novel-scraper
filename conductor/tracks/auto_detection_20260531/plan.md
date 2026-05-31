@@ -2,7 +2,7 @@
 
 ## Phase 1: Chapter Link Auto-Detection
 - [x] Task: Scrape landing page and extract chapter URLs in [src/orchestrator.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/orchestrator.py) [0ee6962]
-- [ ] Task: Add URL mapping support in [src/scraper.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/scraper.py)
+- [x] Task: Add URL mapping support in [src/scraper.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/scraper.py) [0ee6962]
 - [ ] Task: Add unit and integration tests for chapter link auto-detection
 - [ ] Task: Conductor - User Manual Verification 'Chapter Link Auto-Detection' (Protocol in workflow.md)
 
