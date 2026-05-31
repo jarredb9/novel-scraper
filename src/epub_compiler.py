@@ -41,6 +41,7 @@ class EPUBCompiler:
         self,
         chapters: List[Dict[str, Any]],
         cover_path: Optional[str] = None,
+        source_url: Optional[str] = None,
     ) -> None:
         """Compiles a list of chapters into an EPUB file.
 
@@ -48,6 +49,7 @@ class EPUBCompiler:
             chapters (List[Dict[str, Any]]): List of dicts, each with keys
                 'title' and 'paragraphs'.
             cover_path (Optional[str]): Path to the cover image to embed.
+            source_url (Optional[str]): Landing page URL of the novel.
         """
         if not chapters:
             logger.warning("No chapters provided to compile.")
@@ -107,6 +109,8 @@ xmlns:epub="http://www.idpf.org/2007/ops">
         book.set_title(self.title)
         book.set_language("en")
         book.add_author(self.author)
+        if source_url and isinstance(source_url, str):
+            book.add_metadata("DC", "source", source_url)
 
         # Style sheet content
         style_content = """

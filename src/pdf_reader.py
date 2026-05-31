@@ -68,3 +68,24 @@ def parse_pdf_outline(pdf_path: str) -> List[Dict[str, Any]]:
     except Exception:
         return []
 
+
+def extract_source_url_from_pdf(pdf_path: str) -> Optional[str]:
+    """Extracts the source landing page URL from PDF subject metadata.
+
+    Args:
+        pdf_path: Path to the PDF file.
+
+    Returns:
+        The extracted URL string if found, otherwise None.
+    """
+    if not os.path.exists(pdf_path):
+        return None
+    try:
+        reader = pypdf.PdfReader(pdf_path)
+        meta = reader.metadata
+        if meta and meta.subject:
+            return meta.subject
+    except Exception:
+        pass
+    return None
+

@@ -27,13 +27,13 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "--start",
         type=int,
-        default=776,
+        default=None,
         help="Chapter number to start scraping from (default: 776)",
     )
     parser.add_argument(
         "--end",
         type=int,
-        default=1780,
+        default=None,
         help="Chapter number to end scraping at (default: 1780)",
     )
     parser.add_argument(
@@ -70,7 +70,6 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "--update-epub",
         "--merge-epub",
-        dest="update_epub",
         type=str,
         default=None,
         help="Path to an existing compiled EPUB to update with new chapters",
@@ -101,4 +100,10 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         default=None,
         help="Landing page URL of the novel for chapter link auto-detection",
     )
-    return parser.parse_args(args)
+    parsed_args = parser.parse_args(args)
+    if parsed_args.url is None:
+        if parsed_args.start is None:
+            parsed_args.start = 776
+        if parsed_args.end is None:
+            parsed_args.end = 1780
+    return parsed_args

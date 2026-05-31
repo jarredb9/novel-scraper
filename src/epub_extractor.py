@@ -2,7 +2,7 @@
 
 import os
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import ebooklib
 from ebooklib import epub
 from lxml import html
@@ -64,3 +64,26 @@ def extract_chapters_from_epub(epub_path: str) -> List[Dict[str, Any]]:
             )
 
     return chapters
+
+
+def extract_source_url_from_epub(epub_path: str) -> Optional[str]:
+    """Extracts the source landing page URL from EPUB metadata if present.
+
+    Args:
+        epub_path (str): Path to the existing EPUB file.
+
+    Returns:
+        Optional[str]: The source URL if found, otherwise None.
+    """
+    if not os.path.exists(epub_path):
+        return None
+    try:
+        book = epub.read_epub(epub_path)
+        source_meta = book.get_metadata("DC", "source")
+        if source_meta and len(source_meta) > 0:
+            return source_meta[0][0]
+    except Exception as e:
+        logger.warning(
+            f"Failed to read source URL from EPUB metadata: {str(e)}"
+        )
+    return None

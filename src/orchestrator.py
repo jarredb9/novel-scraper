@@ -206,6 +206,10 @@ def run_orchestrator(
 
     # Determine the range of chapter numbers to compile
     if url_map is not None:
+        if start is None:
+            start = min(url_map.keys())
+        if end is None:
+            end = max(url_map.keys())
         target_chapters = {
             chap for chap in url_map.keys() if start <= chap <= end
         }
@@ -338,10 +342,11 @@ def run_orchestrator(
         try:
             compiler = PDFCompiler(output_path=pdf_output)
             compiler.title = novel_title
-            if cover_path is not None:
-                compiler.compile(chapters_data, cover_path=cover_path)
-            else:
-                compiler.compile(chapters_data)
+            compiler.compile(
+                chapters_data,
+                cover_path=cover_path,
+                source_url=scraper.base_url
+            )
             logger.info(
                 f"PDF compilation completed successfully. "
                 f"Saved to {pdf_output}"
@@ -354,10 +359,11 @@ def run_orchestrator(
         try:
             compiler = EPUBCompiler(output_path=epub_output)
             compiler.title = novel_title
-            if cover_path is not None:
-                compiler.compile(chapters_data, cover_path=cover_path)
-            else:
-                compiler.compile(chapters_data)
+            compiler.compile(
+                chapters_data,
+                cover_path=cover_path,
+                source_url=scraper.base_url
+            )
             logger.info(
                 f"EPUB compilation completed successfully. "
                 f"Saved to {epub_output}"

@@ -111,6 +111,7 @@ class PDFCompiler:
         self,
         chapters: List[Dict[str, Any]],
         cover_path: Optional[str] = None,
+        source_url: Optional[str] = None,
     ) -> None:
         """Compiles a list of chapters into the PDF.
 
@@ -120,6 +121,7 @@ class PDFCompiler:
             chapters (List[Dict[str, Any]]): List of dicts, each with keys
                 'title' and 'paragraphs'.
             cover_path (Optional[str]): Path to the cover image to embed.
+            source_url (Optional[str]): Landing page URL of the novel.
         """
         if not chapters:
             logger.warning("No chapters provided to compile.")
@@ -149,6 +151,9 @@ class PDFCompiler:
                 rightMargin=self.margin,
                 topMargin=self.margin,
                 bottomMargin=self.margin + 18,
+                title=self.title,
+                author=self.author,
+                subject=source_url if isinstance(source_url, str) else None,
             )
             doc.build(story, canvasmaker=canvas_factory)
 

@@ -78,7 +78,8 @@ def test_orchestrator_successful_flow(tmp_path):
             {"title": "Chapter 776: Title", "paragraphs": ["Paragraph 1", "Paragraph 2"]},
             {"title": "Chapter 776: Title", "paragraphs": ["Paragraph 1", "Paragraph 2"]}
         ]
-        mock_compiler.compile.assert_called_once_with(expected_chapters)
+        mock_compiler.compile.assert_called_once()
+        assert mock_compiler.compile.call_args[0][0] == expected_chapters
         
         # Progress bar (tqdm) should be initialized and iterated
         MockTqdm.assert_called_once()
