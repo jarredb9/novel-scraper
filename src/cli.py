@@ -22,7 +22,8 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Scrape chapters of a web novel and compile them into a PDF."
-        )
+        ),
+        allow_abbrev=False,
     )
     parser.add_argument(
         "--start",
@@ -73,6 +74,12 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         type=str,
         default=None,
         help="Path to an existing compiled EPUB to update with new chapters",
+    )
+    parser.add_argument(
+        "--update",
+        type=str,
+        default=None,
+        help="Path to an existing compiled PDF/EPUB to update with new chapters automatically",
     )
     parser.add_argument(
         "--cover",

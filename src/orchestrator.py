@@ -12,10 +12,10 @@ from src.scraper import NovelScraper
 from src.parser import XPathParser
 from src.sanitizer import ContentSanitizer
 from src.pdf_compiler import PDFCompiler
-from src.pdf_reader import parse_pdf_outline, extract_chapter_number
+from src.pdf_reader import parse_pdf_outline, extract_chapter_number, extract_source_url_from_pdf
 from src.epub_compiler import EPUBCompiler
 from src.cover_resolver import resolve_cover
-from src.epub_extractor import extract_chapters_from_epub
+from src.epub_extractor import extract_chapters_from_epub, extract_source_url_from_epub
 import os
 
 # Retrieve the same logger configured in scraper.py
@@ -120,8 +120,8 @@ def extract_chapters_from_landing_page(
 
 
 def run_orchestrator(
-    start: int,
-    end: int,
+    start: Optional[int],
+    end: Optional[int],
     delay: float,
     cache_dir: str,
     output: str,
@@ -131,6 +131,7 @@ def run_orchestrator(
     format: str = "both",
     threads: int = 4,
     url: Optional[str] = None,
+    update: Optional[str] = None,
 ) -> None:
     """Orchestrates novel scraping and PDF/EPUB compilation.
 
@@ -146,13 +147,33 @@ def run_orchestrator(
         format (str): Compilation format ('pdf', 'epub', 'both').
         threads (int): Number of concurrent scraper threads.
         url (str, optional): Landing page URL for chapter auto-detection.
+        update (str, optional): Path to existing PDF/EPUB file to update.
     """
+    if update:
+        output = update
+        _, ext = os.path.splitext(update)
+        if ext.lower() == ".epub":
+            update_epub = update
+            format = "epub"
+            if not url:
+                url = extract_source_url_from_epub(update)
+        elif ext.lower() == ".pdf":
+            update_pdf = update
+            format = "pdf"
+            if not url:
+                url = extract_source_url_from_pdf(update)
+        if not url:
+            raise ValueError(
+                f"No landing page URL found in metadata of the file {update}. "
+                "Please provide the landing page URL manually via --url."
+            )
+
     logger.info(f"Starting orchestration flow: chapters {start} to {end}")
     logger.info(
         f"Parameters: delay={delay}s, cache_dir='{cache_dir}', "
         f"output='{output}', update_pdf='{update_pdf}', "
         f"update_epub='{update_epub}', cover='{cover}', "
-        f"format='{format}', threads={threads}, url='{url}'"
+        f"format='{format}', threads={threads}, url='{url}', update='{update}'"
     )
 
     url_map = None
@@ -252,6 +273,12 @@ def run_orchestrator(
                 )
         else:
             logger.warning(f"Existing EPUB file not found: {update_epub}")
+
+    if update:
+        missing_chapters = target_chapters - existing_chapters
+        if not missing_chapters and os.path.exists(update):
+            logger.info("No new chapters found. The file is already up to date.")
+            return
 
     # Combine existing and new chapters, then sort sequentially
     all_chap_nums = sorted(list(target_chapters | existing_chapters))

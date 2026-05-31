@@ -25,6 +25,7 @@ def main():
             output=args.output,
             update_pdf=args.update_pdf,
             update_epub=args.update_epub,
+            update=args.update,
             cover=args.cover,
             format=args.format,
             threads=args.threads,

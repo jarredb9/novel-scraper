@@ -19,6 +19,7 @@ def test_main_execution():
         mock_args.format = "both"
         mock_args.threads = 4
         mock_args.url = None
+        mock_args.update = None
         mock_parse_args.return_value = mock_args
 
         # Mock sys.argv
@@ -34,6 +35,7 @@ def test_main_execution():
             output="novel.pdf",
             update_pdf=None,
             update_epub=None,
+            update=None,
             cover=None,
             format="both",
             threads=4,
@@ -48,6 +50,7 @@ def test_main_execution_error():
         mock_args.update_pdf = None
         mock_args.update_epub = None
         mock_args.cover = None
+        mock_args.update = None
         mock_parse_args.return_value = mock_args
         mock_run_orchestrator.side_effect = Exception("Orchestrator failed")
 
