@@ -10,9 +10,9 @@ This file provides persistent, project-specific context and operational guidelin
 
 ### Architecture Map
 - [main.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/main.py): Entry point of the application.
-- [src/cli.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cli.py): Defines arguments (`--start`, `--end`, `--delay`, `--output`, `--format`, `--update-pdf`, `--update-epub`, `--cover`).
+- [src/cli.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cli.py): Defines arguments (`--start`, `--end`, `--delay`, `--output`, `--format`, `--update-pdf`, `--update-epub`, `--cover`, `--threads`).
 - [src/orchestrator.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/orchestrator.py): Unified workflow runner executing parsing, caching, scraping, and compiling.
-- [src/scraper.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/scraper.py): Fetching engine with polite rate limiting and exponential backoff (retries on HTTP 429).
+- [src/scraper.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/scraper.py): Fetching engine with polite rate limiting, exponential backoff (retries on HTTP 429), and a thread lock for safe concurrent rate-limiting.
 - [src/cache.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cache.py): `CachingManager` storing/retrieving raw chapter HTML files under `./cache`.
 - [src/parser.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/parser.py): `lxml` parser utilizing target XPaths for chapter text extraction.
 - [src/sanitizer.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/sanitizer.py): Cleans boilerplate/ads and outputs formatted paragraphs.
@@ -40,6 +40,9 @@ python main.py --start 800 --end 850 --output fantasy_novel --format both
 
 # Run with custom delay (default: 1.0) and cover image
 python main.py --start 800 --end 810 --delay 2.0 --cover ./cover.jpg --output novel.pdf
+
+# Scrape concurrently using multi-threading (default: 4 threads)
+python main.py --start 800 --end 850 --threads 4 --output novel.pdf
 
 # Incrementally update an existing EPUB/PDF file with new chapters
 python main.py --update-epub novel.epub --start 811 --end 820 --output novel.epub
