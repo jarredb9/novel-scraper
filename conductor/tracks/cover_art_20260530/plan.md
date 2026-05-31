@@ -5,7 +5,7 @@
     - [ ] Write tests in `tests/test_cli.py` for new arguments `--cover` and `--update-epub` / `--merge-epub`
     - [ ] Implement `--cover` and `--update-epub` args in `src/cli.py`
     - [ ] Verify test suite passes and coverage is maintained
-- [ ] Task: Cover Art Downloader and Resolver
+- [x] Task: Cover Art Downloader and Resolver (222551a)
     - [ ] Write failing unit tests in `tests/test_cover_resolver.py` for resolving local paths, downloading URLs, scraping from landing page, caching, and soft fallback
     - [ ] Implement cover art downloader and resolver (e.g. in `src/cover_resolver.py` or `src/scraper.py`)
     - [ ] Verify all tests pass with >80% coverage for the new code
