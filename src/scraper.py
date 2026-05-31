@@ -42,6 +42,7 @@ class NovelScraper:
         delay: float = 1.0,
         timeout: int = 10,
         retries: int = 3,
+        url_map: Optional[dict] = None,
     ):
         """Initializes the scraper with caching and network settings.
 
@@ -51,12 +52,14 @@ class NovelScraper:
             delay (float): Politeness delay in seconds.
             timeout (int): HTTP request timeout in seconds.
             retries (int): Number of retries on failure.
+            url_map (dict, optional): Map of chapter number to specific URL.
         """
         self.cache_manager = cache_manager
         self.base_url = base_url
         self.delay = delay
         self.timeout = timeout
         self.retries = retries
+        self.url_map = url_map
         self.last_request_time: float = 0.0
         self._lock = threading.Lock()
         self.headers = {
@@ -76,6 +79,8 @@ class NovelScraper:
         Returns:
             str: URL for the chapter.
         """
+        if self.url_map and chapter_num in self.url_map:
+            return self.url_map[chapter_num]
         if self.base_url.endswith("/"):
             return f"{self.base_url}chapter-{chapter_num}.html"
         return f"{self.base_url}{chapter_num}.html"

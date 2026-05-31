@@ -52,6 +52,73 @@ def derive_novel_title(base_url: str) -> str:
     return "Compiled Novel"
 
 
+def extract_chapters_from_landing_page(
+    html_content: str, landing_page_url: str
+) -> dict:
+    """Extract chapter numbers and absolute URLs from landing page HTML.
+
+    Args:
+        html_content (str): The HTML contents of the landing page.
+        landing_page_url (str): The landing page URL.
+
+    Returns:
+        dict: A dictionary mapping chapter number (int/float) to absolute URL.
+    """
+    from lxml import html
+    from urllib.parse import urljoin
+    import re
+
+    tree = html.fromstring(html_content)
+    anchors = tree.xpath("//a")
+    url_map = {}
+
+    text_pattern = re.compile(
+        r'(?i)\b(?:chapter|chap|ch\.?|ep\.?|episode)\s*(\d+(?:\.\d+)?)'
+    )
+    href_pattern = re.compile(r'(?i)chapter[-_](\d+(?:\.\d+)?)')
+    number_pattern = re.compile(r'^\s*(\d+(?:\.\d+)?)\s*$')
+
+    for anchor in anchors:
+        href = anchor.get("href")
+        if not href:
+            continue
+        text = "".join(anchor.itertext()).strip()
+
+        chap_num = None
+
+        text_match = text_pattern.search(text)
+        if text_match:
+            try:
+                val = float(text_match.group(1))
+                chap_num = int(val) if val.is_integer() else val
+            except ValueError:
+                pass
+
+        if chap_num is None:
+            href_match = href_pattern.search(href)
+            if href_match:
+                try:
+                    val = float(href_match.group(1))
+                    chap_num = int(val) if val.is_integer() else val
+                except ValueError:
+                    pass
+
+        if chap_num is None:
+            num_match = number_pattern.search(text)
+            if num_match:
+                try:
+                    val = float(num_match.group(1))
+                    chap_num = int(val) if val.is_integer() else val
+                except ValueError:
+                    pass
+
+        if chap_num is not None:
+            absolute_url = urljoin(landing_page_url, href)
+            url_map[chap_num] = absolute_url
+
+    return url_map
+
+
 def run_orchestrator(
     start: int,
     end: int,
@@ -63,6 +130,7 @@ def run_orchestrator(
     cover: Optional[str] = None,
     format: str = "both",
     threads: int = 4,
+    url: Optional[str] = None,
 ) -> None:
     """Orchestrates novel scraping and PDF/EPUB compilation.
 
@@ -77,17 +145,40 @@ def run_orchestrator(
         cover (str, optional): Optional path or URL to the cover image.
         format (str): Compilation format ('pdf', 'epub', 'both').
         threads (int): Number of concurrent scraper threads.
+        url (str, optional): Landing page URL for chapter auto-detection.
     """
     logger.info(f"Starting orchestration flow: chapters {start} to {end}")
     logger.info(
         f"Parameters: delay={delay}s, cache_dir='{cache_dir}', "
         f"output='{output}', update_pdf='{update_pdf}', "
         f"update_epub='{update_epub}', cover='{cover}', "
-        f"format='{format}', threads={threads}"
+        f"format='{format}', threads={threads}, url='{url}'"
     )
 
+    url_map = None
+    if url:
+        logger.info(f"Auto-detecting chapter links from landing page: {url}")
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/120.0.0.0 Safari/537.36"
+            )
+        }
+        try:
+            import requests
+            response = requests.get(url, headers=headers, timeout=10)
+            response.raise_for_status()
+            url_map = extract_chapters_from_landing_page(response.text, url)
+            logger.info(f"Extracted {len(url_map)} chapter links from landing page.")
+        except Exception as e:
+            logger.error(f"Failed to fetch or parse landing page: {str(e)}")
+            raise
+
     cache_manager = CachingManager(cache_dir=cache_dir)
-    scraper = NovelScraper(cache_manager=cache_manager, delay=delay)
+    scraper = NovelScraper(cache_manager=cache_manager, delay=delay, url_map=url_map)
+    if url:
+        scraper.base_url = url
     parser = XPathParser()
     sanitizer = ContentSanitizer()
 
@@ -104,7 +195,10 @@ def run_orchestrator(
         epub_output = output + ".epub"
 
     # Determine the range of chapter numbers to compile
-    target_chapters = set(range(start, end + 1))
+    if url_map is not None:
+        target_chapters = {chap for chap in url_map.keys() if start <= chap <= end}
+    else:
+        target_chapters = set(range(start, end + 1))
     existing_chapters = set()
 
     if update_pdf and (format == "pdf" or format == "both"):

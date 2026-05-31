@@ -53,7 +53,7 @@ def test_orchestrator_successful_flow(tmp_path):
 
         # Assertions to verify the flow of download -> cache -> parse -> compile -> log
         MockCacheManager.assert_called_once_with(cache_dir=cache_dir)
-        MockScraper.assert_called_once_with(cache_manager=mock_cache, delay=delay)
+        MockScraper.assert_called_once_with(cache_manager=mock_cache, delay=delay, url_map=None)
         MockParser.assert_called_once()
         MockSanitizer.assert_called_once()
         MockCompiler.assert_called_once_with(output_path=output_pdf)

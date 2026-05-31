@@ -95,4 +95,10 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         default=4,
         help="Number of concurrent scraper threads (default: 4)",
     )
+    parser.add_argument(
+        "--url",
+        type=str,
+        default=None,
+        help="Landing page URL of the novel for chapter link auto-detection",
+    )
     return parser.parse_args(args)

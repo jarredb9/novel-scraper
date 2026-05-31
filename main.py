@@ -28,6 +28,7 @@ def main():
             cover=args.cover,
             format=args.format,
             threads=args.threads,
+            url=args.url,
         )
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)

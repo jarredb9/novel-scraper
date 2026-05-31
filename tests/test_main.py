@@ -18,6 +18,7 @@ def test_main_execution():
         mock_args.cover = None
         mock_args.format = "both"
         mock_args.threads = 4
+        mock_args.url = None
         mock_parse_args.return_value = mock_args
 
         # Mock sys.argv
@@ -36,6 +37,7 @@ def test_main_execution():
             cover=None,
             format="both",
             threads=4,
+            url=None,
         )
 
 def test_main_execution_error():
