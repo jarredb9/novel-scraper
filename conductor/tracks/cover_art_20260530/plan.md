@@ -16,7 +16,7 @@
     - [ ] Write failing unit tests in `tests/test_epub_extractor.py` for extracting chapter title and text from existing EPUB
     - [ ] Implement EPUB extraction logic
     - [ ] Verify all tests pass with >80% coverage
-- [ ] Task: EPUB Cover Embedding
+- [x] Task: EPUB Cover Embedding (af22988)
     - [ ] Write failing unit tests in `tests/test_epub_cover_embedding.py` for setting EPUB cover metadata and generating dedicated cover XHTML page
     - [ ] Implement cover embedding in `src/epub_compiler.py`
     - [ ] Verify all tests pass with >80% coverage
