@@ -23,10 +23,10 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: EPUB Chapter Extraction & Cover Embedding' (Protocol in workflow.md) (e2970e7)
 
 ## Phase 3: PDF Cover Page & Orchestrator Integration
-- [ ] Task: PDF Cover Page Generation
-    - [ ] Write failing unit tests in `tests/test_pdf_cover.py` for creating a dedicated cover page with centered image and text
-    - [ ] Implement cover page layout rendering in `src/pdf_compiler.py`
-    - [ ] Verify tests pass with >80% coverage
+- [x] Task: PDF Cover Page Generation (69ad54d)
+    - [x] Write failing unit tests in `tests/test_pdf_cover.py` for creating a dedicated cover page with centered image and text
+    - [x] Implement cover page layout rendering in `src/pdf_compiler.py`
+    - [x] Verify tests pass with >80% coverage
 - [ ] Task: Orchestrator Integration
     - [ ] Write unit tests in `tests/test_orchestrator_integration.py` for the complete flow (scraping, resolving, extracting, compiling with cover)
     - [ ] Modify `src/orchestrator.py` to coordinate cover download, extraction, and compilation
