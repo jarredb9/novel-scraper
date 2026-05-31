@@ -7,14 +7,14 @@ A Python script that scrapes novel chapters from a website (specifically freeweb
 # Product Definition - Novel Scraper & PDF/EPUB Compiler
 
 ## Overview
-A robust Python utility to scrape chapters of a novel (specifically "The First Legendary Beast") from freewebnovel.com and compile them into beautifully formatted ebook-style PDF and/or EPUB documents, with support for cover art caching/embedding and existing EPUB updating.
+A robust Python utility to scrape chapters of a novel (specifically "The First Legendary Beast") from freewebnovel.com and compile them into beautifully formatted ebook-style PDF and/or EPUB documents, with support for multi-threaded/concurrent scraping, cover art caching/embedding, and existing EPUB updating.
 
 ## Product Vision
 For readers who want to enjoy web novels offline on their ereaders or PDF viewers without being interrupted by internet connectivity issues or site popups.
 
 ## Key Features (Functional Requirements)
 1. **Polite, Incremental Scraper**:
-   - Sequential scraper iterating through chapters 776 to 1780.
+   - Sequential or concurrent scraper iterating through chapters 776 to 1780.
    - Built-in delays (configurable, default 1.0s) and User-Agent headers to prevent IP blocking.
    - Incremental local caching: Downloads and stores HTML content locally first. If the process is interrupted, it can resume without redownloading.
 2. **Robust HTML Parser**:
@@ -32,7 +32,7 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
    - Generates a standard `.epub` file using `ebooklib`.
    - Includes navigation metadata, a Table of Contents (TOC), book spine, and styled pages using an embedded stylesheet.
 5. **Command Line Interface (CLI)**:
-   - Configurable CLI parameters for start/end chapters, rate limiting, output path, updating/merging existing PDF outline bookmark ranges using `--update-pdf` / `--merge-pdf`, existing EPUB files using `--update-epub` / `--merge-epub`, cover art using `--cover`, and compiling to specific formats using `--format` (choices: `pdf`, `epub`, `both`).
+   - Configurable CLI parameters for start/end chapters, rate limiting, concurrent scraping threads using `--threads` / `-t` (default: 4), output path, updating/merging existing PDF outline bookmark ranges using `--update-pdf` / `--merge-pdf`, existing EPUB files using `--update-epub` / `--merge-epub`, cover art using `--cover`, and compiling to specific formats using `--format` (choices: `pdf`, `epub`, `both`).
 6. **Cover Art & EPUB Updating**:
    - Automatically scraping the cover image from the landing page using XPath, downloading from a URL, or using a local path.
    - Caching the cover image locally as `cache/cover.jpg` to avoid redundant network requests.
@@ -47,4 +47,3 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
 ## Out of Scope
 - A graphical user interface (GUI) or mobile app.
 - Scraping sites other than freewebnovel.com (though selectors are configurable).
-- Multi-threaded scraping by default (to avoid DDOS/blocking risks).

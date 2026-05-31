@@ -6,7 +6,7 @@ A modular Python command-line application that scrapes a specified range of chap
 
 ## Key Features
 
-- **Polite & Rate-Limited Scraping**: Employs browser headers and enforces a default 1-second delay between requests. Automatically detects HTTP 429 rate-limiting status codes and backs off exponentially.
+- **Polite & Rate-Limited Concurrent Scraping**: Employs browser headers and enforces a default 1-second delay between requests. Thread-safe lock guarantees rate limits are respected across concurrent requests. Automatically detects HTTP 429 rate-limiting status codes and backs off exponentially. Supports multi-threaded fetching via ThreadPoolExecutor.
 - **Resume-Friendly Caching**: Automatically saves fetched chapter HTML files locally. If execution is interrupted, the system skips already-cached chapters and resumes where it left off.
 - **HTML Parsing & Sanitization**: Uses `lxml` to query specific elements via XPaths. Cleans raw HTML text, strips advertising/boilerplate code, and formats text into readable paragraphs.
 - **E-Reader Optimized PDF & EPUB Compilation**:
@@ -16,7 +16,7 @@ A modular Python command-line application that scrapes a specified range of chap
   - **PDF**: Scans bookmarks/outlines from an existing PDF (using `pypdf`), extracts existing chapter numbers, automatically determines which target chapters are missing, downloads/caches them, and compiles the entire combined set in correct sequential numerical order.
   - **EPUB**: Extracts chapters directly from an existing EPUB (using `ebooklib`), merging them with newly requested chapters without needing HTML cache files or redownloading.
 - **Cover Art Caching & Embedding**: Auto-scrapes the novel's cover from the landing page using XPath, downloads from a URL, or accepts a local path, caching it as `cache/cover.jpg` to avoid redundant requests.
-- **CLI Configuration**: Fully configurable execution using arguments for start chapter, end chapter, delay, cache directory, output filename, compilation format, existing PDF/EPUB merging, and cover art.
+- **CLI Configuration**: Fully configurable execution using arguments for start chapter, end chapter, delay, cache directory, output filename, compilation format, existing PDF/EPUB merging, cover art, and concurrent threads.
 - **Verbose Logging**: Detailed network events, HTTP statuses, and errors are written directly to `scraper.log` to keep standard console output clean.
 - **Interactive UI**: CLI progress tracking is animated using `tqdm`.
 
@@ -89,6 +89,7 @@ Customize the scrape range, politeness delay, and output file path using the com
 | `--update-epub` | `str` | `None` | Path to an existing compiled EPUB to update with new chapters (alias: `--merge-epub`). |
 | `--cover` | `str` | `None` | Optional path or URL to the cover image. Defaults to scraping from landing page. |
 | `--format` | `str` | `both` | Output format choices: `pdf`, `epub`, or `both` (default: `both`). |
+| `--threads` / `-t` | `int` | `4` | Number of concurrent scraper threads. |
 
 ### Example
 
