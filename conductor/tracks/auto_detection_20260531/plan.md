@@ -4,7 +4,7 @@
 - [x] Task: Scrape landing page and extract chapter URLs in [src/orchestrator.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/orchestrator.py) [0ee6962]
 - [x] Task: Add URL mapping support in [src/scraper.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/scraper.py) [0ee6962]
 - [x] Task: Add unit and integration tests for chapter link auto-detection [0ee6962]
-- [ ] Task: Conductor - User Manual Verification 'Chapter Link Auto-Detection' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Chapter Link Auto-Detection' (Protocol in workflow.md) [ce89b24]
 
 ## Phase 2: Heuristic Content Extraction
 - [ ] Task: Implement heuristic title/body extraction in [src/parser.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/parser.py)
