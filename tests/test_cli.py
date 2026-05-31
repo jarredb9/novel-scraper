@@ -75,3 +75,21 @@ def test_cli_merge_epub_custom():
     args = parse_args(["--merge-epub", "existing.epub"])
     assert args.update_epub == "existing.epub"
 
+
+def test_cli_threads_default():
+    args = parse_args([])
+    assert args.threads == 4
+
+
+def test_cli_threads_custom():
+    args = parse_args(["--threads", "8"])
+    assert args.threads == 8
+    args_short = parse_args(["-t", "2"])
+    assert args_short.threads == 2
+
+
+def test_cli_threads_invalid():
+    with pytest.raises(SystemExit):
+        parse_args(["--threads", "not-an-int"])
+
+

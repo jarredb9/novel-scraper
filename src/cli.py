@@ -88,4 +88,11 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         default="both",
         help="Output compilation format: pdf, epub, or both (default: both)",
     )
+    parser.add_argument(
+        "--threads",
+        "-t",
+        type=int,
+        default=4,
+        help="Number of concurrent scraper threads (default: 4)",
+    )
     return parser.parse_args(args)
