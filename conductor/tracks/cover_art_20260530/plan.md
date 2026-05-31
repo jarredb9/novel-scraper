@@ -9,7 +9,7 @@
     - [ ] Write failing unit tests in `tests/test_cover_resolver.py` for resolving local paths, downloading URLs, scraping from landing page, caching, and soft fallback
     - [ ] Implement cover art downloader and resolver (e.g. in `src/cover_resolver.py` or `src/scraper.py`)
     - [ ] Verify all tests pass with >80% coverage for the new code
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: CLI and Cover Resolution & Caching' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 1: CLI and Cover Resolution & Caching' (Protocol in workflow.md)
 
 ## Phase 2: EPUB Chapter Extraction & Cover Embedding
 - [ ] Task: EPUB Chapter Extraction
