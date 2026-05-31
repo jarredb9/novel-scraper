@@ -82,13 +82,14 @@ Customize the scrape range, politeness delay, and output file path using the com
 
 | Flag | Type | Default | Description |
 |---|---|---|---|
-| `--start` | `int` | `776` | Chapter number to start scraping from. |
-| `--end` | `int` | `1780` | Chapter number to end scraping at. |
+| `--start` | `int` | `None` | Chapter number to start scraping from. Falls back to 776 if no url/update specified. |
+| `--end` | `int` | `None` | Chapter number to end scraping at. Falls back to 1780 if no url/update specified. |
 | `--delay` | `float` | `1.0` | Delay in seconds between successive requests. |
 | `--cache-dir` | `str` | `./cache` | Local folder directory to store chapter cache. |
 | `--output` | `str` | `novel.pdf` | Filename of the compiled output. |
 | `--update-pdf` | `str` | `None` | Path to an existing compiled PDF to update with new chapters (alias: `--merge-pdf`). |
 | `--update-epub` | `str` | `None` | Path to an existing compiled EPUB to update with new chapters (alias: `--merge-epub`). |
+| `--update` | `str` | `None` | Path to an existing compiled PDF/EPUB to auto-update based on embedded metadata URL. |
 | `--cover` | `str` | `None` | Optional path or URL to the cover image. Defaults to scraping from landing page. |
 | `--format` | `str` | `both` | Output format choices: `pdf`, `epub`, or `both` (default: `both`). |
 | `--threads` / `-t` | `int` | `4` | Number of concurrent scraper threads. |
@@ -100,6 +101,18 @@ To scrape chapters 800 through 850 with a 2-second rate-limiting delay and compi
 
 ```bash
 python3 main.py --start 800 --end 850 --delay 2.0 --output fantasy_novel.pdf
+```
+
+To auto-detect all chapters on the landing page and compile them as an EPUB:
+
+```bash
+python3 main.py --url https://freewebnovel.com/the-first-legendary-beast-master.html --output mynovel.epub --format epub
+```
+
+To auto-update an existing EPUB with newly released chapters using metadata-driven source URL detection:
+
+```bash
+python3 main.py --update mynovel.epub
 ```
 
 To update/merge an existing `fantasy_novel.pdf` by fetching chapters 851 through 860 and appending them sequentially:
