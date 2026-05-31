@@ -79,7 +79,10 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         "--update",
         type=str,
         default=None,
-        help="Path to an existing compiled PDF/EPUB to update with new chapters automatically",
+        help=(
+            "Path to an existing compiled PDF/EPUB to "
+            "update with new chapters automatically"
+        ),
     )
     parser.add_argument(
         "--cover",

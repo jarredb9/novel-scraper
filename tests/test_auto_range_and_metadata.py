@@ -1,3 +1,5 @@
+"""Tests for auto-range detection and metadata embedding."""
+
 import os
 import pytest
 from unittest.mock import MagicMock, patch
@@ -8,8 +10,9 @@ from src.pdf_reader import extract_source_url_from_pdf
 from src.orchestrator import run_orchestrator
 from src.cli import parse_args
 
+
 def test_cli_defaults_to_none():
-    """Verify cli defaults to None for start and end when url is specified, and fallback otherwise."""
+    """Verify cli defaults to None when url is specified."""
     args_no_url = parse_args([])
     assert args_no_url.start == 776
     assert args_no_url.end == 1780
@@ -18,32 +21,42 @@ def test_cli_defaults_to_none():
     assert args_with_url.start is None
     assert args_with_url.end is None
 
+
 def test_epub_metadata_url_writing_reading(tmp_path):
-    """Verify that source URL is correctly embedded and read from EPUB."""
+    """Verify source URL is embedded and read from EPUB."""
     output_epub = tmp_path / "test_metadata.epub"
     compiler = EPUBCompiler(output_path=str(output_epub))
-    chapters = [{"title": "Chapter 1: Start", "paragraphs": ["Content"]}]
-    compiler.compile(chapters, source_url="https://freewebnovel.com/some-novel.html")
+    test_url = "https://freewebnovel.com/some-novel.html"
+    chapters = [
+        {"title": "Chapter 1: Start", "paragraphs": ["Content"]}
+    ]
+    compiler.compile(chapters, source_url=test_url)
     
     assert output_epub.exists()
     
     source_url = extract_source_url_from_epub(str(output_epub))
-    assert source_url == "https://freewebnovel.com/some-novel.html"
+    assert source_url == test_url
+
+
 
 def test_pdf_metadata_url_writing_reading(tmp_path):
-    """Verify that source URL is correctly embedded and read from PDF."""
+    """Verify source URL is embedded and read from PDF."""
     output_pdf = tmp_path / "test_metadata.pdf"
     compiler = PDFCompiler(output_path=str(output_pdf))
-    chapters = [{"title": "Chapter 1: Start", "paragraphs": ["Content"]}]
-    compiler.compile(chapters, source_url="https://freewebnovel.com/some-novel.html")
+    test_url = "https://freewebnovel.com/some-novel.html"
+    chapters = [
+        {"title": "Chapter 1: Start", "paragraphs": ["Content"]}
+    ]
+    compiler.compile(chapters, source_url=test_url)
     
     assert output_pdf.exists()
     
     source_url = extract_source_url_from_pdf(str(output_pdf))
-    assert source_url == "https://freewebnovel.com/some-novel.html"
+    assert source_url == test_url
+
 
 def test_orchestrator_auto_range(tmp_path):
-    """Verify that when start/end are None, orchestrator detects full range from url_map."""
+    """Verify orchestrator detects full range from url_map."""
     cache_dir = str(tmp_path / "cache")
     output_pdf = str(tmp_path / "output.pdf")
     landing_url = "https://freewebnovel.com/some-novel.html"

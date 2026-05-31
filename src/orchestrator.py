@@ -12,10 +12,17 @@ from src.scraper import NovelScraper
 from src.parser import XPathParser
 from src.sanitizer import ContentSanitizer
 from src.pdf_compiler import PDFCompiler
-from src.pdf_reader import parse_pdf_outline, extract_chapter_number, extract_source_url_from_pdf
+from src.pdf_reader import (
+    parse_pdf_outline,
+    extract_chapter_number,
+    extract_source_url_from_pdf,
+)
 from src.epub_compiler import EPUBCompiler
 from src.cover_resolver import resolve_cover
-from src.epub_extractor import extract_chapters_from_epub, extract_source_url_from_epub
+from src.epub_extractor import (
+    extract_chapters_from_epub,
+    extract_source_url_from_epub,
+)
 import os
 
 # Retrieve the same logger configured in scraper.py
@@ -281,7 +288,10 @@ def run_orchestrator(
     if update:
         missing_chapters = target_chapters - existing_chapters
         if not missing_chapters and os.path.exists(update):
-            logger.info("No new chapters found. The file is already up to date.")
+            logger.info(
+                "No new chapters found. "
+                "The file is already up to date."
+            )
             return
 
     # Combine existing and new chapters, then sort sequentially

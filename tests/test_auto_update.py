@@ -1,16 +1,20 @@
+"""Tests for the auto-update CLI and orchestration flow."""
+
 import os
 import pytest
 from unittest.mock import MagicMock, patch
 from src.cli import parse_args
 from src.orchestrator import run_orchestrator
 
+
 def test_cli_update_argument():
-    """Verify that the new --update argument is parsed."""
+    """Verify the new --update argument is parsed."""
     args = parse_args(["--update", "novel.epub"])
     assert args.update == "novel.epub"
 
+
 def test_auto_update_raises_if_no_url_and_no_metadata(tmp_path):
-    """Verify that run_orchestrator raises ValueError if --update path has no url and no metadata."""
+    """Verify ValueError when no url and no metadata."""
     dummy_file = tmp_path / "empty.epub"
     dummy_file.write_text("dummy")
 
@@ -25,8 +29,9 @@ def test_auto_update_raises_if_no_url_and_no_metadata(tmp_path):
         )
     assert "No landing page URL found" in str(exc_info.value)
 
+
 def test_auto_update_flow_no_new_chapters(tmp_path):
-    """Verify that auto-update exits early if there are no new chapters."""
+    """Verify auto-update exits early with no new chapters."""
     output_epub = tmp_path / "novel.epub"
     output_epub.write_text("dummy")
     
@@ -43,11 +48,17 @@ def test_auto_update_flow_no_new_chapters(tmp_path):
     </html>
     """
 
-    with patch('src.orchestrator.extract_source_url_from_epub') as mock_extract_url, \
-         patch('src.orchestrator.extract_chapters_from_epub') as mock_extract_chapters, \
-         patch('src.orchestrator.EPUBCompiler') as MockCompiler, \
-         patch('src.orchestrator.NovelScraper') as MockScraper, \
-         patch('requests.get') as mock_requests_get:
+    with patch(
+        'src.orchestrator.extract_source_url_from_epub'
+    ) as mock_extract_url, patch(
+        'src.orchestrator.extract_chapters_from_epub'
+    ) as mock_extract_chapters, patch(
+        'src.orchestrator.EPUBCompiler'
+    ) as MockCompiler, patch(
+        'src.orchestrator.NovelScraper'
+    ) as MockScraper, patch(
+        'requests.get'
+    ) as mock_requests_get:
 
         mock_extract_url.return_value = landing_url
         mock_extract_chapters.return_value = [
@@ -60,8 +71,8 @@ def test_auto_update_flow_no_new_chapters(tmp_path):
         mock_response.text = landing_html
         mock_requests_get.return_value = mock_response
 
-        # Run orchestrator with update
-        # Since chapters 1 & 2 are already present, it should find no new chapters and do nothing
+        # Chapters 1 & 2 are already present, so no
+        # new chapters should be found.
         run_orchestrator(
             start=None,
             end=None,
@@ -74,8 +85,9 @@ def test_auto_update_flow_no_new_chapters(tmp_path):
         # EPUBCompiler should NOT be instantiated to compile new stuff
         MockCompiler.assert_not_called()
 
+
 def test_auto_update_flow_with_new_chapters(tmp_path):
-    """Verify that auto-update fetches and compiles new chapters alongside existing ones."""
+    """Verify auto-update fetches new chapters."""
     output_epub = tmp_path / "novel.epub"
     output_epub.write_text("dummy")
     
@@ -93,15 +105,25 @@ def test_auto_update_flow_with_new_chapters(tmp_path):
     """
     dummy_chapter_html = "<html><body>Chapter 3 content</body></html>"
 
-    with patch('src.orchestrator.extract_source_url_from_epub') as mock_extract_url, \
-         patch('src.orchestrator.extract_chapters_from_epub') as mock_extract_chapters, \
-         patch('src.orchestrator.CachingManager'), \
-         patch('src.orchestrator.NovelScraper') as MockScraper, \
-         patch('src.orchestrator.XPathParser') as MockParser, \
-         patch('src.orchestrator.ContentSanitizer') as MockSanitizer, \
-         patch('src.orchestrator.EPUBCompiler') as MockCompiler, \
-         patch('src.orchestrator.tqdm') as MockTqdm, \
-         patch('requests.get') as mock_requests_get:
+    with patch(
+        'src.orchestrator.extract_source_url_from_epub'
+    ) as mock_extract_url, patch(
+        'src.orchestrator.extract_chapters_from_epub'
+    ) as mock_extract_chapters, patch(
+        'src.orchestrator.CachingManager'
+    ), patch(
+        'src.orchestrator.NovelScraper'
+    ) as MockScraper, patch(
+        'src.orchestrator.XPathParser'
+    ) as MockParser, patch(
+        'src.orchestrator.ContentSanitizer'
+    ) as MockSanitizer, patch(
+        'src.orchestrator.EPUBCompiler'
+    ) as MockCompiler, patch(
+        'src.orchestrator.tqdm'
+    ) as MockTqdm, patch(
+        'requests.get'
+    ) as mock_requests_get:
 
         mock_extract_url.return_value = landing_url
         mock_extract_chapters.return_value = [
@@ -153,8 +175,10 @@ def test_auto_update_flow_with_new_chapters(tmp_path):
         assert compiled_chapters[2]["title"] == "Chapter 3"
 
 
-def test_auto_update_ignores_chapters_before_existing_start(tmp_path):
-    """Verify that auto-update ignores any new/missing chapters on landing page that are before the existing minimum chapter."""
+def test_auto_update_ignores_chapters_before_existing_start(
+    tmp_path,
+):
+    """Verify auto-update ignores pre-existing chapters."""
     output_epub = tmp_path / "novel.epub"
     output_epub.write_text("dummy")
     
@@ -173,15 +197,25 @@ def test_auto_update_ignores_chapters_before_existing_start(tmp_path):
     """
     dummy_chapter_html = "<html><body>Chapter 4 content</body></html>"
 
-    with patch('src.orchestrator.extract_source_url_from_epub') as mock_extract_url, \
-         patch('src.orchestrator.extract_chapters_from_epub') as mock_extract_chapters, \
-         patch('src.orchestrator.CachingManager'), \
-         patch('src.orchestrator.NovelScraper') as MockScraper, \
-         patch('src.orchestrator.XPathParser') as MockParser, \
-         patch('src.orchestrator.ContentSanitizer') as MockSanitizer, \
-         patch('src.orchestrator.EPUBCompiler') as MockCompiler, \
-         patch('src.orchestrator.tqdm') as MockTqdm, \
-         patch('requests.get') as mock_requests_get:
+    with patch(
+        'src.orchestrator.extract_source_url_from_epub'
+    ) as mock_extract_url, patch(
+        'src.orchestrator.extract_chapters_from_epub'
+    ) as mock_extract_chapters, patch(
+        'src.orchestrator.CachingManager'
+    ), patch(
+        'src.orchestrator.NovelScraper'
+    ) as MockScraper, patch(
+        'src.orchestrator.XPathParser'
+    ) as MockParser, patch(
+        'src.orchestrator.ContentSanitizer'
+    ) as MockSanitizer, patch(
+        'src.orchestrator.EPUBCompiler'
+    ) as MockCompiler, patch(
+        'src.orchestrator.tqdm'
+    ) as MockTqdm, patch(
+        'requests.get'
+    ) as mock_requests_get:
 
         mock_extract_url.return_value = landing_url
         # Existing EPUB starts at Chapter 3, completely omitting 1 and 2
