@@ -24,6 +24,8 @@ def main():
             cache_dir=args.cache_dir,
             output=args.output,
             update_pdf=args.update_pdf,
+            update_epub=args.update_epub,
+            cover=args.cover,
             format=args.format,
         )
     except Exception as e:
