@@ -1,0 +1,8 @@
+{
+  "track_id": "cover_art_20260530",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-05-31T01:45:00Z",
+  "updated_at": "2026-05-31T01:45:00Z",
+  "description": "Support downloading cover art and embedding it in EPUB/PDF"
+}
