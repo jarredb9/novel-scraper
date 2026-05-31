@@ -27,6 +27,7 @@ def main():
             update_epub=args.update_epub,
             cover=args.cover,
             format=args.format,
+            threads=args.threads,
         )
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)

@@ -17,6 +17,7 @@ def test_main_execution():
         mock_args.update_epub = None
         mock_args.cover = None
         mock_args.format = "both"
+        mock_args.threads = 4
         mock_parse_args.return_value = mock_args
 
         # Mock sys.argv
@@ -33,7 +34,8 @@ def test_main_execution():
             update_pdf=None,
             update_epub=None,
             cover=None,
-            format="both"
+            format="both",
+            threads=4,
         )
 
 def test_main_execution_error():

@@ -62,6 +62,7 @@ def run_orchestrator(
     update_epub: Optional[str] = None,
     cover: Optional[str] = None,
     format: str = "both",
+    threads: int = 4,
 ) -> None:
     """Orchestrates novel scraping and PDF/EPUB compilation.
 
@@ -75,13 +76,14 @@ def run_orchestrator(
         update_epub (str, optional): Path to existing EPUB to update.
         cover (str, optional): Optional path or URL to the cover image.
         format (str): Compilation format ('pdf', 'epub', 'both').
+        threads (int): Number of concurrent scraper threads.
     """
     logger.info(f"Starting orchestration flow: chapters {start} to {end}")
     logger.info(
         f"Parameters: delay={delay}s, cache_dir='{cache_dir}', "
         f"output='{output}', update_pdf='{update_pdf}', "
         f"update_epub='{update_epub}', cover='{cover}', "
-        f"format='{format}'"
+        f"format='{format}', threads={threads}"
     )
 
     cache_manager = CachingManager(cache_dir=cache_dir)
@@ -145,38 +147,78 @@ def run_orchestrator(
     all_chap_nums = sorted(list(target_chapters | existing_chapters))
     logger.info(f"Combined chapter range to compile: {all_chap_nums}")
 
-    chapters_data = []
-
-    # Wrap the chapter iteration in a tqdm progress bar
-    for chap_num in tqdm(all_chap_nums, desc="Compiling Novel"):
-        logger.info(f"Processing chapter {chap_num}")
-
-        # If the chapter is already extracted from the existing EPUB, use it without redownloading
+    # Helper function to fetch, parse, and sanitize a single chapter
+    def process_chapter(chap_num: int) -> dict:
         if chap_num in extracted_epub_chapters:
             logger.info(f"Using extracted EPUB data for chapter {chap_num}")
-            chapters_data.append(extracted_epub_chapters[chap_num])
-            continue
+            return extracted_epub_chapters[chap_num]
 
-        try:
-            # Step 1: Download & Cache
-            html_content = scraper.fetch_chapter_html(chap_num)
+        logger.info(f"Processing chapter {chap_num}")
+        # Step 1: Download & Cache
+        html_content = scraper.fetch_chapter_html(chap_num)
+        # Step 2: Parse
+        title, raw_body = parser.parse(html_content)
+        # Step 3: Sanitize
+        paragraphs = sanitizer.sanitize(raw_body)
+        return {"title": title, "paragraphs": paragraphs}
 
-            # Step 2: Parse
-            title, raw_body = parser.parse(html_content)
+    # Thread-safe mapping of chapters with concurrency control
+    from concurrent.futures import ThreadPoolExecutor, as_completed
 
-            # Step 3: Sanitize
-            paragraphs = sanitizer.sanitize(raw_body)
+    chapters_data_map = {}
+    total_chapters = len(all_chap_nums)
 
-            # Save processed data
-            chapters_data.append({"title": title, "paragraphs": paragraphs})
+    # Wrap the chapter iteration in a tqdm progress bar
+    pbar = tqdm(all_chap_nums, desc="Compiling Novel")
+    has_update = hasattr(pbar, "update")
+    has_close = hasattr(pbar, "close")
 
-        except Exception as e:
-            logger.error(
-                f"Error processing chapter {chap_num}: {str(e)}",
-                exc_info=True,
-            )
-            # Re-raise the exception to abort the execution cleanly
-            raise
+    if threads > 1 and total_chapters > 0:
+        with ThreadPoolExecutor(max_workers=threads) as executor:
+            # Submit all tasks
+            future_to_chap = {
+                executor.submit(process_chapter, chap_num): chap_num
+                for chap_num in all_chap_nums
+            }
+            
+            try:
+                for future in as_completed(future_to_chap):
+                    chap_num = future_to_chap[future]
+                    # This raises any exception encountered during execution
+                    result = future.result()
+                    chapters_data_map[chap_num] = result
+                    # Update progress bar manually or iterate over it.
+                    if has_update:
+                        pbar.update(1)
+            except Exception as e:
+                logger.error(
+                    f"Error in multi-threaded scraping: {str(e)}",
+                    exc_info=True,
+                )
+                # Shutdown executor immediately and cancel pending futures
+                executor.shutdown(wait=False, cancel_futures=True)
+                if has_close:
+                    pbar.close()
+                raise
+        if has_close:
+            pbar.close()
+    else:
+        # Sequential execution (fallback or when threads=1)
+        for chap_num in pbar:
+            try:
+                result = process_chapter(chap_num)
+                chapters_data_map[chap_num] = result
+            except Exception as e:
+                logger.error(
+                    f"Error processing chapter {chap_num}: {str(e)}",
+                    exc_info=True,
+                )
+                if has_close:
+                    pbar.close()
+                raise
+
+    # Reconstruct chapters list in sorted order
+    chapters_data = [chapters_data_map[chap_num] for chap_num in all_chap_nums]
 
     # Step 4: Compile output
     logger.info(
