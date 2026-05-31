@@ -14,7 +14,7 @@
     - [x] Implement metadata extraction helper in `src/pdf_reader.py`.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Auto-Range Downloader and Metadata Storage' (Protocol in workflow.md) (dc3215c)
 
-## Phase 2: Auto-Update CLI & Orchestrator Flow
+## Phase 2: Auto-Update CLI & Orchestrator Flow [checkpoint: 28a296f]
 - [x] Task: Write tests for Auto-Update command logic (8ccf36c)
     - [x] Write unit and integration tests for the `--update` CLI argument.
     - [x] Write tests verifying that auto-update reads metadata to find the source URL, detects missing chapters, downloads only the missing ones, and compiles them correctly.
@@ -22,4 +22,4 @@
     - [x] Add the `--update` parameter to `src/cli.py`.
     - [x] Implement update detection logic in `src/orchestrator.py`.
     - [x] Connect the `--update` execution path in `main.py` and `src/orchestrator.py`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Auto-Update CLI & Orchestrator Flow' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Auto-Update CLI & Orchestrator Flow' (Protocol in workflow.md) (28a296f)
