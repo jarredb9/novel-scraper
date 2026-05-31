@@ -23,7 +23,14 @@ logger = logging.getLogger("novel_scraper")
 
 
 def derive_novel_title(base_url: str) -> str:
-    """Derive the novel title from the scraper's base URL."""
+    """Derive the novel title from the scraper's base URL.
+
+    Args:
+        base_url (str): The base URL of the novel.
+
+    Returns:
+        str: The derived title of the novel.
+    """
     if not isinstance(base_url, str):
         return "Compiled Novel"
     url = base_url.strip()
@@ -72,8 +79,9 @@ def run_orchestrator(
     logger.info(f"Starting orchestration flow: chapters {start} to {end}")
     logger.info(
         f"Parameters: delay={delay}s, cache_dir='{cache_dir}', "
-        f"output='{output}', update_pdf='{update_pdf}', update_epub='{update_epub}', "
-        f"cover='{cover}', format='{format}'"
+        f"output='{output}', update_pdf='{update_pdf}', "
+        f"update_epub='{update_epub}', cover='{cover}', "
+        f"format='{format}'"
     )
 
     cache_manager = CachingManager(cache_dir=cache_dir)
@@ -103,7 +111,10 @@ def run_orchestrator(
         for chap in outline:
             if chap.get("number") is not None:
                 existing_chapters.add(chap["number"])
-        logger.info(f"Found existing chapters in PDF: {sorted(list(existing_chapters))}")
+        logger.info(
+            f"Found existing chapters in PDF: "
+            f"{sorted(list(existing_chapters))}"
+        )
 
     # Resolve cover image
     cover_path = resolve_cover(cover, scraper.base_url, cache_dir)
@@ -112,7 +123,9 @@ def run_orchestrator(
     extracted_epub_chapters = {}
     if update_epub and (format == "epub" or format == "both"):
         if os.path.exists(update_epub):
-            logger.info(f"Extracting chapters from existing EPUB: {update_epub}")
+            logger.info(
+                f"Extracting chapters from existing EPUB: {update_epub}"
+            )
             try:
                 raw_extracted = extract_chapters_from_epub(update_epub)
                 for chap in raw_extracted:
@@ -121,7 +134,10 @@ def run_orchestrator(
                         extracted_epub_chapters[num] = chap
                         existing_chapters.add(num)
             except Exception as e:
-                logger.warning(f"Failed to extract chapters from existing EPUB: {str(e)}")
+                logger.warning(
+                    "Failed to extract chapters from existing EPUB: "
+                    f"{str(e)}"
+                )
         else:
             logger.warning(f"Existing EPUB file not found: {update_epub}")
 
@@ -179,7 +195,8 @@ def run_orchestrator(
             else:
                 compiler.compile(chapters_data)
             logger.info(
-                f"PDF compilation completed successfully. Saved to {pdf_output}"
+                f"PDF compilation completed successfully. "
+                f"Saved to {pdf_output}"
             )
         except Exception as e:
             logger.error(f"Failed to compile PDF: {str(e)}", exc_info=True)
@@ -194,7 +211,8 @@ def run_orchestrator(
             else:
                 compiler.compile(chapters_data)
             logger.info(
-                f"EPUB compilation completed successfully. Saved to {epub_output}"
+                f"EPUB compilation completed successfully. "
+                f"Saved to {epub_output}"
             )
         except Exception as e:
             logger.error(f"Failed to compile EPUB: {str(e)}", exc_info=True)

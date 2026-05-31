@@ -1,5 +1,4 @@
-"""Module for extracting chapter titles and paragraph text from an existing EPUB file.
-"""
+"""Module for extracting chapters from an existing EPUB file."""
 
 import os
 import logging

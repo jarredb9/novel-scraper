@@ -99,7 +99,9 @@ def resolve_cover(
                 )
 
             img_url = urljoin(landing_url, img_srcs[0])
-            logger.info(f"Downloading scraped cover image from: {img_url}")
+            logger.info(
+                f"Downloading scraped cover image from: {img_url}"
+            )
 
             img_res = requests.get(img_url, timeout=timeout)
             img_res.raise_for_status()

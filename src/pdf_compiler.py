@@ -238,7 +238,9 @@ class PDFCompiler:
                 story.append(img)
                 story.append(Spacer(1, 20))
             except Exception as e:
-                logger.warning(f"Failed to load cover image in PDF story: {str(e)}")
+                logger.warning(
+                    f"Failed to load cover image in PDF story: {str(e)}"
+                )
 
             cover_title_style = ParagraphStyle(
                 name="CoverTitle",
