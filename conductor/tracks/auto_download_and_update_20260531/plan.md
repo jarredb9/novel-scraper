@@ -23,3 +23,6 @@
     - [x] Implement update detection logic in `src/orchestrator.py`.
     - [x] Connect the `--update` execution path in `main.py` and `src/orchestrator.py`.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Auto-Update CLI & Orchestrator Flow' (Protocol in workflow.md) (28a296f)
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions (008b9b0)
