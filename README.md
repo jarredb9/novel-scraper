@@ -10,10 +10,13 @@ A modular Python command-line application that scrapes a specified range of chap
 - **Resume-Friendly Caching**: Automatically saves fetched chapter HTML files locally. If execution is interrupted, the system skips already-cached chapters and resumes where it left off.
 - **HTML Parsing & Sanitization**: Uses `lxml` to query specific elements via XPaths. Cleans raw HTML text, strips advertising/boilerplate code, and formats text into readable paragraphs.
 - **E-Reader Optimized PDF & EPUB Compilation**:
-  - **PDF Layout**: Narrow margins (0.5 inches / 36 points) to maximize text area, Times-Bold titles, Times-Roman 11pt body text with 1.5 line spacing (16.5pt leading), clickable Table of Contents, and document outline sidebar bookmarks.
-  - **EPUB Layout**: Generates standardized EPUB packages containing structured XHTML chapters, a Table of Contents, and custom CSS stylesheets for justified body text with indentation and 1.5 line spacing.
-- **Incremental PDF Updating & Merging**: Scans bookmarks/outlines from an existing PDF (using `pypdf`), extracts existing chapter numbers, automatically determines which target chapters are missing, downloads/caches them, and compiles the entire combined set in correct sequential numerical order.
-- **CLI Configuration**: Fully configurable execution using arguments for start chapter, end chapter, delay, cache directory, output filename, compilation format, and existing PDF merging.
+  - **PDF Layout**: Narrow margins (0.5 inches / 36 points) to maximize text area, Times-Bold titles, Times-Roman 11pt body text with 1.5 line spacing (16.5pt leading), clickable Table of Contents, and document outline sidebar bookmarks. Includes a dedicated front cover page if a cover image is provided.
+  - **EPUB Layout**: Generates standardized EPUB packages containing structured XHTML chapters, a Table of Contents, custom CSS stylesheets, and embedded cover art metadata/pages.
+- **Incremental PDF & EPUB Updating & Merging**:
+  - **PDF**: Scans bookmarks/outlines from an existing PDF (using `pypdf`), extracts existing chapter numbers, automatically determines which target chapters are missing, downloads/caches them, and compiles the entire combined set in correct sequential numerical order.
+  - **EPUB**: Extracts chapters directly from an existing EPUB (using `ebooklib`), merging them with newly requested chapters without needing HTML cache files or redownloading.
+- **Cover Art Caching & Embedding**: Auto-scrapes the novel's cover from the landing page using XPath, downloads from a URL, or accepts a local path, caching it as `cache/cover.jpg` to avoid redundant requests.
+- **CLI Configuration**: Fully configurable execution using arguments for start chapter, end chapter, delay, cache directory, output filename, compilation format, existing PDF/EPUB merging, and cover art.
 - **Verbose Logging**: Detailed network events, HTTP statuses, and errors are written directly to `scraper.log` to keep standard console output clean.
 - **Interactive UI**: CLI progress tracking is animated using `tqdm`.
 
@@ -83,6 +86,8 @@ Customize the scrape range, politeness delay, and output file path using the com
 | `--cache-dir` | `str` | `./cache` | Local folder directory to store chapter cache. |
 | `--output` | `str` | `novel.pdf` | Filename of the compiled output. |
 | `--update-pdf` | `str` | `None` | Path to an existing compiled PDF to update with new chapters (alias: `--merge-pdf`). |
+| `--update-epub` | `str` | `None` | Path to an existing compiled EPUB to update with new chapters (alias: `--merge-epub`). |
+| `--cover` | `str` | `None` | Optional path or URL to the cover image. Defaults to scraping from landing page. |
 | `--format` | `str` | `both` | Output format choices: `pdf`, `epub`, or `both` (default: `both`). |
 
 ### Example
@@ -103,6 +108,18 @@ To compile chapters 800 through 850 as an EPUB book only:
 
 ```bash
 python3 main.py --start 800 --end 850 --output fantasy_novel.epub --format epub
+```
+
+To compile with a custom cover image URL or local path:
+
+```bash
+python3 main.py --start 800 --end 850 --output fantasy_novel.pdf --cover https://example.com/cover.jpg
+```
+
+To update/merge an existing `fantasy_novel.epub` by fetching chapters 851 through 860 and appending them sequentially without redownloading existing chapters:
+
+```bash
+python3 main.py --update-epub fantasy_novel.epub --start 851 --end 860 --output fantasy_novel.epub
 ```
 
 ---
