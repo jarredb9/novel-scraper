@@ -7,7 +7,7 @@
 - [x] Task: Conductor - User Manual Verification 'Chapter Link Auto-Detection' (Protocol in workflow.md) [ce89b24]
 
 ## Phase 2: Heuristic Content Extraction
-- [ ] Task: Implement heuristic title/body extraction in [src/parser.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/parser.py)
-- [ ] Task: Fallback to heuristic parser in XPathParser when XPaths fail
-- [ ] Task: Add unit tests for heuristic content extraction
+- [x] Task: Implement heuristic title/body extraction in [src/parser.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/parser.py) [77b2fbb]
+- [x] Task: Fallback to heuristic parser in XPathParser when XPaths fail [77b2fbb]
+- [x] Task: Add unit tests for heuristic content extraction [77b2fbb]
 - [ ] Task: Conductor - User Manual Verification 'Heuristic Content Extraction' (Protocol in workflow.md)
