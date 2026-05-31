@@ -1,6 +1,6 @@
 # Plan: Auto-Download & Auto-Update
 
-## Phase 1: Auto-Range Downloader and Metadata Storage
+## Phase 1: Auto-Range Downloader and Metadata Storage [checkpoint: dc3215c]
 - [x] Task: Write tests for Auto-Range Detection and EPUB/PDF metadata reading/writing (f5f2a13)
     - [x] Write unit tests verifying that when `--url` is provided and `--start` / `--end` are `None`, the scraper auto-detects and processes the full chapter range.
     - [x] Write unit tests for writing the landing page URL to EPUB metadata and extracting it.
@@ -12,7 +12,7 @@
     - [x] Modify `src/pdf_compiler.py` to embed the landing page URL into PDF Subject/Keywords metadata.
     - [x] Implement metadata extraction helper in `src/epub_extractor.py`.
     - [x] Implement metadata extraction helper in `src/pdf_reader.py`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Auto-Range Downloader and Metadata Storage' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Auto-Range Downloader and Metadata Storage' (Protocol in workflow.md) (dc3215c)
 
 ## Phase 2: Auto-Update CLI & Orchestrator Flow
 - [ ] Task: Write tests for Auto-Update command logic
