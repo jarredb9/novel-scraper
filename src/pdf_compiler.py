@@ -6,10 +6,11 @@ optimized for ereader margins and typography.
 """
 
 import logging
-from typing import List, Dict, Any
+import os
+from typing import List, Dict, Any, Optional
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, Image
 from reportlab.pdfgen import canvas
 from src.pdf_reader import extract_chapter_number
 
@@ -86,18 +87,31 @@ class PDFCompiler:
     with a clickable Table of Contents and PDF outline bookmarks.
     """
 
-    def __init__(self, output_path: str = "output.pdf"):
+    def __init__(
+        self,
+        output_path: str = "output.pdf",
+        title: str = "Compiled Novel",
+        author: str = "Scraper",
+    ):
         """Initializes the PDF compiler.
 
         Args:
             output_path (str): Output file path for the compiled PDF.
+            title (str): Title of the book.
+            author (str): Author/Creator of the book.
         """
         self.output_path = output_path
+        self.title = title
+        self.author = author
         self.margin = 36  # 0.5 inches in points
         self.pagesize = letter
         self.bookmark_map = {}
 
-    def compile(self, chapters: List[Dict[str, Any]]) -> None:
+    def compile(
+        self,
+        chapters: List[Dict[str, Any]],
+        cover_path: Optional[str] = None,
+    ) -> None:
         """Compiles a list of chapters into the PDF.
 
         Runs a multi-pass stabilization loop to handle dynamic TOC size.
@@ -105,6 +119,7 @@ class PDFCompiler:
         Args:
             chapters (List[Dict[str, Any]]): List of dicts, each with keys
                 'title' and 'paragraphs'.
+            cover_path (Optional[str]): Path to the cover image to embed.
         """
         if not chapters:
             logger.warning("No chapters provided to compile.")
@@ -125,7 +140,7 @@ class PDFCompiler:
                 c.bookmark_map = current_map
                 return c
 
-            story = self._generate_story(chapters, pass_num)
+            story = self._generate_story(chapters, pass_num, cover_path)
 
             doc = SimpleDocTemplate(
                 self.output_path,
@@ -159,7 +174,10 @@ class PDFCompiler:
         return (num if num is not None else float("inf"), title)
 
     def _generate_story(
-        self, chapters: List[Dict[str, Any]], pass_num: int = 0
+        self,
+        chapters: List[Dict[str, Any]],
+        pass_num: int = 0,
+        cover_path: Optional[str] = None,
     ) -> List[Any]:
         """Generates the document flow list (story).
 
@@ -211,6 +229,37 @@ class PDFCompiler:
         )
 
         story = []
+
+        if cover_path and os.path.exists(cover_path):
+            story.append(Spacer(1, 40))
+            try:
+                img = Image(cover_path, width=300, height=400)
+                img.hAlign = 'CENTER'
+                story.append(img)
+                story.append(Spacer(1, 20))
+            except Exception as e:
+                logger.warning(f"Failed to load cover image in PDF story: {str(e)}")
+
+            cover_title_style = ParagraphStyle(
+                name="CoverTitle",
+                parent=styles["Heading1"],
+                fontName="Helvetica-Bold",
+                fontSize=26,
+                leading=32,
+                alignment=1,  # Center
+                spaceAfter=10,
+            )
+            cover_meta_style = ParagraphStyle(
+                name="CoverMeta",
+                parent=styles["Normal"],
+                fontName="Helvetica",
+                fontSize=14,
+                leading=18,
+                alignment=1,  # Center
+            )
+            story.append(Paragraph(self.title, cover_title_style))
+            story.append(Paragraph(f"By {self.author}", cover_meta_style))
+            story.append(PageBreak())
 
         # Bookmark target for the top of the Table of Contents
         toc_key = "table_of_contents"
