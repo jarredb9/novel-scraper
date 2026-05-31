@@ -11,7 +11,7 @@
     - [ ] Verify all tests pass with >80% coverage for the new code
 - [x] Task: Conductor - User Manual Verification 'Phase 1: CLI and Cover Resolution & Caching' (Protocol in workflow.md) (13b513b)
 
-## Phase 2: EPUB Chapter Extraction & Cover Embedding
+## Phase 2: EPUB Chapter Extraction & Cover Embedding [checkpoint: e2970e7]
 - [x] Task: EPUB Chapter Extraction (85c3154)
     - [ ] Write failing unit tests in `tests/test_epub_extractor.py` for extracting chapter title and text from existing EPUB
     - [ ] Implement EPUB extraction logic
@@ -20,7 +20,7 @@
     - [ ] Write failing unit tests in `tests/test_epub_cover_embedding.py` for setting EPUB cover metadata and generating dedicated cover XHTML page
     - [ ] Implement cover embedding in `src/epub_compiler.py`
     - [ ] Verify all tests pass with >80% coverage
-- [~] Task: Conductor - User Manual Verification 'Phase 2: EPUB Chapter Extraction & Cover Embedding' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: EPUB Chapter Extraction & Cover Embedding' (Protocol in workflow.md) (e2970e7)
 
 ## Phase 3: PDF Cover Page & Orchestrator Integration
 - [ ] Task: PDF Cover Page Generation
