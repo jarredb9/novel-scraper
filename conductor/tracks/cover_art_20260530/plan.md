@@ -12,7 +12,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: CLI and Cover Resolution & Caching' (Protocol in workflow.md) (13b513b)
 
 ## Phase 2: EPUB Chapter Extraction & Cover Embedding
-- [ ] Task: EPUB Chapter Extraction
+- [x] Task: EPUB Chapter Extraction (85c3154)
     - [ ] Write failing unit tests in `tests/test_epub_extractor.py` for extracting chapter title and text from existing EPUB
     - [ ] Implement EPUB extraction logic
     - [ ] Verify all tests pass with >80% coverage
