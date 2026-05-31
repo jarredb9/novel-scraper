@@ -6,7 +6,7 @@ into a standard EPUB format with Table of Contents navigation and CSS styling.
 
 import logging
 import os
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from ebooklib import epub
 from src.pdf_reader import extract_chapter_number
 
@@ -37,12 +37,17 @@ class EPUBCompiler:
         num = extract_chapter_number(title)
         return (num if num is not None else float("inf"), title)
 
-    def compile(self, chapters: List[Dict[str, Any]]) -> None:
+    def compile(
+        self,
+        chapters: List[Dict[str, Any]],
+        cover_path: Optional[str] = None,
+    ) -> None:
         """Compiles a list of chapters into an EPUB file.
 
         Args:
             chapters (List[Dict[str, Any]]): List of dicts, each with keys
                 'title' and 'paragraphs'.
+            cover_path (Optional[str]): Path to the cover image to embed.
         """
         if not chapters:
             logger.warning("No chapters provided to compile.")
@@ -51,6 +56,52 @@ class EPUBCompiler:
         sorted_chapters = sorted(chapters, key=self._chapter_sort_key)
 
         book = epub.EpubBook()
+
+        has_cover = False
+        cover_page = None
+        if cover_path and os.path.exists(cover_path):
+            try:
+                with open(cover_path, "rb") as f:
+                    cover_content = f.read()
+                book.set_cover(
+                    "images/cover.jpg", cover_content, create_page=False
+                )
+
+                # Add custom cover XHTML page
+                cover_page = epub.EpubHtml(
+                    title="Cover", file_name="cover.xhtml", lang="en"
+                )
+                cover_page.content = """<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+    <title>Cover</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #ffffff;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <img src="images/cover.jpg" alt="Cover Image" />
+    </div>
+</body>
+</html>"""
+                book.add_item(cover_page)
+                has_cover = True
+            except Exception as e:
+                logger.warning(f"Failed to embed cover in EPUB: {str(e)}")
+                has_cover = False
         # Set metadata
         book.set_identifier("novel_scraper_compiled_epub")
         book.set_title(self.title)
@@ -139,8 +190,11 @@ xmlns:epub="http://www.idpf.org/2007/ops">
         ncx = epub.EpubNcx()
         book.add_item(ncx)
 
-        # Set spine (include nav first)
-        book.spine = ["nav"] + epub_chapters
+        # Set spine (include nav first, or cover then nav)
+        if has_cover and cover_page is not None:
+            book.spine = [cover_page, "nav"] + epub_chapters
+        else:
+            book.spine = ["nav"] + epub_chapters
 
         # Ensure directory exists
         out_dir = os.path.dirname(self.output_path)
