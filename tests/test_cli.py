@@ -53,3 +53,25 @@ def test_cli_format_invalid():
     with pytest.raises(SystemExit):
         parse_args(["--format", "mobi"])
 
+def test_cli_cover_default():
+    args = parse_args([])
+    assert args.cover is None
+
+def test_cli_cover_custom():
+    args = parse_args(["--cover", "https://example.com/cover.jpg"])
+    assert args.cover == "https://example.com/cover.jpg"
+    args2 = parse_args(["--cover", "./local_cover.png"])
+    assert args2.cover == "./local_cover.png"
+
+def test_cli_update_epub_default():
+    args = parse_args([])
+    assert args.update_epub is None
+
+def test_cli_update_epub_custom():
+    args = parse_args(["--update-epub", "existing.epub"])
+    assert args.update_epub == "existing.epub"
+
+def test_cli_merge_epub_custom():
+    args = parse_args(["--merge-epub", "existing.epub"])
+    assert args.update_epub == "existing.epub"
+

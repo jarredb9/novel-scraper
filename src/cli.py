@@ -68,6 +68,20 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         help="Path to an existing compiled PDF to update with new chapters",
     )
     parser.add_argument(
+        "--update-epub",
+        "--merge-epub",
+        dest="update_epub",
+        type=str,
+        default=None,
+        help="Path to an existing compiled EPUB to update with new chapters",
+    )
+    parser.add_argument(
+        "--cover",
+        type=str,
+        default=None,
+        help="Optional path or URL to the cover image (default: None)",
+    )
+    parser.add_argument(
         "--format",
         type=str,
         choices=["pdf", "epub", "both"],
