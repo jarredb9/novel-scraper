@@ -1,8 +1,0 @@
-{
-  "track_id": "multi_threaded_scraping_20260531",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-05-31T14:08:15Z",
-  "updated_at": "2026-05-31T14:08:15Z",
-  "description": "Support multi-threaded / concurrent scraping to speed up chapter downloads while enforcing a global rate limit delay."
-}
