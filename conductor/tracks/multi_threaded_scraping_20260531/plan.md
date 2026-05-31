@@ -6,7 +6,7 @@
 - [x] Task: Add tests for CLI/Scraper thread safety and verify they pass (fe3630a)
 - [x] Task: Conductor - User Manual Verification 'CLI and Scraper Core Updates' (Protocol in workflow.md)
 
-## Phase 2: Multi-threaded Orchestration
+## Phase 2: Multi-threaded Orchestration [checkpoint: 233f790]
 - [x] Task: Parallelize chapter scraping in [src/orchestrator.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/orchestrator.py) (19e57e3)
 - [x] Task: Integrate safe tqdm progress bar updates and error handling (19e57e3)
 - [x] Task: Write integration tests for multi-threaded scraping and verify they pass (19e57e3)
