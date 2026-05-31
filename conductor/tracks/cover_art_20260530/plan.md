@@ -1,6 +1,6 @@
 # Implementation Plan: Cover Art and EPUB Updating
 
-## Phase 1: CLI and Cover Resolution & Caching
+## Phase 1: CLI and Cover Resolution & Caching [checkpoint: 13b513b]
 - [x] Task: CLI Arguments and Configuration (b639738)
     - [ ] Write tests in `tests/test_cli.py` for new arguments `--cover` and `--update-epub` / `--merge-epub`
     - [ ] Implement `--cover` and `--update-epub` args in `src/cli.py`
@@ -9,7 +9,7 @@
     - [ ] Write failing unit tests in `tests/test_cover_resolver.py` for resolving local paths, downloading URLs, scraping from landing page, caching, and soft fallback
     - [ ] Implement cover art downloader and resolver (e.g. in `src/cover_resolver.py` or `src/scraper.py`)
     - [ ] Verify all tests pass with >80% coverage for the new code
-- [~] Task: Conductor - User Manual Verification 'Phase 1: CLI and Cover Resolution & Caching' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: CLI and Cover Resolution & Caching' (Protocol in workflow.md) (13b513b)
 
 ## Phase 2: EPUB Chapter Extraction & Cover Embedding
 - [ ] Task: EPUB Chapter Extraction
