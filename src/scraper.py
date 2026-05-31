@@ -6,6 +6,7 @@ scraped chapters.
 """
 
 import logging
+import threading
 import time
 from typing import Optional
 import requests
@@ -57,6 +58,7 @@ class NovelScraper:
         self.timeout = timeout
         self.retries = retries
         self.last_request_time: float = 0.0
+        self._lock = threading.Lock()
         self.headers = {
             "User-Agent": (
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -107,16 +109,17 @@ class NovelScraper:
         while attempt < self.retries:
             attempt += 1
 
-            # Enforce politeness delay
-            elapsed = time.time() - self.last_request_time
-            if elapsed < self.delay:
-                sleep_time = self.delay - elapsed
-                logger.debug(
-                    f"Sleeping for {sleep_time:.2f}s to respect rate limits"
-                )
-                time.sleep(sleep_time)
+            # Enforce politeness delay under thread lock
+            with self._lock:
+                elapsed = time.time() - self.last_request_time
+                if elapsed < self.delay:
+                    sleep_time = self.delay - elapsed
+                    logger.debug(
+                        f"Sleeping for {sleep_time:.2f}s to respect rate limits"
+                    )
+                    time.sleep(sleep_time)
 
-            self.last_request_time = time.time()
+                self.last_request_time = time.time()
 
             try:
                 logger.info(

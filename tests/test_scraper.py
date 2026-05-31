@@ -121,3 +121,36 @@ def test_scraper_exponential_backoff_on_429(mock_cache):
         assert 5.0 in sleep_args
 
 
+def test_scraper_thread_safety(mock_cache):
+    import threading
+    scraper = NovelScraper(cache_manager=mock_cache, delay=0.2)
+    
+    call_times = []
+    
+    with patch("requests.get") as mock_get:
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.text = "content"
+        mock_get.return_value = mock_resp
+        
+        def worker(ch):
+            scraper.fetch_chapter_html(ch)
+            call_times.append(time.time())
+
+        # Use non-cached chapters to force requests.get
+        threads = [threading.Thread(target=worker, args=(ch,)) for ch in [900, 901, 902]]
+        
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+            
+    call_times.sort()
+    # There are 3 calls, each should be separated by at least 0.2 seconds delay
+    diffs = [call_times[i+1] - call_times[i] for i in range(len(call_times)-1)]
+    for diff in diffs:
+        assert diff >= 0.18  # Allow tiny floating-point/thread scheduling tolerance
+
+
+
+
