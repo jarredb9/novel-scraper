@@ -5,8 +5,8 @@ from src.orchestrator import run_orchestrator
 
 def test_orchestrator_multi_threaded_success(tmp_path):
     """
-    Verifies that when threads > 1, ThreadPoolExecutor is used and the downloaded
-    chapters are correctly collected and sorted.
+    Verifies that when threads > 1, ThreadPoolExecutor is used and the
+    downloaded chapters are correctly collected and sorted.
     """
     cache_dir = tmp_path / "cache"
     output_base = tmp_path / "output_novel"
@@ -25,10 +25,19 @@ def test_orchestrator_multi_threaded_success(tmp_path):
         MockScraper.return_value = mock_scraper
         
         # Mock requests/caching responses for 3 chapters
-        mock_scraper.fetch_chapter_html.side_effect = lambda num: f"<html><body>Chapter {num}</body></html>"
+        mock_scraper.fetch_chapter_html.side_effect = (
+            lambda num: f"<html><body>Chapter {num}</body></html>"
+        )
         
+        def mock_parse(html):
+            clean_num = (
+                html.replace("<html><body>Chapter ", "")
+                .replace("</body></html>", "")
+            )
+            return f"Chapter {clean_num}: Title", "<div>Raw Body</div>"
+
         mock_parser = MagicMock()
-        mock_parser.parse.side_effect = lambda html: (f"Chapter {html.replace('<html><body>Chapter ', '').replace('</body></html>', '')}: Title", "<div>Raw Body</div>")
+        mock_parser.parse.side_effect = mock_parse
         MockParser.return_value = mock_parser
         
         mock_sanitizer = MagicMock()
@@ -65,8 +74,8 @@ def test_orchestrator_multi_threaded_success(tmp_path):
 
 def test_orchestrator_multi_threaded_fail_fast(tmp_path):
     """
-    Verifies that if a thread raises an exception, the remaining tasks are cancelled
-    and the orchestrator aborts.
+    Verifies that if a thread raises an exception, the remaining tasks
+    are cancelled and the orchestrator aborts.
     """
     cache_dir = tmp_path / "cache"
     output_base = tmp_path / "output_novel"

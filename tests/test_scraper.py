@@ -138,7 +138,10 @@ def test_scraper_thread_safety(mock_cache):
             call_times.append(time.time())
 
         # Use non-cached chapters to force requests.get
-        threads = [threading.Thread(target=worker, args=(ch,)) for ch in [900, 901, 902]]
+        threads = [
+            threading.Thread(target=worker, args=(ch,))
+            for ch in [900, 901, 902]
+        ]
         
         for t in threads:
             t.start()
@@ -149,7 +152,8 @@ def test_scraper_thread_safety(mock_cache):
     # There are 3 calls, each should be separated by at least 0.2 seconds delay
     diffs = [call_times[i+1] - call_times[i] for i in range(len(call_times)-1)]
     for diff in diffs:
-        assert diff >= 0.18  # Allow tiny floating-point/thread scheduling tolerance
+        # Allow tiny floating-point/thread scheduling tolerance
+        assert diff >= 0.18
 
 
 
