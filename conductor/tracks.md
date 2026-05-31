@@ -4,7 +4,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: Support Multi-threaded / Concurrent Scraping**
+- [x] **Track: Support Multi-threaded / Concurrent Scraping**
 *Link: [./tracks/multi_threaded_scraping_20260531/](./tracks/multi_threaded_scraping_20260531/)*
 
 ---
