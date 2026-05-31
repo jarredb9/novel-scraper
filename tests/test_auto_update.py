@@ -151,3 +151,82 @@ def test_auto_update_flow_with_new_chapters(tmp_path):
         assert compiled_chapters[0]["title"] == "Chapter 1"
         assert compiled_chapters[1]["title"] == "Chapter 2"
         assert compiled_chapters[2]["title"] == "Chapter 3"
+
+
+def test_auto_update_ignores_chapters_before_existing_start(tmp_path):
+    """Verify that auto-update ignores any new/missing chapters on landing page that are before the existing minimum chapter."""
+    output_epub = tmp_path / "novel.epub"
+    output_epub.write_text("dummy")
+    
+    landing_url = "https://freewebnovel.com/some-novel.html"
+    
+    # Mocking landing page to have chapters 1, 2, 3, and 4
+    landing_html = """
+    <html>
+        <body>
+            <a href="/some-novel/chapter-1.html">Chapter 1</a>
+            <a href="/some-novel/chapter-2.html">Chapter 2</a>
+            <a href="/some-novel/chapter-3.html">Chapter 3</a>
+            <a href="/some-novel/chapter-4.html">Chapter 4</a>
+        </body>
+    </html>
+    """
+    dummy_chapter_html = "<html><body>Chapter 4 content</body></html>"
+
+    with patch('src.orchestrator.extract_source_url_from_epub') as mock_extract_url, \
+         patch('src.orchestrator.extract_chapters_from_epub') as mock_extract_chapters, \
+         patch('src.orchestrator.CachingManager'), \
+         patch('src.orchestrator.NovelScraper') as MockScraper, \
+         patch('src.orchestrator.XPathParser') as MockParser, \
+         patch('src.orchestrator.ContentSanitizer') as MockSanitizer, \
+         patch('src.orchestrator.EPUBCompiler') as MockCompiler, \
+         patch('src.orchestrator.tqdm') as MockTqdm, \
+         patch('requests.get') as mock_requests_get:
+
+        mock_extract_url.return_value = landing_url
+        # Existing EPUB starts at Chapter 3, completely omitting 1 and 2
+        mock_extract_chapters.return_value = [
+            {"title": "Chapter 3", "paragraphs": ["P3"]}
+        ]
+
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.text = landing_html
+        mock_requests_get.return_value = mock_response
+
+        mock_scraper = MagicMock()
+        mock_parser = MagicMock()
+        mock_sanitizer = MagicMock()
+        mock_compiler = MagicMock()
+
+        MockScraper.return_value = mock_scraper
+        MockParser.return_value = mock_parser
+        MockSanitizer.return_value = mock_sanitizer
+        MockCompiler.return_value = mock_compiler
+        MockTqdm.side_effect = lambda x, **kwargs: x
+
+        mock_scraper.fetch_chapter_html.return_value = dummy_chapter_html
+        mock_parser.parse.return_value = ("Chapter 4", "<div>Body 4</div>")
+        mock_sanitizer.sanitize.return_value = ["Paragraph 4"]
+
+        # Run orchestrator with update
+        run_orchestrator(
+            start=None,
+            end=None,
+            delay=1.0,
+            cache_dir=str(tmp_path / "cache"),
+            output=str(output_epub),
+            update=str(output_epub),
+            format="epub"
+        )
+        
+        # Scraper should only be called for chapter 4! NOT 1 or 2!
+        mock_scraper.fetch_chapter_html.assert_called_once_with(4)
+        
+        # EPUBCompiler should compile the combined chapters: 3 and 4
+        mock_compiler.compile.assert_called_once()
+        args, _ = mock_compiler.compile.call_args
+        compiled_chapters = args[0]
+        assert len(compiled_chapters) == 2
+        assert compiled_chapters[0]["title"] == "Chapter 3"
+        assert compiled_chapters[1]["title"] == "Chapter 4"

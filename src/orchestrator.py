@@ -225,18 +225,8 @@ def run_orchestrator(
         pdf_output = output + ".pdf"
         epub_output = output + ".epub"
 
-    # Determine the range of chapter numbers to compile
-    if url_map is not None:
-        if start is None:
-            start = min(url_map.keys())
-        if end is None:
-            end = max(url_map.keys())
-        target_chapters = {
-            chap for chap in url_map.keys() if start <= chap <= end
-        }
-    else:
-        target_chapters = set(range(start, end + 1))
     existing_chapters = set()
+    extracted_epub_chapters = {}
 
     if update_pdf and (format == "pdf" or format == "both"):
         logger.info(f"Scanning outline of existing PDF: {update_pdf}")
@@ -249,11 +239,7 @@ def run_orchestrator(
             f"{sorted(list(existing_chapters))}"
         )
 
-    # Resolve cover image
-    cover_path = resolve_cover(cover, scraper.base_url, cache_dir)
-
     # Extract chapters from existing EPUB if requested
-    extracted_epub_chapters = {}
     if update_epub and (format == "epub" or format == "both"):
         if os.path.exists(update_epub):
             logger.info(
@@ -273,6 +259,24 @@ def run_orchestrator(
                 )
         else:
             logger.warning(f"Existing EPUB file not found: {update_epub}")
+
+    # Resolve cover image
+    cover_path = resolve_cover(cover, scraper.base_url, cache_dir)
+
+    # Determine the range of chapter numbers to compile
+    if url_map is not None:
+        if start is None:
+            if existing_chapters:
+                start = min(existing_chapters)
+            else:
+                start = min(url_map.keys())
+        if end is None:
+            end = max(url_map.keys())
+        target_chapters = {
+            chap for chap in url_map.keys() if start <= chap <= end
+        }
+    else:
+        target_chapters = set(range(start, end + 1))
 
     if update:
         missing_chapters = target_chapters - existing_chapters

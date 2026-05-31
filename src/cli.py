@@ -108,7 +108,7 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         help="Landing page URL of the novel for chapter link auto-detection",
     )
     parsed_args = parser.parse_args(args)
-    if parsed_args.url is None:
+    if parsed_args.url is None and parsed_args.update is None:
         if parsed_args.start is None:
             parsed_args.start = 776
         if parsed_args.end is None:
