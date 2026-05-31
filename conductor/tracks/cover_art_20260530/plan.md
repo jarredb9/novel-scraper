@@ -1,7 +1,7 @@
 # Implementation Plan: Cover Art and EPUB Updating
 
 ## Phase 1: CLI and Cover Resolution & Caching
-- [ ] Task: CLI Arguments and Configuration
+- [x] Task: CLI Arguments and Configuration (b639738)
     - [ ] Write tests in `tests/test_cli.py` for new arguments `--cover` and `--update-epub` / `--merge-epub`
     - [ ] Implement `--cover` and `--update-epub` args in `src/cli.py`
     - [ ] Verify test suite passes and coverage is maintained
