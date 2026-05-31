@@ -11,3 +11,6 @@
 - [x] Task: Fallback to heuristic parser in XPathParser when XPaths fail [77b2fbb]
 - [x] Task: Add unit tests for heuristic content extraction [77b2fbb]
 - [x] Task: Conductor - User Manual Verification 'Heuristic Content Extraction' (Protocol in workflow.md) [21b62ec]
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions [3d989b0]
