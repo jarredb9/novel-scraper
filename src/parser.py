@@ -59,7 +59,10 @@ class XPathParser:
             title = title_elements[0].text_content().strip()
 
         if not title:
-            logger.info("Default title XPath failed or empty. Falling back to title heuristics.")
+            logger.info(
+                "Default title XPath failed or empty. "
+                "Falling back to title heuristics."
+            )
             try:
                 title = self._extract_title_heuristically(tree)
             except ValueError:
@@ -147,7 +150,8 @@ class XPathParser:
         Raises:
             ValueError: if no body container is found.
         """
-        # Select the container element containing the largest number of <p> tag descendants.
+        # Select the container element containing the largest number of
+        # <p> tag descendants.
         containers = tree.xpath("//div | //article | //section")
         best_container = None
         max_p_count = 0
@@ -160,7 +164,9 @@ class XPathParser:
                 best_container = container
 
         if best_container is not None:
-            return html.tostring(best_container, encoding="utf-8").decode("utf-8")
+            return html.tostring(
+                best_container, encoding="utf-8"
+            ).decode("utf-8")
 
         # Fallback to raw text/breaks if <p> tags are absent
         fallbacks = tree.xpath(
@@ -170,6 +176,8 @@ class XPathParser:
         for container in fallbacks:
             text = container.text_content().strip()
             if text:
-                return html.tostring(container, encoding="utf-8").decode("utf-8")
+                return html.tostring(
+                    container, encoding="utf-8"
+                ).decode("utf-8")
 
         raise ValueError("Could not extract chapter body.")

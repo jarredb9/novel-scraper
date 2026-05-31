@@ -170,13 +170,23 @@ def run_orchestrator(
             response = requests.get(url, headers=headers, timeout=10)
             response.raise_for_status()
             url_map = extract_chapters_from_landing_page(response.text, url)
-            logger.info(f"Extracted {len(url_map)} chapter links from landing page.")
+            if not url_map:
+                raise ValueError(
+                    f"No chapter links could be auto-detected from: {url}"
+                )
+            logger.info(
+                f"Extracted {len(url_map)} chapter links from landing page."
+            )
         except Exception as e:
             logger.error(f"Failed to fetch or parse landing page: {str(e)}")
             raise
 
     cache_manager = CachingManager(cache_dir=cache_dir)
-    scraper = NovelScraper(cache_manager=cache_manager, delay=delay, url_map=url_map)
+    scraper = NovelScraper(
+        cache_manager=cache_manager,
+        delay=delay,
+        url_map=url_map,
+    )
     if url:
         scraper.base_url = url
     parser = XPathParser()
@@ -196,7 +206,9 @@ def run_orchestrator(
 
     # Determine the range of chapter numbers to compile
     if url_map is not None:
-        target_chapters = {chap for chap in url_map.keys() if start <= chap <= end}
+        target_chapters = {
+            chap for chap in url_map.keys() if start <= chap <= end
+        }
     else:
         target_chapters = set(range(start, end + 1))
     existing_chapters = set()

@@ -119,3 +119,36 @@ def test_orchestrator_uses_url(tmp_path):
                 3: "https://freewebnovel.com/some-novel/chapter-3.html",
             }
         )
+
+def test_orchestrator_raises_on_empty_url_map(tmp_path):
+    """Verify that orchestrator raises ValueError if url_map is empty."""
+    cache_dir = str(tmp_path / "cache")
+    output_pdf = str(tmp_path / "output.pdf")
+    landing_url = "https://freewebnovel.com/some-novel.html"
+
+    # HTML without any matching chapter anchors
+    landing_html = "<html><body>No chapters here</body></html>"
+
+    with patch('requests.get') as mock_requests_get, \
+         patch('src.orchestrator.CachingManager'), \
+         patch('src.orchestrator.NovelScraper'), \
+         patch('src.orchestrator.XPathParser'), \
+         patch('src.orchestrator.ContentSanitizer'), \
+         patch('src.orchestrator.PDFCompiler'):
+
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.text = landing_html
+        mock_requests_get.return_value = mock_response
+
+        with pytest.raises(ValueError) as exc_info:
+            run_orchestrator(
+                start=1,
+                end=5,
+                delay=0.1,
+                cache_dir=cache_dir,
+                output=output_pdf,
+                url=landing_url
+            )
+        assert "No chapter links could be auto-detected" in str(exc_info.value)
+
