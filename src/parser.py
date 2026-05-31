@@ -53,29 +53,123 @@ class XPathParser:
             raise ValueError(f"Failed to parse HTML: {str(e)}")
 
         # Extract Title
+        title = None
         title_elements = tree.xpath(self.title_xpath)
-        if not title_elements:
-            logger.warning(
-                f"Title element not found with XPath: {self.title_xpath}"
-            )
-            raise ValueError("Could not extract chapter title.")
+        if title_elements:
+            title = title_elements[0].text_content().strip()
 
-        # Get text content of the title element
-        title = title_elements[0].text_content().strip()
         if not title:
-            raise ValueError("Chapter title is empty.")
+            logger.info("Default title XPath failed or empty. Falling back to title heuristics.")
+            try:
+                title = self._extract_title_heuristically(tree)
+            except ValueError:
+                if title_elements:
+                    raise ValueError("Chapter title is empty.")
+                else:
+                    raise ValueError("Could not extract chapter title.")
 
         # Extract Body
+        raw_body = None
         body_elements = tree.xpath(self.body_xpath)
-        if not body_elements:
-            logger.warning(
-                f"Body element not found with XPath: {self.body_xpath}"
-            )
-            raise ValueError("Could not extract chapter body.")
+        if body_elements:
+            raw_body = html.tostring(
+                body_elements[0], encoding="utf-8"
+            ).decode("utf-8")
 
-        # Serialize body to string for sanitization
-        raw_body = html.tostring(
-            body_elements[0], encoding="utf-8"
-        ).decode("utf-8")
+        if not raw_body:
+            logger.info("Default body XPath failed. Falling back to body heuristics.")
+            raw_body = self._extract_body_heuristically(tree)
 
         return title, raw_body
+
+    def _extract_title_heuristically(self, tree) -> str:
+        """Extract chapter title using heuristic patterns.
+
+        Args:
+            tree: parsed HTML lxml tree.
+
+        Returns:
+            str: extracted title.
+
+        Raises:
+            ValueError: if no title is found.
+        """
+        # 1. first <h1> text content
+        h1s = tree.xpath("//h1")
+        if h1s:
+            title = h1s[0].text_content().strip()
+            if title:
+                return title
+
+        # 2. fallback to <h2>
+        h2s = tree.xpath("//h2")
+        if h2s:
+            title = h2s[0].text_content().strip()
+            if title:
+                return title
+
+        # 3. fallback to elements with class names containing "title"
+        title_classes = tree.xpath(
+            "//*[contains(@class, 'title') or contains(@class, 'Title')]"
+        )
+        for elem in title_classes:
+            title = elem.text_content().strip()
+            if title:
+                return title
+
+        # 4. fallback to cleaning up the document's <title> tag.
+        html_title = tree.xpath("//title")
+        if html_title:
+            title = html_title[0].text_content().strip()
+            # Cleanup common site name suffixes
+            for suffix in [
+                " - FreeWebNovel",
+                " FreeWebNovel",
+                " - freewebnovel.com",
+                " freewebnovel.com",
+            ]:
+                if title.lower().endswith(suffix.lower()):
+                    title = title[:-len(suffix)].strip()
+            if title:
+                return title
+
+        raise ValueError("Could not extract chapter title.")
+
+    def _extract_body_heuristically(self, tree) -> str:
+        """Extract chapter body using heuristic patterns.
+
+        Args:
+            tree: parsed HTML lxml tree.
+
+        Returns:
+            str: serialized raw body HTML string.
+
+        Raises:
+            ValueError: if no body container is found.
+        """
+        # Select the container element containing the largest number of <p> tag descendants.
+        containers = tree.xpath("//div | //article | //section")
+        best_container = None
+        max_p_count = 0
+
+        for container in containers:
+            p_descendants = container.xpath(".//p")
+            p_count = len(p_descendants)
+            if p_count > max_p_count:
+                max_p_count = p_count
+                best_container = container
+
+        if best_container is not None:
+            return html.tostring(best_container, encoding="utf-8").decode("utf-8")
+
+        # Fallback to raw text/breaks if <p> tags are absent
+        fallbacks = tree.xpath(
+            "//article | //div[contains(@class, 'content') "
+            "or contains(@class, 'body')] | //body"
+        )
+        for container in fallbacks:
+            text = container.text_content().strip()
+            if text:
+                return html.tostring(container, encoding="utf-8").decode("utf-8")
+
+        raise ValueError("Could not extract chapter body.")
