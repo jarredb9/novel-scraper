@@ -6,6 +6,7 @@ into a standard EPUB format with Table of Contents navigation and CSS styling.
 
 import logging
 import os
+import uuid
 from typing import List, Dict, Any, Optional
 from ebooklib import epub
 from src.pdf_reader import extract_chapter_number
@@ -36,6 +37,25 @@ class EPUBCompiler:
         title = chapter.get("title", "")
         num = extract_chapter_number(title)
         return (num if num is not None else float("inf"), title)
+
+    def _derive_identifier(
+        self, source_url: Optional[str] = None
+    ) -> str:
+        """Derives a stable, unique EPUB identifier for a novel.
+
+        Uses UUID5 (SHA-1 based) so the same input always produces
+        the same identifier.  This lets e-reader apps recognise an
+        updated EPUB as the same book and preserve reading position.
+
+        Args:
+            source_url: The novel's landing-page URL, if available.
+
+        Returns:
+            A deterministic URN string unique to this novel.
+        """
+        _ns = uuid.UUID("a4b1c2d3-e5f6-7890-abcd-ef1234567890")
+        seed = source_url if isinstance(source_url, str) else self.title
+        return f"urn:uuid:{uuid.uuid5(_ns, seed)}"
 
     def compile(
         self,
@@ -104,8 +124,10 @@ xmlns:epub="http://www.idpf.org/2007/ops">
             except Exception as e:
                 logger.warning(f"Failed to embed cover in EPUB: {str(e)}")
                 has_cover = False
-        # Set metadata
-        book.set_identifier("novel_scraper_compiled_epub")
+        # Set metadata — use a stable, per-novel identifier so
+        # readers recognise updated EPUBs as the same book.
+        book_id = self._derive_identifier(source_url)
+        book.set_identifier(book_id)
         book.set_title(self.title)
         book.set_language("en")
         book.add_author(self.author)
