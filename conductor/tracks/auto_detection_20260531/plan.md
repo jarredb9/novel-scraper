@@ -10,4 +10,4 @@
 - [x] Task: Implement heuristic title/body extraction in [src/parser.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/parser.py) [77b2fbb]
 - [x] Task: Fallback to heuristic parser in XPathParser when XPaths fail [77b2fbb]
 - [x] Task: Add unit tests for heuristic content extraction [77b2fbb]
-- [ ] Task: Conductor - User Manual Verification 'Heuristic Content Extraction' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Heuristic Content Extraction' (Protocol in workflow.md) [21b62ec]
