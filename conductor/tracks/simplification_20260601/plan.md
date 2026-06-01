@@ -18,7 +18,7 @@
     - [x] Modify `src/cli.py` to remove `--update-pdf`, `--merge-pdf`, `--update-epub`, `--merge-epub`.
     - [x] Modify `src/orchestrator.py` to remove update parameters other than `update` (path). Simplify how it calls the consolidated `extract_source_url` helper.
     - [x] Run test suite, update tests to reflect changed orchestrator arguments, and ensure 100% test pass rate and >80% coverage.
-- [ ] Task: Update documentation to reflect simplified parameters.
+- [~] Task: Update documentation to reflect simplified parameters.
     - [ ] Update command-line usage examples in `README.md` to remove `--update-epub` and `--update-pdf`.
     - [ ] Update `AGENTS.md` (and any related rules files) to remove references to `--update-epub` and `--update-pdf`.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
