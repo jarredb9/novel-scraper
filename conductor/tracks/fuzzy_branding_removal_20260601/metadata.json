@@ -1,0 +1,8 @@
+{
+  "track_id": "fuzzy_branding_removal_20260601",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-06-01T11:59:55Z",
+  "updated_at": "2026-06-01T11:59:55Z",
+  "description": "Add fuzzy search to find and remove branding statements from paragraphs while ensuring actual novel content is preserved."
+}
