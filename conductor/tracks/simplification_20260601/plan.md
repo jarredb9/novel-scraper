@@ -13,11 +13,11 @@
 
 
 ## Phase 2: CLI Simplification, Orchestrator Refactor, and Documentation Updates
-- [~] Task: Simplify CLI and clean orchestrator update logic.
-    - [ ] Update CLI parser tests in `tests/test_cli.py` to remove references to the old update parameters and ensure only `--update` remains.
-    - [ ] Modify `src/cli.py` to remove `--update-pdf`, `--merge-pdf`, `--update-epub`, `--merge-epub`.
-    - [ ] Modify `src/orchestrator.py` to remove update parameters other than `update` (path). Simplify how it calls the consolidated `extract_source_url` helper.
-    - [ ] Run test suite, update tests to reflect changed orchestrator arguments, and ensure 100% test pass rate and >80% coverage.
+- [x] Task: Simplify CLI and clean orchestrator update logic. (46d7e28)
+    - [x] Update CLI parser tests in `tests/test_cli.py` to remove references to the old update parameters and ensure only `--update` remains.
+    - [x] Modify `src/cli.py` to remove `--update-pdf`, `--merge-pdf`, `--update-epub`, `--merge-epub`.
+    - [x] Modify `src/orchestrator.py` to remove update parameters other than `update` (path). Simplify how it calls the consolidated `extract_source_url` helper.
+    - [x] Run test suite, update tests to reflect changed orchestrator arguments, and ensure 100% test pass rate and >80% coverage.
 - [ ] Task: Update documentation to reflect simplified parameters.
     - [ ] Update command-line usage examples in `README.md` to remove `--update-epub` and `--update-pdf`.
     - [ ] Update `AGENTS.md` (and any related rules files) to remove references to `--update-epub` and `--update-pdf`.
