@@ -1,0 +1,8 @@
+{
+  "track_id": "text_formatting_20260601",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-06-01T12:42:00Z",
+  "updated_at": "2026-06-01T12:42:00Z",
+  "description": "Improve text cleaning and formatting (smart quotes, em-dashes, clean empty lines, and improve branding/ad filtering)"
+}
