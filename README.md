@@ -10,7 +10,7 @@ A modular Python command-line application that scrapes a specified range of chap
 - **Heuristic Content Parsing Fallback**: Dynamically extracts chapter titles and main body content (using tags like `<h1>`, `<h2>`, CSS classes, and `p`-tag density) if the default XPath selectors fail to locate them.
 - **Polite & Rate-Limited Concurrent Scraping**: Employs browser headers and enforces a default 1-second delay between requests. Thread-safe lock guarantees rate limits are respected across concurrent requests. Automatically detects HTTP 429 rate-limiting status codes and backs off exponentially. Supports multi-threaded fetching via ThreadPoolExecutor.
 - **Resume-Friendly Caching**: Automatically saves fetched chapter HTML files locally. If execution is interrupted, the system skips already-cached chapters and resumes where it left off.
-- **HTML Parsing & Sanitization**: Uses `lxml` to query specific elements via XPaths. Cleans raw HTML text, strips advertising/boilerplate code, and formats text into readable paragraphs. Employs a dependable fuzzy matching-based cleanup system (using standard library `difflib`) to identify and remove website branding statements from paragraphs.
+- **HTML Parsing & Sanitization**: Uses `lxml` to query specific elements via XPaths. Cleans raw HTML text, strips advertising/boilerplate code, and formats text into readable paragraphs. Automatically normalizes punctuation (converting curly quotes `“`/`”`/`‘`/`’` to straight ones, consecutive dashes to em-dashes `—`, and multiple dots to a single ellipsis `…`), and filters out empty or symbol-only paragraphs containing no alphanumeric characters (e.g., `* * *`, `---`). Employs a dependable fuzzy matching-based cleanup system (using standard library `difflib`) to identify and remove website branding statements from paragraphs.
 - **E-Reader Optimized PDF & EPUB Compilation**:
   - **PDF Layout**: Narrow margins (0.5 inches / 36 points) to maximize text area, Times-Bold titles, Times-Roman 11pt body text with 1.5 line spacing (16.5pt leading), clickable Table of Contents, and document outline sidebar bookmarks. Includes a dedicated front cover page if a cover image is provided.
   - **EPUB Layout**: Generates standardized EPUB packages containing structured XHTML chapters, a Table of Contents, custom CSS stylesheets, and embedded cover art metadata/pages.
@@ -92,6 +92,7 @@ Customize the scrape range, politeness delay, and output file path using the com
 | `--format` | `str` | `both` | Output format choices: `pdf`, `epub`, or `both` (default: `both`). |
 | `--threads` / `-t` | `int` | `4` | Number of concurrent scraper threads. |
 | `--url` | `str` | `None` | Landing page URL for chapter link auto-detection. |
+| `--ad-pattern` | `str` | `None` | Custom ad/branding regex pattern to exclude. Can be specified multiple times or comma-separated. |
 
 ### Example
 

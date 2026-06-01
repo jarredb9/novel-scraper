@@ -10,12 +10,12 @@ This file provides persistent, project-specific context and operational guidelin
 
 ### Architecture Map
 - [main.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/main.py): Entry point of the application.
-- [src/cli.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cli.py): Defines arguments (`--start`, `--end`, `--delay`, `--output`, `--format`, `--update`, `--cover`, `--threads`, `--url`).
+- [src/cli.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cli.py): Defines arguments (`--start`, `--end`, `--delay`, `--output`, `--format`, `--update`, `--cover`, `--threads`, `--url`, `--ad-pattern`).
 - [src/orchestrator.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/orchestrator.py): Unified workflow runner executing parsing, caching, scraping, and compiling. Automatically parses landing pages for chapter link mapping when `--url` is specified.
 - [src/scraper.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/scraper.py): Fetching engine with polite rate limiting, exponential backoff (retries on HTTP 429), and a thread lock for safe concurrent rate-limiting. Supports custom URL mapping.
 - [src/cache.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cache.py): `CachingManager` storing/retrieving raw chapter HTML files under `./cache`.
 - [src/parser.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/parser.py): `lxml` parser utilizing target XPaths for chapter text extraction, with heuristic fallbacks for titles and bodies if XPaths fail.
-- [src/sanitizer.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/sanitizer.py): Cleans boilerplate/ads and outputs formatted paragraphs. Supports fuzzy matching to remove branding statements.
+- [src/sanitizer.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/sanitizer.py): Cleans boilerplate/ads and outputs formatted paragraphs. Supports punctuation normalization, non-alphanumeric paragraph filtering, and fuzzy matching to remove branding statements.
 - [src/pdf_compiler.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/pdf_compiler.py): Builds flowing PDFs via ReportLab with clickable Table of Contents (TOC) and document outline sidebars.
 - [src/pdf_reader.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/pdf_reader.py): Extracts outline bookmark data from existing PDFs using `pypdf` to identify completed chapters.
 - [src/epub_compiler.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/epub_compiler.py): Formats and packages EPUB containers using `ebooklib`.
