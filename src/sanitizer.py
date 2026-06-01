@@ -13,6 +13,17 @@ from lxml import html
 
 logger = logging.getLogger("novel_scraper")
 
+# Pre-allocated punctuation translation tables and regex patterns
+_QUOTE_TRANSLATION = str.maketrans({
+    "“": '"',
+    "”": '"',
+    "‘": "'",
+    "’": "'"
+})
+_DASH_RE = re.compile(r"-{2,}")
+_DOT_RE = re.compile(r"\.{2,}")
+_WHITESPACE_RE = re.compile(r"\s+")
+
 
 class ContentSanitizer:
     """Cleans raw HTML chapter content into plain text paragraphs."""
@@ -205,20 +216,14 @@ class ContentSanitizer:
             return ""
 
         # Normalize curly quotes and apostrophes
-        quote_translation = str.maketrans({
-            "“": '"',
-            "”": '"',
-            "‘": "'",
-            "’": "'"
-        })
-        text = text.translate(quote_translation)
+        text = text.translate(_QUOTE_TRANSLATION)
 
         # Normalize dashes (two or more consecutive hyphens to standard em-dash)
-        text = re.sub(r"-{2,}", "—", text)
+        text = _DASH_RE.sub("—", text)
 
         # Normalize dots (two or more consecutive dots to standard ellipsis)
-        text = re.sub(r"\.{2,}", "…", text)
+        text = _DOT_RE.sub("…", text)
 
         # Replace multiple whitespaces/newlines/tabs with a single space
-        cleaned = re.sub(r"\s+", " ", text)
+        cleaned = _WHITESPACE_RE.sub(" ", text)
         return cleaned.strip()

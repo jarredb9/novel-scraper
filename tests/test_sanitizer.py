@@ -167,7 +167,9 @@ def test_non_alphanumeric_paragraph_filtering():
 
 
 def test_sanitizer_custom_ad_patterns_merged():
-    sanitizer = ContentSanitizer(custom_ad_patterns=[r"custom_extra_ad", r"another-ad-pattern\d+"])
+    sanitizer = ContentSanitizer(
+        custom_ad_patterns=[r"custom_extra_ad", r"another-ad-pattern\d+"]
+    )
     raw_html = """
     <div>
         <p>Keep this paragraph.</p>

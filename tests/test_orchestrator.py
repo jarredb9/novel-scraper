@@ -269,6 +269,8 @@ def test_orchestrator_passes_custom_ad_patterns(tmp_path):
             output="out.pdf", format="pdf", ad_patterns=["custom_ad_pattern"]
         )
 
-        MockSanitizer.assert_called_once_with(custom_ad_patterns=["custom_ad_pattern"])
+        MockSanitizer.assert_called_once_with(
+            custom_ad_patterns=["custom_ad_pattern"]
+        )
 
 

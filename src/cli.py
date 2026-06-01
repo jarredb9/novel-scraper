@@ -100,11 +100,15 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         "--ad-pattern",
         action="append",
         default=None,
-        help="Custom ad regex pattern to filter out (can be specified multiple times or comma-separated)",
+        help=(
+            "Custom ad regex pattern to filter out "
+            "(can be specified multiple times or comma-separated)"
+        ),
     )
     parsed_args = parser.parse_args(args)
 
-    # Post-process ad patterns: split comma-separated entries and clean whitespace
+    # Post-process ad patterns: split comma-separated entries
+    # and clean whitespace
     ad_patterns = []
     if getattr(parsed_args, "ad_pattern", None):
         for item in parsed_args.ad_pattern:

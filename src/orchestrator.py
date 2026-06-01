@@ -146,6 +146,7 @@ def run_orchestrator(
         threads (int): Number of concurrent scraper threads.
         url (str, optional): Landing page URL for chapter auto-detection.
         update (str, optional): Path to existing PDF/EPUB file to update.
+        ad_patterns (list of str, optional): Custom regex ad patterns.
     """
     update_pdf = None
     update_epub = None
