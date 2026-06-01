@@ -4,9 +4,8 @@ import os
 import pytest
 from unittest.mock import MagicMock, patch
 from src.epub_compiler import EPUBCompiler
-from src.epub_extractor import extract_source_url_from_epub
 from src.pdf_compiler import PDFCompiler
-from src.pdf_reader import extract_source_url_from_pdf
+from src.utils import extract_source_url
 from src.orchestrator import run_orchestrator
 from src.cli import parse_args
 
@@ -34,7 +33,7 @@ def test_epub_metadata_url_writing_reading(tmp_path):
     
     assert output_epub.exists()
     
-    source_url = extract_source_url_from_epub(str(output_epub))
+    source_url = extract_source_url(str(output_epub))
     assert source_url == test_url
 
 
@@ -51,7 +50,7 @@ def test_pdf_metadata_url_writing_reading(tmp_path):
     
     assert output_pdf.exists()
     
-    source_url = extract_source_url_from_pdf(str(output_pdf))
+    source_url = extract_source_url(str(output_pdf))
     assert source_url == test_url
 
 

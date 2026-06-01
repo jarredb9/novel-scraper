@@ -12,17 +12,11 @@ from src.scraper import NovelScraper
 from src.parser import XPathParser
 from src.sanitizer import ContentSanitizer
 from src.pdf_compiler import PDFCompiler
-from src.pdf_reader import (
-    parse_pdf_outline,
-    extract_chapter_number,
-    extract_source_url_from_pdf,
-)
+from src.pdf_reader import parse_pdf_outline
 from src.epub_compiler import EPUBCompiler
 from src.cover_resolver import resolve_cover
-from src.epub_extractor import (
-    extract_chapters_from_epub,
-    extract_source_url_from_epub,
-)
+from src.epub_extractor import extract_chapters_from_epub
+from src.utils import extract_chapter_number, extract_source_url
 import os
 
 # Retrieve the same logger configured in scraper.py
@@ -163,12 +157,12 @@ def run_orchestrator(
             update_epub = update
             format = "epub"
             if not url:
-                url = extract_source_url_from_epub(update)
+                url = extract_source_url(update)
         elif ext.lower() == ".pdf":
             update_pdf = update
             format = "pdf"
             if not url:
-                url = extract_source_url_from_pdf(update)
+                url = extract_source_url(update)
         if not url:
             raise ValueError(
                 f"No landing page URL found in metadata of the file {update}. "

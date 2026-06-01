@@ -49,7 +49,7 @@ def test_auto_update_flow_no_new_chapters(tmp_path):
     """
 
     with patch(
-        'src.orchestrator.extract_source_url_from_epub'
+        'src.orchestrator.extract_source_url'
     ) as mock_extract_url, patch(
         'src.orchestrator.extract_chapters_from_epub'
     ) as mock_extract_chapters, patch(
@@ -106,7 +106,7 @@ def test_auto_update_flow_with_new_chapters(tmp_path):
     dummy_chapter_html = "<html><body>Chapter 3 content</body></html>"
 
     with patch(
-        'src.orchestrator.extract_source_url_from_epub'
+        'src.orchestrator.extract_source_url'
     ) as mock_extract_url, patch(
         'src.orchestrator.extract_chapters_from_epub'
     ) as mock_extract_chapters, patch(
@@ -198,7 +198,7 @@ def test_auto_update_ignores_chapters_before_existing_start(
     dummy_chapter_html = "<html><body>Chapter 4 content</body></html>"
 
     with patch(
-        'src.orchestrator.extract_source_url_from_epub'
+        'src.orchestrator.extract_source_url'
     ) as mock_extract_url, patch(
         'src.orchestrator.extract_chapters_from_epub'
     ) as mock_extract_chapters, patch(

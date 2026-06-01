@@ -12,7 +12,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, Image
 from reportlab.pdfgen import canvas
-from src.pdf_reader import extract_chapter_number
+from src.utils import extract_chapter_number
 
 logger = logging.getLogger("novel_scraper")
 

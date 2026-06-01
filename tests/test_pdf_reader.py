@@ -2,7 +2,9 @@ import os
 import pytest
 from unittest.mock import MagicMock, patch
 from src.pdf_compiler import PDFCompiler
-from src.pdf_reader import parse_pdf_outline, extract_chapter_number
+from src.pdf_reader import parse_pdf_outline
+from src.utils import extract_chapter_number
+
 
 def test_extract_chapter_number():
     assert extract_chapter_number("Chapter 1: Start") == 1

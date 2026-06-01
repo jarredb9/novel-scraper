@@ -9,7 +9,7 @@ import os
 import uuid
 from typing import List, Dict, Any, Optional
 from ebooklib import epub
-from src.pdf_reader import extract_chapter_number
+from src.utils import extract_chapter_number
 
 logger = logging.getLogger("novel_scraper")
 
