@@ -75,3 +75,36 @@ def test_sanitizer_parse_exception(monkeypatch):
     paragraphs = sanitizer.sanitize("<p>Text in fallback</p>")
     assert paragraphs == ["Text in fallback"]
 
+
+def test_fuzzy_branding_removal():
+    sanitizer = ContentSanitizer()
+    
+    # 1. Standalone branding paragraphs (exact & fuzzy)
+    raw_html_1 = "<p>Stay connected through freewebnovel</p>"
+    assert sanitizer.sanitize(raw_html_1) == []
+    
+    raw_html_2 = "<p>Stay connected through freewebnovel.</p>"
+    assert sanitizer.sanitize(raw_html_2) == []
+    
+    raw_html_3 = "<p>Stay tuned with freewebnovel!</p>"
+    assert sanitizer.sanitize(raw_html_3) == []
+
+    raw_html_4 = "<p>Explore new worlds at freewebnovel</p>"
+    assert sanitizer.sanitize(raw_html_4) == []
+
+    # 2. Branding text at the end of a sentence
+    raw_html_5 = "<p>The beast roared. Stay connected through freewebnovel</p>"
+    assert sanitizer.sanitize(raw_html_5) == ["The beast roared."]
+
+    raw_html_6 = "<p>The wizard cast a spell. Stay tuned with freewebnovel.</p>"
+    assert sanitizer.sanitize(raw_html_6) == ["The wizard cast a spell."]
+
+    # 3. Non-branding sentences containing similar words (should NOT be removed)
+    # E.g. "We must stay connected through our communication devices."
+    raw_html_7 = "<p>We must stay connected through our communication devices.</p>"
+    assert sanitizer.sanitize(raw_html_7) == ["We must stay connected through our communication devices."]
+
+    raw_html_8 = "<p>She decided to stay in a hotel. Explore new worlds at the library.</p>"
+    assert sanitizer.sanitize(raw_html_8) == ["She decided to stay in a hotel. Explore new worlds at the library."]
+
+
