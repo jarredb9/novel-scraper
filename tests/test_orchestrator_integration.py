@@ -31,11 +31,13 @@ def test_run_orchestrator_integration(tmp_path):
          patch("src.orchestrator.ContentSanitizer") as MockSanitizer, \
          patch("src.orchestrator.PDFCompiler") as MockPDFCompiler, \
          patch("src.orchestrator.EPUBCompiler") as MockEPUBCompiler, \
+         patch("src.orchestrator.extract_source_url") as mock_extract_url, \
          patch("src.orchestrator.tqdm") as MockTqdm:
          
         # Set up mocks
         mock_resolve.return_value = str(cache_dir / "cover.jpg")
         mock_extract.return_value = mock_epub_chapters
+        mock_extract_url.return_value = None
         MockTqdm.side_effect = lambda x, **kwargs: x
         
         mock_scraper = MagicMock()
@@ -67,7 +69,7 @@ def test_run_orchestrator_integration(tmp_path):
             delay=0.1,
             cache_dir=str(cache_dir),
             output=str(output_base),
-            update_epub=str(existing_epub),
+            update=str(existing_epub),
             cover=str(cover_input),
             format="both"
         )

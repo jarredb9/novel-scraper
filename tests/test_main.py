@@ -13,8 +13,6 @@ def test_main_execution():
         mock_args.delay = 1.0
         mock_args.cache_dir = "./cache"
         mock_args.output = "novel.pdf"
-        mock_args.update_pdf = None
-        mock_args.update_epub = None
         mock_args.cover = None
         mock_args.format = "both"
         mock_args.threads = 4
@@ -33,8 +31,6 @@ def test_main_execution():
             delay=1.0,
             cache_dir="./cache",
             output="novel.pdf",
-            update_pdf=None,
-            update_epub=None,
             update=None,
             cover=None,
             format="both",
@@ -47,8 +43,6 @@ def test_main_execution_error():
          patch('main.run_orchestrator') as mock_run_orchestrator:
         
         mock_args = MagicMock()
-        mock_args.update_pdf = None
-        mock_args.update_epub = None
         mock_args.cover = None
         mock_args.update = None
         mock_parse_args.return_value = mock_args

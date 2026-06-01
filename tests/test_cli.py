@@ -63,17 +63,14 @@ def test_cli_cover_custom():
     args2 = parse_args(["--cover", "./local_cover.png"])
     assert args2.cover == "./local_cover.png"
 
-def test_cli_update_epub_default():
+def test_cli_update_default():
     args = parse_args([])
-    assert args.update_epub is None
+    assert args.update is None
 
-def test_cli_update_epub_custom():
-    args = parse_args(["--update-epub", "existing.epub"])
-    assert args.update_epub == "existing.epub"
+def test_cli_update_custom():
+    args = parse_args(["--update", "existing.epub"])
+    assert args.update == "existing.epub"
 
-def test_cli_merge_epub_custom():
-    args = parse_args(["--merge-epub", "existing.epub"])
-    assert args.update_epub == "existing.epub"
 
 
 def test_cli_threads_default():

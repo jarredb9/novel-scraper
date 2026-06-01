@@ -23,8 +23,6 @@ def main():
             delay=args.delay,
             cache_dir=args.cache_dir,
             output=args.output,
-            update_pdf=args.update_pdf,
-            update_epub=args.update_epub,
             update=args.update,
             cover=args.cover,
             format=args.format,

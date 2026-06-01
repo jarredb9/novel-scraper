@@ -5,11 +5,12 @@ from src.cli import parse_args
 from src.orchestrator import run_orchestrator
 
 def test_cli_update_pdf_argument():
-    # Verify that --update-pdf parameter is correctly parsed
-    args = parse_args(["--update-pdf", "my_novel.pdf", "--start", "770", "--end", "780"])
-    assert args.update_pdf == "my_novel.pdf"
+    # Verify that --update parameter is correctly parsed
+    args = parse_args(["--update", "my_novel.pdf", "--start", "770", "--end", "780"])
+    assert args.update == "my_novel.pdf"
     assert args.start == 770
     assert args.end == 780
+
 
 def test_orchestrator_update_pdf_flow(tmp_path):
     """
@@ -37,9 +38,11 @@ def test_orchestrator_update_pdf_flow(tmp_path):
          patch('src.orchestrator.XPathParser') as MockParser, \
          patch('src.orchestrator.ContentSanitizer') as MockSanitizer, \
          patch('src.orchestrator.PDFCompiler') as MockCompiler, \
+         patch('src.orchestrator.extract_source_url') as mock_extract_url, \
          patch('src.orchestrator.tqdm') as MockTqdm:
 
         mock_parse_outline.return_value = mock_outline
+        mock_extract_url.return_value = None
 
         mock_cache = MagicMock()
         mock_scraper = MagicMock()
@@ -59,14 +62,14 @@ def test_orchestrator_update_pdf_flow(tmp_path):
         mock_parser.parse.side_effect = lambda html: (f"Chapter {html.split()[-1][:-7]}: Title", "<div>Raw Body</div>")
         mock_sanitizer.sanitize.return_value = ["Para"]
 
-        # Run orchestrator with update_pdf
+        # Run orchestrator with update
         run_orchestrator(
             start=start_chap,
             end=end_chap,
             delay=delay,
             cache_dir=cache_dir,
             output=output_pdf,
-            update_pdf=existing_pdf
+            update=existing_pdf
         )
 
         # parse_pdf_outline should be called with existing_pdf

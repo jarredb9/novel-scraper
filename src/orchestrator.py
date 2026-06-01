@@ -126,8 +126,6 @@ def run_orchestrator(
     delay: float,
     cache_dir: str,
     output: str,
-    update_pdf: Optional[str] = None,
-    update_epub: Optional[str] = None,
     cover: Optional[str] = None,
     format: str = "both",
     threads: int = 4,
@@ -142,28 +140,26 @@ def run_orchestrator(
         delay (float): Politeness delay in seconds.
         cache_dir (str): Cache directory for HTML files.
         output (str): Filename for compiled PDF/EPUB output.
-        update_pdf (str, optional): Path to existing PDF to update.
-        update_epub (str, optional): Path to existing EPUB to update.
         cover (str, optional): Optional path or URL to the cover image.
         format (str): Compilation format ('pdf', 'epub', 'both').
         threads (int): Number of concurrent scraper threads.
         url (str, optional): Landing page URL for chapter auto-detection.
         update (str, optional): Path to existing PDF/EPUB file to update.
     """
+    update_pdf = None
+    update_epub = None
     if update:
         output = update
         _, ext = os.path.splitext(update)
         if ext.lower() == ".epub":
             update_epub = update
-            format = "epub"
             if not url:
                 url = extract_source_url(update)
         elif ext.lower() == ".pdf":
             update_pdf = update
-            format = "pdf"
             if not url:
                 url = extract_source_url(update)
-        if not url:
+        if not url and (start is None or end is None):
             raise ValueError(
                 f"No landing page URL found in metadata of the file {update}. "
                 "Please provide the landing page URL manually via --url."
