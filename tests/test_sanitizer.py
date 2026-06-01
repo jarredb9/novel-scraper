@@ -128,3 +128,42 @@ def test_fuzzy_branding_removal():
     assert sanitizer.sanitize("<p>Discover exclusive\ntales on freewebnovel</p>") == []
 
 
+def test_punctuation_normalization():
+    sanitizer = ContentSanitizer()
+    
+    # Smart double quotes and single quotes/apostrophes
+    text_quotes = "<p>“Hello,” she said, ‘It’s a nice day.’</p>"
+    paragraphs = sanitizer.sanitize(text_quotes)
+    assert paragraphs == ['"Hello," she said, \'It\'s a nice day.\'']
+
+    # Consecutive dashes to em-dash
+    text_dashes = "<p>Wait--what was that? Or maybe---this.</p>"
+    paragraphs = sanitizer.sanitize(text_dashes)
+    assert paragraphs == ["Wait—what was that? Or maybe—this."]
+
+    # Triple/multiple dots to ellipsis
+    text_dots = "<p>To be continued... or is it..?</p>"
+    paragraphs = sanitizer.sanitize(text_dots)
+    # Note: '..' should map to '…', and '...' to '…'
+    assert paragraphs == ["To be continued… or is it…?"]
+
+
+def test_non_alphanumeric_paragraph_filtering():
+    sanitizer = ContentSanitizer()
+    
+    # Only symbol paragraphs should be filtered out
+    raw_html = """
+    <div>
+        <p>Actual content starts here.</p>
+        <p>* * *</p>
+        <p>---</p>
+        <p>...</p>
+        <p>   </p>
+        <p>Another content line.</p>
+    </div>
+    """
+    paragraphs = sanitizer.sanitize(raw_html)
+    assert paragraphs == ["Actual content starts here.", "Another content line."]
+
+
+
