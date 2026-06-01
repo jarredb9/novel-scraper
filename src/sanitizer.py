@@ -161,7 +161,11 @@ class ContentSanitizer:
                 text = p.text_content()
                 cleaned = self.clean_text(text)
                 cleaned = self._clean_paragraph_fuzzy(cleaned)
-                if cleaned and not self._should_exclude(cleaned):
+                if (
+                    cleaned
+                    and any(c.isalnum() for c in cleaned)
+                    and not self._should_exclude(cleaned)
+                ):
                     paragraphs.append(cleaned)
         else:
             # Fallback: split text content by lines
@@ -169,13 +173,17 @@ class ContentSanitizer:
             for line in text_content.splitlines():
                 cleaned = self.clean_text(line)
                 cleaned = self._clean_paragraph_fuzzy(cleaned)
-                if cleaned and not self._should_exclude(cleaned):
+                if (
+                    cleaned
+                    and any(c.isalnum() for c in cleaned)
+                    and not self._should_exclude(cleaned)
+                ):
                     paragraphs.append(cleaned)
 
         return paragraphs
 
     def clean_text(self, text: str) -> str:
-        """Cleans excess whitespace from a string.
+        """Cleans excess whitespace and normalizes punctuation from a string.
 
         Args:
             text (str): The raw text string.
@@ -185,6 +193,22 @@ class ContentSanitizer:
         """
         if not text:
             return ""
+
+        # Normalize curly quotes and apostrophes
+        quote_translation = str.maketrans({
+            "“": '"',
+            "”": '"',
+            "‘": "'",
+            "’": "'"
+        })
+        text = text.translate(quote_translation)
+
+        # Normalize dashes (two or more consecutive hyphens to standard em-dash)
+        text = re.sub(r"-{2,}", "—", text)
+
+        # Normalize dots (two or more consecutive dots to standard ellipsis)
+        text = re.sub(r"\.{2,}", "…", text)
+
         # Replace multiple whitespaces/newlines/tabs with a single space
         cleaned = re.sub(r"\s+", " ", text)
         return cleaned.strip()
