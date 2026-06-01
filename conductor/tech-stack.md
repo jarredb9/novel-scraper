@@ -11,6 +11,7 @@ This document specifies the chosen technology stack, development environments, a
 - **`requests`**: Synchronous HTTP library for fetching web pages.
 - **`lxml`**: High-performance XML/HTML parser that natively supports XPath querying.
   - Used for parsing `/html/body/div[3]/div[1]/div/div[1]/span` and `/html/body/div[3]/div[1]/div/div[5]/div[1]`.
+- **`difflib`**: Standard Python library module used for fuzzy sequence matching to detect and clean branding statements.
 
 ## Compilation & File Generation
 ### PDF Compilation

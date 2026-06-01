@@ -22,7 +22,7 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
      - Chapter Title/Number: `/html/body/div[3]/div[1]/div/div[1]/span`
      - Article Text Content: `/html/body/div[3]/div[1]/div/div[5]/div[1]`
    - Falls back to heuristic parsing (e.g., header tags, class names, and p-tag density) if the configured/default XPaths fail.
-   - Sanitizes text content, stripping unnecessary scripts, styles, or wrapper HTML tags.
+   - Sanitizes text content, stripping unnecessary scripts, styles, wrapper HTML tags, and using fuzzy matching to remove website branding phrases (such as freewebnovel promotion notices) embedded in paragraphs or at the end of sentences.
 3. **Ebook-Style PDF Compiler**:
    - Generates a PDF file `the_first_legendary_beast_chapters_776_1780.pdf`.
    - Starts with a clickable Table of Contents (TOC) page mapping every chapter directly to its starting page in the document.
