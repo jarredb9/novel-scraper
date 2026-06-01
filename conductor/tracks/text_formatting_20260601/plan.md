@@ -21,7 +21,7 @@
     - [x] Update `src/cli.py` to add CLI option `--ad-pattern` (multiple allowed or comma-separated).
     - [x] Update `src/orchestrator.py` to extract ad patterns from CLI arguments and inject them into `ContentSanitizer`.
     - [x] Run tests and verify they pass.
-- [ ] Task: Update README.md and AGENTS.md documentation
-    - [ ] Update `README.md` to document the new `--ad-pattern` CLI parameter and the punctuation normalization behaviors.
-    - [ ] Update `AGENTS.md` to reflect CLI and sanitizer changes.
+- [x] Task: Update README.md and AGENTS.md documentation (bf62c06)
+    - [x] Update `README.md` to document the new `--ad-pattern` CLI parameter and the punctuation normalization behaviors.
+    - [x] Update `AGENTS.md` to reflect CLI and sanitizer changes.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Configurable Ad & Branding Filtering' (Protocol in workflow.md)
