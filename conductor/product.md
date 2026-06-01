@@ -22,7 +22,7 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
      - Chapter Title/Number: `/html/body/div[3]/div[1]/div/div[1]/span`
      - Article Text Content: `/html/body/div[3]/div[1]/div/div[5]/div[1]`
    - Falls back to heuristic parsing (e.g., header tags, class names, and p-tag density) if the configured/default XPaths fail.
-   - Sanitizes text content, stripping unnecessary scripts, styles, wrapper HTML tags, and using fuzzy matching to remove website branding phrases (such as freewebnovel promotion notices) embedded in paragraphs or at the end of sentences.
+   - Sanitizes text content, stripping unnecessary scripts, styles, wrapper HTML tags, performing automatic punctuation normalization (converting curly quotes to straight ones, consecutive dashes to em-dashes, and multiple dots to ellipses), filtering empty or symbol-only paragraphs, and using fuzzy matching to remove website branding phrases (such as freewebnovel promotion notices) embedded in paragraphs or at the end of sentences.
 3. **Ebook-Style PDF Compiler**:
    - Generates a PDF file `the_first_legendary_beast_chapters_776_1780.pdf`.
    - Starts with a clickable Table of Contents (TOC) page mapping every chapter directly to its starting page in the document.
@@ -33,7 +33,7 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
    - Generates a standard `.epub` file using `ebooklib`.
    - Includes navigation metadata, a Table of Contents (TOC), book spine, and styled pages using an embedded stylesheet.
 5. **Command Line Interface (CLI)**:
-   - Configurable CLI parameters for start/end chapters, rate limiting, concurrent scraping threads using `--threads` / `-t` (default: 4), output path, updating/merging existing EPUB or PDF files using `--update <path>`, cover art using `--cover`, compiling to specific formats using `--format` (choices: `pdf`, `epub`, or `both`), and landing page URL for chapter link auto-detection using `--url`.
+   - Configurable CLI parameters for start/end chapters, rate limiting, concurrent scraping threads using `--threads` / `-t` (default: 4), output path, updating/merging existing EPUB or PDF files using `--update <path>`, cover art using `--cover`, compiling to specific formats using `--format` (choices: `pdf`, `epub`, or `both`), landing page URL for chapter link auto-detection using `--url`, and custom ad/branding filtering patterns using `--ad-pattern`.
 6. **Cover Art & EPUB Updating**:
    - Automatically scraping the cover image from the landing page using XPath, downloading from a URL, or using a local path.
    - Caching the cover image locally as `cache/cover.jpg` to avoid redundant network requests.
