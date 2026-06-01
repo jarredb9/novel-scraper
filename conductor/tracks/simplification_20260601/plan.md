@@ -21,4 +21,4 @@
 - [x] Task: Update documentation to reflect simplified parameters. (63122ad)
     - [x] Update command-line usage examples in `README.md` to remove `--update-epub` and `--update-pdf`.
     - [x] Update `AGENTS.md` (and any related rules files) to remove references to `--update-epub` and `--update-pdf`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
