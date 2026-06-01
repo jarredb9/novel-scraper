@@ -5,3 +5,5 @@ scraper.log
 .pytest_cache/
 test_cache/
 cache/
+.venv/
+
