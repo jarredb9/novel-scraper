@@ -33,7 +33,7 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
    - Generates a standard `.epub` file using `ebooklib`.
    - Includes navigation metadata, a Table of Contents (TOC), book spine, and styled pages using an embedded stylesheet.
 5. **Command Line Interface (CLI)**:
-   - Configurable CLI parameters for start/end chapters, rate limiting, concurrent scraping threads using `--threads` / `-t` (default: 4), output path, updating/merging existing PDF outline bookmark ranges using `--update-pdf` / `--merge-pdf`, existing EPUB files using `--update-epub` / `--merge-epub`, automatic updates using `--update <path>`, cover art using `--cover`, compiling to specific formats using `--format` (choices: `pdf`, `epub`, `both`), and landing page URL for chapter link auto-detection using `--url`.
+   - Configurable CLI parameters for start/end chapters, rate limiting, concurrent scraping threads using `--threads` / `-t` (default: 4), output path, updating/merging existing EPUB or PDF files using `--update <path>`, cover art using `--cover`, compiling to specific formats using `--format` (choices: `pdf`, `epub`, or `both`), and landing page URL for chapter link auto-detection using `--url`.
 6. **Cover Art & EPUB Updating**:
    - Automatically scraping the cover image from the landing page using XPath, downloading from a URL, or using a local path.
    - Caching the cover image locally as `cache/cover.jpg` to avoid redundant network requests.
