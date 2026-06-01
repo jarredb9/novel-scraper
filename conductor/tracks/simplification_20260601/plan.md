@@ -12,7 +12,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
 
-## Phase 2: CLI Simplification, Orchestrator Refactor, and Documentation Updates
+## Phase 2: CLI Simplification, Orchestrator Refactor, and Documentation Updates [checkpoint: 28c168e]
 - [x] Task: Simplify CLI and clean orchestrator update logic. (46d7e28)
     - [x] Update CLI parser tests in `tests/test_cli.py` to remove references to the old update parameters and ensure only `--update` remains.
     - [x] Modify `src/cli.py` to remove `--update-pdf`, `--merge-pdf`, `--update-epub`, `--merge-epub`.
@@ -21,4 +21,5 @@
 - [x] Task: Update documentation to reflect simplified parameters. (63122ad)
     - [x] Update command-line usage examples in `README.md` to remove `--update-epub` and `--update-pdf`.
     - [x] Update `AGENTS.md` (and any related rules files) to remove references to `--update-epub` and `--update-pdf`.
-- [~] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+
