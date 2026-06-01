@@ -12,7 +12,7 @@
     - [x] Run tests and verify they pass.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Punctuation Normalization & Paragraph Filtering' (Protocol in workflow.md) (b3ad126)
 
-## Phase 2: Configurable Ad & Branding Filtering
+## Phase 2: Configurable Ad & Branding Filtering [checkpoint: f1cbbc9]
 - [x] Task: Write failing unit tests for configurable ad and branding patterns (1a347e2)
     - [x] Add tests in `tests/test_sanitizer.py` to verify that custom regex patterns filter matching paragraphs.
     - [x] Add integration/orchestrator tests verifying CLI arguments pass custom ad patterns to the sanitizer.
@@ -24,4 +24,4 @@
 - [x] Task: Update README.md and AGENTS.md documentation (bf62c06)
     - [x] Update `README.md` to document the new `--ad-pattern` CLI parameter and the punctuation normalization behaviors.
     - [x] Update `AGENTS.md` to reflect CLI and sanitizer changes.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Configurable Ad & Branding Filtering' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Configurable Ad & Branding Filtering' (Protocol in workflow.md) (f1cbbc9)
