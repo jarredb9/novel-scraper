@@ -16,11 +16,11 @@
 - [x] Task: Write failing unit tests for configurable ad and branding patterns (1a347e2)
     - [x] Add tests in `tests/test_sanitizer.py` to verify that custom regex patterns filter matching paragraphs.
     - [x] Add integration/orchestrator tests verifying CLI arguments pass custom ad patterns to the sanitizer.
-- [ ] Task: Implement configurable ad/branding patterns
-    - [ ] Update `ContentSanitizer.__init__` in `src/sanitizer.py` to allow merging custom ad patterns with defaults.
-    - [ ] Update `src/cli.py` to add CLI option `--ad-pattern` (multiple allowed or comma-separated).
-    - [ ] Update `src/orchestrator.py` to extract ad patterns from CLI arguments and inject them into `ContentSanitizer`.
-    - [ ] Run tests and verify they pass.
+- [x] Task: Implement configurable ad/branding patterns (5f12235)
+    - [x] Update `ContentSanitizer.__init__` in `src/sanitizer.py` to allow merging custom ad patterns with defaults.
+    - [x] Update `src/cli.py` to add CLI option `--ad-pattern` (multiple allowed or comma-separated).
+    - [x] Update `src/orchestrator.py` to extract ad patterns from CLI arguments and inject them into `ContentSanitizer`.
+    - [x] Run tests and verify they pass.
 - [ ] Task: Update README.md and AGENTS.md documentation
     - [ ] Update `README.md` to document the new `--ad-pattern` CLI parameter and the punctuation normalization behaviors.
     - [ ] Update `AGENTS.md` to reflect CLI and sanitizer changes.
