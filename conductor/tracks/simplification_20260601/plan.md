@@ -9,7 +9,7 @@
     - [x] Update tests to verify that new imports from `src.utils` are used and behave exactly the same.
     - [x] Refactor `src/pdf_reader.py` and `src/epub_extractor.py` to import and call `extract_chapter_number` and `extract_source_url` from `src.utils`.
     - [x] Run test suite and check code coverage.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
 ## Phase 2: CLI Simplification, Orchestrator Refactor, and Documentation Updates
 - [ ] Task: Simplify CLI and clean orchestrator update logic.
