@@ -17,11 +17,16 @@ logger = logging.getLogger("novel_scraper")
 class ContentSanitizer:
     """Cleans raw HTML chapter content into plain text paragraphs."""
 
-    def __init__(self, boilerplate_patterns: List[str] = None):
+    def __init__(
+        self,
+        boilerplate_patterns: List[str] = None,
+        custom_ad_patterns: List[str] = None,
+    ):
         """Initializes the sanitizer.
 
         Args:
             boilerplate_patterns (List[str]): Regex patterns to match ads.
+            custom_ad_patterns (List[str]): Additional regex patterns to match ads.
         """
         if boilerplate_patterns is None:
             # Default patterns seen on freewebnovel.com
@@ -35,6 +40,11 @@ class ContentSanitizer:
             ]
         else:
             self.boilerplate_patterns = boilerplate_patterns
+
+        if custom_ad_patterns:
+            self.boilerplate_patterns = list(self.boilerplate_patterns) + list(
+                custom_ad_patterns
+            )
 
         self.branding_templates = [
             "stay connected through freewebnovel",

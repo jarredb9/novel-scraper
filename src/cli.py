@@ -96,7 +96,24 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         default=None,
         help="Landing page URL of the novel for chapter link auto-detection",
     )
+    parser.add_argument(
+        "--ad-pattern",
+        action="append",
+        default=None,
+        help="Custom ad regex pattern to filter out (can be specified multiple times or comma-separated)",
+    )
     parsed_args = parser.parse_args(args)
+
+    # Post-process ad patterns: split comma-separated entries and clean whitespace
+    ad_patterns = []
+    if getattr(parsed_args, "ad_pattern", None):
+        for item in parsed_args.ad_pattern:
+            for p in item.split(","):
+                p_stripped = p.strip()
+                if p_stripped:
+                    ad_patterns.append(p_stripped)
+    parsed_args.ad_pattern = ad_patterns if ad_patterns else None
+
     if parsed_args.url is None and parsed_args.update is None:
         if parsed_args.start is None:
             parsed_args.start = 776

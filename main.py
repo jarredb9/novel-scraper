@@ -28,6 +28,7 @@ def main():
             format=args.format,
             threads=args.threads,
             url=args.url,
+            ad_patterns=args.ad_pattern,
         )
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)

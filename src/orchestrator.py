@@ -5,7 +5,7 @@ sub-components into a single unified extraction and assembly workflow.
 """
 
 import logging
-from typing import Optional
+from typing import List, Optional
 from tqdm import tqdm
 from src.cache import CachingManager
 from src.scraper import NovelScraper
@@ -131,6 +131,7 @@ def run_orchestrator(
     threads: int = 4,
     url: Optional[str] = None,
     update: Optional[str] = None,
+    ad_patterns: Optional[List[str]] = None,
 ) -> None:
     """Orchestrates novel scraping and PDF/EPUB compilation.
 
@@ -208,7 +209,7 @@ def run_orchestrator(
     if url:
         scraper.base_url = url
     parser = XPathParser()
-    sanitizer = ContentSanitizer()
+    sanitizer = ContentSanitizer(custom_ad_patterns=ad_patterns)
 
     # Determine output paths
     base, ext = os.path.splitext(output)

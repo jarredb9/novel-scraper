@@ -90,3 +90,24 @@ def test_cli_threads_invalid():
         parse_args(["--threads", "not-an-int"])
 
 
+def test_cli_ad_pattern_single():
+    args = parse_args(["--ad-pattern", "pattern1"])
+    assert args.ad_pattern == ["pattern1"]
+
+
+def test_cli_ad_pattern_multiple():
+    args = parse_args(["--ad-pattern", "pattern1", "--ad-pattern", "pattern2"])
+    assert args.ad_pattern == ["pattern1", "pattern2"]
+
+
+def test_cli_ad_pattern_comma_separated():
+    args = parse_args(["--ad-pattern", "pattern1,pattern2, pattern3"])
+    assert args.ad_pattern == ["pattern1", "pattern2", "pattern3"]
+
+
+def test_cli_ad_pattern_default():
+    args = parse_args([])
+    assert args.ad_pattern is None
+
+
+
