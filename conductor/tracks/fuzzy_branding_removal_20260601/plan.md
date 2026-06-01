@@ -10,12 +10,12 @@
 - [x] 00ebc78 Task: Conductor - User Manual Verification 'Phase 1: Setup & Testing' (Protocol in workflow.md)
 
 ## Phase 2: Implementation (TDD Green Phase)
-- [ ] Task: Modify `src/sanitizer.py` to implement fuzzy branding removal.
-    - [ ] Import `difflib` standard library.
-    - [ ] Add branding phrases/sentences templates to `ContentSanitizer`.
-    - [ ] Define sentence-splitting logic to check sentences individually.
-    - [ ] Implement `SequenceMatcher` comparison against targets with a high similarity threshold (e.g., >= 0.85).
-    - [ ] Re-assemble paragraphs after removing/stripping matched sentences.
-    - [ ] Verify that all unit tests pass successfully.
-- [ ] Task: Verify overall codebase test coverage remains >80%.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Implementation' (Protocol in workflow.md)
+- [x] 5fe8b3c Task: Modify `src/sanitizer.py` to implement fuzzy branding removal.
+    - [x] Import `difflib` standard library.
+    - [x] Add branding phrases/sentences templates to `ContentSanitizer`.
+    - [x] Define sentence-splitting logic to check sentences individually.
+    - [x] Implement `SequenceMatcher` comparison against targets with a high similarity threshold (e.g., >= 0.85).
+    - [x] Re-assemble paragraphs after removing/stripping matched sentences.
+    - [x] Verify that all unit tests pass successfully.
+- [x] 5fe8b3c Task: Verify overall codebase test coverage remains >80%.
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Implementation' (Protocol in workflow.md)
