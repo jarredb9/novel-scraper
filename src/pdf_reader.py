@@ -1,7 +1,7 @@
 import os
 from typing import Optional, List, Dict, Any
 import pypdf
-from src.utils import extract_chapter_number, extract_source_url
+from src.utils import extract_chapter_number
 
 
 

@@ -64,5 +64,3 @@ def extract_chapters_from_epub(epub_path: str) -> List[Dict[str, Any]]:
             )
 
     return chapters
-
-from src.utils import extract_source_url
