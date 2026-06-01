@@ -1,7 +1,7 @@
 # Implementation Plan - Fuzzy Branding Removal
 
 ## Phase 1: Setup & Testing (TDD Red Phase)
-- [ ] Task: Add failing unit tests in `tests/test_sanitizer.py` verifying fuzzy matching on branding phrases.
+- [x] 13f8174 Task: Add failing unit tests in `tests/test_sanitizer.py` verifying fuzzy matching on branding phrases.
     - [ ] Test standalone branding paragraphs (e.g. "Stay connected through freewebnovel").
     - [ ] Test branding text at the end of sentence (e.g. "The beast roared. Stay connected through freewebnovel").
     - [ ] Test fuzzy variation (e.g. "Stay connected through freewebnovel.").
