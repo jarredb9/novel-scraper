@@ -23,3 +23,8 @@
     - [x] Update `AGENTS.md` (and any related rules files) to remove references to `--update-epub` and `--update-pdf`.
 - [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions (a224393)
+
+
