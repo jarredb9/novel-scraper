@@ -240,3 +240,35 @@ def test_orchestrator_formats_both(tmp_path):
         MockEPUBCompiler.assert_called_once_with(output_path="out.epub")
         mock_epub_compiler.compile.assert_called_once()
 
+
+def test_orchestrator_passes_custom_ad_patterns(tmp_path):
+    with patch('src.orchestrator.CachingManager'), \
+         patch('src.orchestrator.NovelScraper') as MockScraper, \
+         patch('src.orchestrator.XPathParser') as MockParser, \
+         patch('src.orchestrator.ContentSanitizer') as MockSanitizer, \
+         patch('src.orchestrator.PDFCompiler') as MockPDFCompiler, \
+         patch('src.orchestrator.tqdm') as MockTqdm:
+
+        MockTqdm.side_effect = lambda x, **kwargs: x
+        mock_scraper = MagicMock()
+        mock_parser = MagicMock()
+        mock_sanitizer = MagicMock()
+        mock_pdf_compiler = MagicMock()
+
+        MockScraper.return_value = mock_scraper
+        MockParser.return_value = mock_parser
+        MockSanitizer.return_value = mock_sanitizer
+        MockPDFCompiler.return_value = mock_pdf_compiler
+
+        mock_scraper.fetch_chapter_html.return_value = "html"
+        mock_parser.parse.return_value = ("Chapter 1: Title", "body")
+        mock_sanitizer.sanitize.return_value = ["para"]
+
+        run_orchestrator(
+            start=776, end=776, delay=0.1, cache_dir=str(tmp_path),
+            output="out.pdf", format="pdf", ad_patterns=["custom_ad_pattern"]
+        )
+
+        MockSanitizer.assert_called_once_with(custom_ad_patterns=["custom_ad_pattern"])
+
+

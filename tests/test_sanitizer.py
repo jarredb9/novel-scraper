@@ -166,4 +166,19 @@ def test_non_alphanumeric_paragraph_filtering():
     assert paragraphs == ["Actual content starts here.", "Another content line."]
 
 
+def test_sanitizer_custom_ad_patterns_merged():
+    sanitizer = ContentSanitizer(custom_ad_patterns=[r"custom_extra_ad", r"another-ad-pattern\d+"])
+    raw_html = """
+    <div>
+        <p>Keep this paragraph.</p>
+        <p>This paragraph contains a logo statement.</p>
+        <p>This paragraph contains custom_extra_ad text.</p>
+        <p>This paragraph contains another-ad-pattern456 text.</p>
+    </div>
+    """
+    paragraphs = sanitizer.sanitize(raw_html)
+    assert paragraphs == ["Keep this paragraph."]
+
+
+
 
