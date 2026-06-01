@@ -25,3 +25,6 @@
     - [x] Update `README.md` to document the new `--ad-pattern` CLI parameter and the punctuation normalization behaviors.
     - [x] Update `AGENTS.md` to reflect CLI and sanitizer changes.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Configurable Ad & Branding Filtering' (Protocol in workflow.md) (f1cbbc9)
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions (98e8bd2)
