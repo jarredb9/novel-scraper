@@ -6,10 +6,10 @@
     - [x] Add tests verifying `--` and `---` mapping to `—`.
     - [x] Add tests verifying `...` mapping to `…`.
     - [x] Add tests verifying empty/non-alphanumeric paragraphs are filtered out.
-- [ ] Task: Implement punctuation normalization and paragraph filtering in `src/sanitizer.py`
-    - [ ] Add translation mappings or regex-based replacement rules in `ContentSanitizer.clean_text` or a helper.
-    - [ ] Update `ContentSanitizer.sanitize` to filter out paragraphs with no alphanumeric characters.
-    - [ ] Run tests and verify they pass.
+- [x] Task: Implement punctuation normalization and paragraph filtering in `src/sanitizer.py` (2c4b01c)
+    - [x] Add translation mappings or regex-based replacement rules in `ContentSanitizer.clean_text` or a helper.
+    - [x] Update `ContentSanitizer.sanitize` to filter out paragraphs with no alphanumeric characters.
+    - [x] Run tests and verify they pass.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Punctuation Normalization & Paragraph Filtering' (Protocol in workflow.md)
 
 ## Phase 2: Configurable Ad & Branding Filtering
