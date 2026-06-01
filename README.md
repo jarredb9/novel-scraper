@@ -87,9 +87,7 @@ Customize the scrape range, politeness delay, and output file path using the com
 | `--delay` | `float` | `1.0` | Delay in seconds between successive requests. |
 | `--cache-dir` | `str` | `./cache` | Local folder directory to store chapter cache. |
 | `--output` | `str` | `novel.pdf` | Filename of the compiled output. |
-| `--update-pdf` | `str` | `None` | Path to an existing compiled PDF to update with new chapters (alias: `--merge-pdf`). |
-| `--update-epub` | `str` | `None` | Path to an existing compiled EPUB to update with new chapters (alias: `--merge-epub`). |
-| `--update` | `str` | `None` | Path to an existing compiled PDF/EPUB to auto-update based on embedded metadata URL. |
+| `--update` | `str` | `None` | Path to an existing compiled PDF/EPUB to update with new chapters automatically. |
 | `--cover` | `str` | `None` | Optional path or URL to the cover image. Defaults to scraping from landing page. |
 | `--format` | `str` | `both` | Output format choices: `pdf`, `epub`, or `both` (default: `both`). |
 | `--threads` / `-t` | `int` | `4` | Number of concurrent scraper threads. |
@@ -115,10 +113,10 @@ To auto-update an existing EPUB with newly released chapters using metadata-driv
 python3 main.py --update mynovel.epub
 ```
 
-To update/merge an existing `fantasy_novel.pdf` by fetching chapters 851 through 860 and appending them sequentially:
+To update/merge an existing `fantasy_novel.pdf` by fetching chapters 851 through 860 manually and appending them sequentially:
 
 ```bash
-python3 main.py --update-pdf fantasy_novel.pdf --start 851 --end 860 --output fantasy_novel.pdf
+python3 main.py --update fantasy_novel.pdf --start 851 --end 860
 ```
 
 To compile chapters 800 through 850 as an EPUB book only:
@@ -133,10 +131,10 @@ To compile with a custom cover image URL or local path:
 python3 main.py --start 800 --end 850 --output fantasy_novel.pdf --cover https://example.com/cover.jpg
 ```
 
-To update/merge an existing `fantasy_novel.epub` by fetching chapters 851 through 860 and appending them sequentially without redownloading existing chapters:
+To update/merge an existing `fantasy_novel.epub` by fetching chapters 851 through 860 manually and appending them sequentially without redownloading existing chapters:
 
 ```bash
-python3 main.py --update-epub fantasy_novel.epub --start 851 --end 860 --output fantasy_novel.epub
+python3 main.py --update fantasy_novel.epub --start 851 --end 860
 ```
 
 ---

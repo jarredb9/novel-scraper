@@ -10,7 +10,7 @@ This file provides persistent, project-specific context and operational guidelin
 
 ### Architecture Map
 - [main.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/main.py): Entry point of the application.
-- [src/cli.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cli.py): Defines arguments (`--start`, `--end`, `--delay`, `--output`, `--format`, `--update-pdf`, `--update-epub`, `--update`, `--cover`, `--threads`, `--url`).
+- [src/cli.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cli.py): Defines arguments (`--start`, `--end`, `--delay`, `--output`, `--format`, `--update`, `--cover`, `--threads`, `--url`).
 - [src/orchestrator.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/orchestrator.py): Unified workflow runner executing parsing, caching, scraping, and compiling. Automatically parses landing pages for chapter link mapping when `--url` is specified.
 - [src/scraper.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/scraper.py): Fetching engine with polite rate limiting, exponential backoff (retries on HTTP 429), and a thread lock for safe concurrent rate-limiting. Supports custom URL mapping.
 - [src/cache.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cache.py): `CachingManager` storing/retrieving raw chapter HTML files under `./cache`.
@@ -48,7 +48,7 @@ python main.py --start 800 --end 810 --delay 2.0 --cover ./cover.jpg --output no
 python main.py --start 800 --end 850 --threads 4 --output novel.pdf
 
 # Incrementally update an existing EPUB/PDF file with new chapters manually
-python main.py --update-epub novel.epub --start 811 --end 820 --output novel.epub
+python main.py --update novel.epub --start 811 --end 820
 
 # Auto-update an existing EPUB/PDF file using metadata-driven URL extraction
 python main.py --update novel.epub
