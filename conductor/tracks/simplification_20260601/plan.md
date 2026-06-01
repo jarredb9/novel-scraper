@@ -1,10 +1,10 @@
 # Plan: Codebase Simplification and Refactoring
 
 ## Phase 1: Shared Utilities & Metadata Reader Consolidation
-- [ ] Task: Create `src/utils.py` and implement unit tests for it.
-    - [ ] Create `tests/test_utils.py` with failing tests checking `extract_chapter_number` and `extract_source_url`.
-    - [ ] Implement `extract_chapter_number` and `extract_source_url` in `src/utils.py`.
-    - [ ] Run test suite to verify tests pass.
+- [x] Task: Create `src/utils.py` and implement unit tests for it. (8ce30fc)
+    - [x] Create `tests/test_utils.py` with failing tests checking `extract_chapter_number` and `extract_source_url`.
+    - [x] Implement `extract_chapter_number` and `extract_source_url` in `src/utils.py`.
+    - [x] Run test suite to verify tests pass.
 - [ ] Task: Integrate shared utilities into `pdf_reader.py` and `epub_extractor.py`.
     - [ ] Update tests to verify that new imports from `src.utils` are used and behave exactly the same.
     - [ ] Refactor `src/pdf_reader.py` and `src/epub_extractor.py` to import and call `extract_chapter_number` and `extract_source_url` from `src.utils`.
