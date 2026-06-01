@@ -5,10 +5,10 @@
     - [x] Create `tests/test_utils.py` with failing tests checking `extract_chapter_number` and `extract_source_url`.
     - [x] Implement `extract_chapter_number` and `extract_source_url` in `src/utils.py`.
     - [x] Run test suite to verify tests pass.
-- [ ] Task: Integrate shared utilities into `pdf_reader.py` and `epub_extractor.py`.
-    - [ ] Update tests to verify that new imports from `src.utils` are used and behave exactly the same.
-    - [ ] Refactor `src/pdf_reader.py` and `src/epub_extractor.py` to import and call `extract_chapter_number` and `extract_source_url` from `src.utils`.
-    - [ ] Run test suite and check code coverage.
+- [x] Task: Integrate shared utilities into `pdf_reader.py` and `epub_extractor.py`. (262746d)
+    - [x] Update tests to verify that new imports from `src.utils` are used and behave exactly the same.
+    - [x] Refactor `src/pdf_reader.py` and `src/epub_extractor.py` to import and call `extract_chapter_number` and `extract_source_url` from `src.utils`.
+    - [x] Run test suite and check code coverage.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
 ## Phase 2: CLI Simplification, Orchestrator Refactor, and Documentation Updates
