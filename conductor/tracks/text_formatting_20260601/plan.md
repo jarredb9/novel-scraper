@@ -1,11 +1,11 @@
 # Implementation Plan - Text Cleaning and Formatting Improvements
 
 ## Phase 1: Punctuation Normalization & Paragraph Filtering
-- [ ] Task: Write failing unit tests for punctuation normalization and paragraph filtering
-    - [ ] Add tests in `tests/test_sanitizer.py` verifying smart quotes mapping to straight quotes.
-    - [ ] Add tests verifying `--` and `---` mapping to `—`.
-    - [ ] Add tests verifying `...` mapping to `…`.
-    - [ ] Add tests verifying empty/non-alphanumeric paragraphs are filtered out.
+- [x] Task: Write failing unit tests for punctuation normalization and paragraph filtering (96ed95c)
+    - [x] Add tests in `tests/test_sanitizer.py` verifying smart quotes mapping to straight quotes.
+    - [x] Add tests verifying `--` and `---` mapping to `—`.
+    - [x] Add tests verifying `...` mapping to `…`.
+    - [x] Add tests verifying empty/non-alphanumeric paragraphs are filtered out.
 - [ ] Task: Implement punctuation normalization and paragraph filtering in `src/sanitizer.py`
     - [ ] Add translation mappings or regex-based replacement rules in `ContentSanitizer.clean_text` or a helper.
     - [ ] Update `ContentSanitizer.sanitize` to filter out paragraphs with no alphanumeric characters.
