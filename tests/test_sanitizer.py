@@ -92,6 +92,15 @@ def test_fuzzy_branding_removal():
     raw_html_4 = "<p>Explore new worlds at freewebnovel</p>"
     assert sanitizer.sanitize(raw_html_4) == []
 
+    # Test newly added branding templates
+    assert sanitizer.sanitize("<p>Your journey continues on freewebnovel</p>") == []
+    assert sanitizer.sanitize("<p>Your journey continues at freewebnovel</p>") == []
+    assert sanitizer.sanitize("<p>Stay updated through freewebnovel.</p>") == []
+    assert sanitizer.sanitize("<p>Read new chapters at freewebnovel!</p>") == []
+    assert sanitizer.sanitize("<p>Find adventures at freewebnovel</p>") == []
+    assert sanitizer.sanitize("<p>Explore stories on freewebnovel</p>") == []
+    assert sanitizer.sanitize("<p>Continue your adventure with freewebnovel</p>") == []
+
     # 2. Branding text at the end of a sentence
     raw_html_5 = "<p>The beast roared. Stay connected through freewebnovel</p>"
     assert sanitizer.sanitize(raw_html_5) == ["The beast roared."]
@@ -106,5 +115,16 @@ def test_fuzzy_branding_removal():
 
     raw_html_8 = "<p>She decided to stay in a hotel. Explore new worlds at the library.</p>"
     assert sanitizer.sanitize(raw_html_8) == ["She decided to stay in a hotel. Explore new worlds at the library."]
+
+    # 4. Mashup / Run-on text without correct spacing or punctuation
+    raw_html_9 = "<p>The sword clashed.Stay connected through freewebnovel</p>"
+    assert sanitizer.sanitize(raw_html_9) == ["The sword clashed."]
+
+    raw_html_10 = "<p>The sword clashed Stay connected through freewebnovel.</p>"
+    assert sanitizer.sanitize(raw_html_10) == ["The sword clashed"]
+
+    # 5. Experience and Discover (including newlines)
+    assert sanitizer.sanitize("<p>Experience more tales on freewebnovel</p>") == []
+    assert sanitizer.sanitize("<p>Discover exclusive\ntales on freewebnovel</p>") == []
 
 

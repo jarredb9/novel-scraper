@@ -39,7 +39,16 @@ class ContentSanitizer:
         self.branding_templates = [
             "stay connected through freewebnovel",
             "stay tuned with freewebnovel",
+            "stay updated through freewebnovel",
             "explore new worlds at freewebnovel",
+            "your journey continues on freewebnovel",
+            "your journey continues at freewebnovel",
+            "read new chapters at freewebnovel",
+            "find adventures at freewebnovel",
+            "explore stories on freewebnovel",
+            "continue your adventure with freewebnovel",
+            "experience more tales on freewebnovel",
+            "discover exclusive tales on freewebnovel",
         ]
 
     def _should_exclude(self, text: str) -> bool:
@@ -85,7 +94,12 @@ class ContentSanitizer:
         Returns:
             str: Paragraph with fuzzy branding sentences removed.
         """
-        # Split paragraph into sentences using lookbehind to keep punctuation
+        # 1. Direct regex cleaning to remove branding phrases anywhere in the paragraph
+        # (even if mashed without spaces or punctuation)
+        branding_pattern = r"\s*\b(stay|explore|read|find|continue|your|visit|journey|experience|discover)\b.*?\bfreewebnovel(?:\.com)?([.!?])?"
+        paragraph = re.sub(branding_pattern, "", paragraph, flags=re.IGNORECASE)
+
+        # 2. Split paragraph into sentences as a backup/refinement
         sentences = re.split(r"(?<=[.!?])\s+", paragraph)
         cleaned_sentences = []
         for sentence in sentences:
