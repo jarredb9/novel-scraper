@@ -13,7 +13,7 @@
 
 
 ## Phase 2: CLI Simplification, Orchestrator Refactor, and Documentation Updates
-- [ ] Task: Simplify CLI and clean orchestrator update logic.
+- [~] Task: Simplify CLI and clean orchestrator update logic.
     - [ ] Update CLI parser tests in `tests/test_cli.py` to remove references to the old update parameters and ensure only `--update` remains.
     - [ ] Modify `src/cli.py` to remove `--update-pdf`, `--merge-pdf`, `--update-epub`, `--merge-epub`.
     - [ ] Modify `src/orchestrator.py` to remove update parameters other than `update` (path). Simplify how it calls the consolidated `extract_source_url` helper.
