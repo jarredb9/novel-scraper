@@ -5,6 +5,7 @@ boilerplate text, script, style, and iframe tags), and returns a list of
 cleaned paragraphs.
 """
 
+import difflib
 import logging
 import re
 from typing import List
@@ -35,6 +36,12 @@ class ContentSanitizer:
         else:
             self.boilerplate_patterns = boilerplate_patterns
 
+        self.branding_templates = [
+            "stay connected through freewebnovel",
+            "stay tuned with freewebnovel",
+            "explore new worlds at freewebnovel",
+        ]
+
     def _should_exclude(self, text: str) -> bool:
         """Determines if a line of text is boilerplate or advertisement.
 
@@ -49,6 +56,46 @@ class ContentSanitizer:
             if re.search(pattern, lower_text):
                 return True
         return False
+
+    def _is_branding_sentence(self, sentence: str) -> bool:
+        """Helper to check if a sentence matches branding templates.
+
+        Args:
+            sentence (str): Single sentence to check.
+
+        Returns:
+            bool: True if sentence matches branding, False otherwise.
+        """
+        clean_sentence = re.sub(r"[.!?\s]+$", "", sentence.lower()).strip()
+        for template in self.branding_templates:
+            clean_template = re.sub(r"[.!?\s]+$", "", template.lower()).strip()
+            matcher = difflib.SequenceMatcher(
+                None, clean_sentence, clean_template
+            )
+            if matcher.ratio() >= 0.85:
+                return True
+        return False
+
+    def _clean_paragraph_fuzzy(self, paragraph: str) -> str:
+        """Splits a paragraph into sentences and removes branding sentences.
+
+        Args:
+            paragraph (str): Cleaned paragraph text.
+
+        Returns:
+            str: Paragraph with fuzzy branding sentences removed.
+        """
+        # Split paragraph into sentences using lookbehind to keep punctuation
+        sentences = re.split(r"(?<=[.!?])\s+", paragraph)
+        cleaned_sentences = []
+        for sentence in sentences:
+            sentence_stripped = sentence.strip()
+            if not sentence_stripped:
+                continue
+            if self._is_branding_sentence(sentence_stripped):
+                continue
+            cleaned_sentences.append(sentence)
+        return " ".join(cleaned_sentences).strip()
 
     def sanitize(self, raw_html: str) -> List[str]:
         """Sanitizes raw HTML to extract clean paragraph strings.
@@ -99,6 +146,7 @@ class ContentSanitizer:
             for p in p_elements:
                 text = p.text_content()
                 cleaned = self.clean_text(text)
+                cleaned = self._clean_paragraph_fuzzy(cleaned)
                 if cleaned and not self._should_exclude(cleaned):
                     paragraphs.append(cleaned)
         else:
@@ -106,6 +154,7 @@ class ContentSanitizer:
             text_content = fragment.text_content()
             for line in text_content.splitlines():
                 cleaned = self.clean_text(line)
+                cleaned = self._clean_paragraph_fuzzy(cleaned)
                 if cleaned and not self._should_exclude(cleaned):
                     paragraphs.append(cleaned)
 
