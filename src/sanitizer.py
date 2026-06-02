@@ -83,6 +83,21 @@ class ContentSanitizer:
             "discover hidden tales at freewebnovel",
             "enjoy new chapters from freewebnovel",
             "enjoy exclusive content from freewebnovel",
+            # More permutations discovered in the second validation scan
+            "read the latest on freewebnovel",
+            "continue your journey on freewebnovel",
+            "continue reading stories on freewebnovel",
+            "continue reading on freewebnovel",
+            "experience tales at freewebnovel",
+            "explore hidden tales at freewebnovel",
+            "find exclusive stories on freewebnovel",
+            "discover more content at freewebnovel",
+            "enjoy new adventures at freewebnovel",
+            "discover stories with freewebnovel",
+            "enjoy more content from freewebnovel",
+            "experience tales with freewebnovel",
+            "continue reading at freewebnovel",
+            "explore more stories with freewebnovel",
         ]
 
         # Dynamically build a strict regex matching the branding templates
