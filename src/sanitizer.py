@@ -120,6 +120,9 @@ class ContentSanitizer:
         Returns:
             bool: True if sentence matches branding, False otherwise.
         """
+        if "freeweb" not in sentence.lower():
+            return False
+
         clean_sentence = re.sub(r"[.!?\s]+$", "", sentence.lower()).strip()
         for template in self.branding_templates:
             clean_template = re.sub(r"[.!?\s]+$", "", template.lower()).strip()
