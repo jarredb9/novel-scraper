@@ -72,6 +72,17 @@ class ContentSanitizer:
             "discover exclusive tales on freewebnovel",
         ]
 
+        # Dynamically build a strict regex matching the branding templates
+        patterns = []
+        for template in self.branding_templates:
+            words = [re.escape(w) for w in template.split()]
+            pattern_str = r"\s+".join(words)
+            pattern_str = pattern_str.replace("freewebnovel", r"freewebnovel(?:\.com)?")
+            patterns.append(pattern_str)
+        self.branding_pattern = re.compile(
+            r"\s*\b(?:" + "|".join(patterns) + r")([.!?])?", re.IGNORECASE
+        )
+
     def _should_exclude(self, text: str) -> bool:
         """Determines if a line of text is boilerplate or advertisement.
 
@@ -117,8 +128,7 @@ class ContentSanitizer:
         """
         # 1. Direct regex cleaning to remove branding phrases anywhere in the paragraph
         # (even if mashed without spaces or punctuation)
-        branding_pattern = r"\s*\b(stay|explore|read|find|continue|your|visit|journey|experience|discover)\b.*?\bfreewebnovel(?:\.com)?([.!?])?"
-        paragraph = re.sub(branding_pattern, "", paragraph, flags=re.IGNORECASE)
+        paragraph = self.branding_pattern.sub("", paragraph)
 
         # 2. Split paragraph into sentences as a backup/refinement
         sentences = re.split(r"(?<=[.!?])\s+", paragraph)

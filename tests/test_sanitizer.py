@@ -123,7 +123,11 @@ def test_fuzzy_branding_removal():
     raw_html_10 = "<p>The sword clashed Stay connected through freewebnovel.</p>"
     assert sanitizer.sanitize(raw_html_10) == ["The sword clashed"]
 
-    # 5. Experience and Discover (including newlines)
+    # 5. Do not span multiple sentences or quotes, and do not remove valid content containing 'find'
+    raw_html_11 = '<p>"You will find no lumps or imperfections in my silk. If you wish a different grade, I have inventory all the way from Commander to Overlord Rank, and can make custom colours with a small delay." Rae agreed. Explore stories on freewebnovel</p>'
+    assert sanitizer.sanitize(raw_html_11) == ['"You will find no lumps or imperfections in my silk. If you wish a different grade, I have inventory all the way from Commander to Overlord Rank, and can make custom colours with a small delay." Rae agreed.']
+
+    # 6. Experience and Discover (including newlines)
     assert sanitizer.sanitize("<p>Experience more tales on freewebnovel</p>") == []
     assert sanitizer.sanitize("<p>Discover exclusive\ntales on freewebnovel</p>") == []
 
