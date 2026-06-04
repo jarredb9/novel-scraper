@@ -363,6 +363,9 @@ class ScraperApp(App[None]):
                 status_callback=status_callback
             )
             self.finish_scrape(True)
+        except asyncio.CancelledError:
+            self.log_to_pane("[yellow]Scraping cancelled by user.[/yellow]")
+            self.finish_scrape(False)
         except Exception as e:
             self.log_to_pane(f"[red]Scraping failed: {str(e)}[/red]")
             self.finish_scrape(False)
@@ -395,6 +398,8 @@ class ScraperApp(App[None]):
         if success:
             self.query_one("#thread_status_text", Label).update("Finished!")
             self.log_to_pane("[green]Scraping and compilation complete![/green]")
+        elif self.scrape_cancelled:
+            self.query_one("#thread_status_text", Label).update("Cancelled!")
         else:
             failed_chaps = [
                 ch for ch, stat in self.active_threads_status.items() if stat == "error"

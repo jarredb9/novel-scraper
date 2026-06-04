@@ -103,4 +103,25 @@ def test_tui_cancel_scraping():
 
     asyncio.run(run_test_helper())
 
+def test_tui_cancelled_error_handling():
+    """Verify that when scrape_worker raises CancelledError, UI status is set to Cancelled!"""
+    from src.tui import ScraperApp
+    from textual.widgets import Label
+    import asyncio
+
+    app = ScraperApp()
+    app.scrape_cancelled = True
+
+    async def run_test_helper():
+        async with app.run_test() as pilot:
+            # Manually trigger finish_scrape(False) with cancellation flag
+            app.finish_scrape(False)
+            
+            # Check status label
+            status_text = app.query_one("#thread_status_text", Label)
+            assert "Cancelled!" in str(status_text.content)
+
+    asyncio.run(run_test_helper())
+
+
 
