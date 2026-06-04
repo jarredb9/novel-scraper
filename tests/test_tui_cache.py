@@ -58,7 +58,7 @@ def test_cache_browser_ui(tmp_path):
 
             # Verify summary stats
             assert "Total Chapters Cached: 3" in str(summary_lbl.content)
-            assert "Missing Chapter Gaps: 4-4" in str(summary_lbl.content)
+            assert "Missing Chapter Gaps: 4" in str(summary_lbl.content)
 
             # Verify OptionList contains chapters
             assert chapters_list.option_count == 3

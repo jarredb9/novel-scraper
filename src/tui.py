@@ -101,6 +101,8 @@ class ScraperApp(App[None]):
     TITLE = "Novel Scraper Dashboard"
     BINDINGS = [
         ("q", "quit", "Quit"),
+        ("ctrl+c", "quit", "Quit"),
+        ("escape", "escape_field", "Unfocus Field"),
     ]
 
     def __init__(self):
@@ -137,19 +139,24 @@ class ScraperApp(App[None]):
                             id="scrape_url"
                         )
                     with Horizontal(classes="field-row"):
-                        yield Label("Scope:")
+                        yield Label("Scope Preset:")
                         yield Select(
-                            options=[("Custom Range", "custom"), ("Entire Novel", "entire")],
+                            options=[
+                                ("Custom Range", "custom"),
+                                ("Beginning to Chapter X", "beg_to_x"),
+                                ("Chapter X to End", "x_to_end"),
+                                ("Entire Novel", "entire")
+                            ],
                             value="custom",
                             id="scrape_scope",
                             allow_blank=False
                         )
                     with Horizontal(classes="field-row"):
                         yield Label("Start Chapter:")
-                        yield Input(value="800", id="scrape_start")
+                        yield Input(value="800", placeholder="Start Chapter", id="scrape_start")
                     with Horizontal(classes="field-row"):
                         yield Label("End Chapter:")
-                        yield Input(value="805", id="scrape_end")
+                        yield Input(value="805", placeholder="End Chapter", id="scrape_end")
                     with Horizontal(classes="field-row"):
                         yield Label("Threads:")
                         yield Input(value="4", id="scrape_threads")
@@ -177,19 +184,24 @@ class ScraperApp(App[None]):
             with TabPane("Interactive Compiler", id="compile_tab"):
                 with Vertical(classes="form-group"):
                     with Horizontal(classes="field-row"):
-                        yield Label("Scope:")
+                        yield Label("Scope Preset:")
                         yield Select(
-                            options=[("Custom Range", "custom"), ("Entire Novel", "entire")],
+                            options=[
+                                ("Custom Range", "custom"),
+                                ("Beginning to Chapter X", "beg_to_x"),
+                                ("Chapter X to End", "x_to_end"),
+                                ("Entire Novel", "entire")
+                            ],
                             value="custom",
                             id="compile_scope",
                             allow_blank=False
                         )
                     with Horizontal(classes="field-row"):
                         yield Label("Start Chapter:")
-                        yield Input(value="800", id="compile_start")
+                        yield Input(value="800", placeholder="Start Chapter", id="compile_start")
                     with Horizontal(classes="field-row"):
                         yield Label("End Chapter:")
-                        yield Input(value="805", id="compile_end")
+                        yield Input(value="805", placeholder="End Chapter", id="compile_end")
                     with Horizontal(classes="field-row"):
                         yield Label("Output Filename:")
                         yield Input(value="novel_compiled", id="compile_output")
@@ -209,16 +221,52 @@ class ScraperApp(App[None]):
         """Called when the app is mounted."""
         self.refresh_cache()
 
+    def action_escape_field(self) -> None:
+        """Remove focus from the currently focused widget."""
+        if self.focused:
+            self.set_focus(None)
+
     def on_select_changed(self, event: Select.Changed) -> None:
         """Handle select dropdown selection changes."""
-        if event.select.id == "scrape_scope":
-            is_entire = (event.value == "entire")
-            self.query_one("#scrape_start", Input).disabled = is_entire
-            self.query_one("#scrape_end", Input).disabled = is_entire
-        elif event.select.id == "compile_scope":
-            is_entire = (event.value == "entire")
-            self.query_one("#compile_start", Input).disabled = is_entire
-            self.query_one("#compile_end", Input).disabled = is_entire
+        if event.control.id == "scrape_scope":
+            self._update_scope_inputs("scrape", event.value)
+        elif event.control.id == "compile_scope":
+            self._update_scope_inputs("compile", event.value)
+
+    def _update_scope_inputs(self, prefix: str, scope: str) -> None:
+        """Helper to toggle and update start/end inputs based on scope preset."""
+        start_input = self.query_one(f"#{prefix}_start", Input)
+        end_input = self.query_one(f"#{prefix}_end", Input)
+
+        if scope == "entire":
+            start_input.disabled = True
+            start_input.value = "Beginning"
+            end_input.disabled = True
+            end_input.value = "End of Novel"
+        elif scope == "beg_to_x":
+            start_input.disabled = True
+            start_input.value = "Beginning"
+            end_input.disabled = False
+            if end_input.value == "End of Novel":
+                end_input.value = ""
+            end_input.placeholder = "Chapter X"
+        elif scope == "x_to_end":
+            start_input.disabled = False
+            if start_input.value == "Beginning":
+                start_input.value = ""
+            start_input.placeholder = "Chapter X"
+            end_input.disabled = True
+            end_input.value = "End of Novel"
+        else:  # custom
+            start_input.disabled = False
+            if start_input.value == "Beginning":
+                start_input.value = ""
+            start_input.placeholder = "Start Chapter"
+            
+            end_input.disabled = False
+            if end_input.value == "End of Novel":
+                end_input.value = ""
+            end_input.placeholder = "End Chapter"
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button press events."""
@@ -239,7 +287,7 @@ class ScraperApp(App[None]):
         gaps = calculate_gaps(chapters)
         
         if gaps:
-            gaps_str = ", ".join(f"{g[0]}-{g[1]}" for g in gaps)
+            gaps_str = ", ".join(f"{g[0]}" if g[0] == g[1] else f"{g[0]}-{g[1]}" for g in gaps)
         else:
             gaps_str = "None"
             
@@ -274,27 +322,49 @@ class ScraperApp(App[None]):
     def start_compilation_job(self) -> None:
         """Initiate the background compilation task."""
         scope = self.query_one("#compile_scope", Select).value
-        if scope == "entire":
+        try:
+            start = parse_field_chapter(self.query_one("#compile_start", Input).value)
+        except ValueError as e:
+            self.query_one("#compile_status", Label).update(f"[red]Cannot compile: {str(e)}[/red]")
+            return
+
+        try:
+            end = parse_field_chapter(self.query_one("#compile_end", Input).value)
+        except ValueError as e:
+            self.query_one("#compile_status", Label).update(f"[red]Cannot compile: {str(e)}[/red]")
+            return
+
+        if scope == "beg_to_x":
+            start = None
+            if end is None:
+                self.query_one("#compile_status", Label).update("[red]Error: End Chapter X is required[/red]")
+                return
+        elif scope == "x_to_end":
+            end = None
+            if start is None:
+                self.query_one("#compile_status", Label).update("[red]Error: Start Chapter X is required[/red]")
+                return
+        elif scope == "entire":
             start = None
             end = None
-        else:
-            try:
-                start = int(self.query_one("#compile_start", Input).value)
-            except ValueError:
-                start = None
-            try:
-                end = int(self.query_one("#compile_end", Input).value)
-            except ValueError:
-                end = None
+
+        if start is not None and end is not None and start > end:
+            self.query_one("#compile_status", Label).update("[red]Error: Start chapter must be <= End chapter[/red]")
+            return
+
+        # Resolve None values to beginning/end of cache
+        if start is None or end is None:
+            cached = get_cached_chapters(self.cache_dir)
+            if start is None:
+                start = min(cached) if cached else 1
+            if end is None:
+                end = max(cached) if cached else 1
+
         output = self.query_one("#compile_output", Input).value
         fmt = self.query_one("#compile_format", Select).value
 
-        # Validate inputs
-        if scope != "entire" and (start is None or end is None):
-            self.query_one("#compile_status", Label).update("[red]Error: Invalid start/end chapter[/red]")
-            return
         if not output:
-            self.query_one("#compile_status", Label).update("[red]Error: Invalid start/end chapter or output name[/red]")
+            self.query_one("#compile_status", Label).update("[red]Error: Invalid output name[/red]")
             return
 
         self.query_one("#compile_btn", Button).disabled = True
@@ -337,20 +407,50 @@ class ScraperApp(App[None]):
 
     def start_scraping_job(self) -> None:
         """Initiate the background scraping task."""
-        url = self.query_one("#scrape_url", Input).value
+        url_val = self.query_one("#scrape_url", Input).value.strip()
+        url = url_val if url_val else None
         scope = self.query_one("#scrape_scope", Select).value
-        if scope == "entire":
+
+        try:
+            start = parse_field_chapter(self.query_one("#scrape_start", Input).value)
+        except ValueError as e:
+            self.query_one("#thread_status_text", Label).update("Error: Invalid Start Chapter")
+            self.log_to_pane(f"[red]Cannot start scrape: {str(e)}[/red]")
+            return
+
+        try:
+            end = parse_field_chapter(self.query_one("#scrape_end", Input).value)
+        except ValueError as e:
+            self.query_one("#thread_status_text", Label).update("Error: Invalid End Chapter")
+            self.log_to_pane(f"[red]Cannot start scrape: {str(e)}[/red]")
+            return
+
+        if scope == "beg_to_x":
+            start = None
+            if end is None:
+                self.query_one("#thread_status_text", Label).update("Error: End chapter required")
+                self.log_to_pane("[red]Cannot start scrape: End Chapter X is required for 'Beginning to Chapter X'[/red]")
+                return
+        elif scope == "x_to_end":
+            end = None
+            if start is None:
+                self.query_one("#thread_status_text", Label).update("Error: Start chapter required")
+                self.log_to_pane("[red]Cannot start scrape: Start Chapter X is required for 'Chapter X to End'[/red]")
+                return
+        elif scope == "entire":
             start = None
             end = None
-        else:
-            try:
-                start = int(self.query_one("#scrape_start", Input).value)
-            except ValueError:
-                start = None
-            try:
-                end = int(self.query_one("#scrape_end", Input).value)
-            except ValueError:
-                end = None
+
+        if start is not None and end is not None and start > end:
+            self.query_one("#thread_status_text", Label).update("Error: Start > End")
+            self.log_to_pane("[red]Cannot start scrape: Start chapter must be <= End chapter[/red]")
+            return
+
+        if not url and (start is None or end is None):
+            self.query_one("#thread_status_text", Label).update("Error: URL required")
+            self.log_to_pane("[red]Cannot start scrape: A landing page URL is required when using open-ended ranges or entire novel preset[/red]")
+            return
+
         try:
             threads = int(self.query_one("#scrape_threads", Input).value)
         except ValueError:
@@ -397,7 +497,7 @@ class ScraperApp(App[None]):
                 delay=delay,
                 cache_dir="./cache",
                 output="novel_tui_download",
-                format="both",
+                format="none",
                 threads=threads,
                 url=url,
                 status_callback=status_callback
@@ -442,7 +542,7 @@ class ScraperApp(App[None]):
         
         if success:
             self.query_one("#thread_status_text", Label).update("Finished!")
-            self.log_to_pane("[green]Scraping and compilation complete![/green]")
+            self.log_to_pane("[green]Scraping complete! Chapters cached.[/green]")
         elif self.scrape_cancelled:
             self.query_one("#thread_status_text", Label).update("Cancelled!")
         else:
@@ -505,3 +605,31 @@ def calculate_gaps(cached_chapters: list[int]) -> list[tuple[int, int]]:
             gaps.append((curr + 1, nxt - 1))
             
     return gaps
+
+
+def parse_field_chapter(val: str) -> Optional[int]:
+    """Parse a chapter field string into an integer or None if blank/boundary.
+
+    Args:
+        val: The raw input string value.
+
+    Returns:
+        The integer chapter number, or None if blank, "Beginning", or "End of
+        Novel".
+
+    Raises:
+        ValueError: If the string is non-blank and cannot be parsed as an
+            integer.
+    """
+    s = val.strip()
+    if not s or s in ("Beginning", "End of Novel"):
+        return None
+    try:
+        val_int = int(s)
+        if val_int < 1:
+            raise ValueError(f"Chapter number must be >= 1: {s}")
+        return val_int
+    except ValueError as e:
+        if "must be >= 1" in str(e):
+            raise
+        raise ValueError(f"Invalid chapter number: {s}")

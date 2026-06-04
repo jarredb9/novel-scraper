@@ -123,8 +123,8 @@ def test_tui_cancelled_error_handling():
 
     asyncio.run(run_test_helper())
 
-def test_tui_scrape_scope_toggle():
-    """Verify that selecting Entire Novel disables the chapter inputs."""
+def test_tui_scrape_scope_toggles():
+    """Verify that scope dropdown selections dynamically toggle and populate fields."""
     from src.tui import ScraperApp
     from textual.widgets import Select, Input
     import asyncio
@@ -137,16 +137,31 @@ def test_tui_scrape_scope_toggle():
             start_input = app.query_one("#scrape_start", Input)
             end_input = app.query_one("#scrape_end", Input)
 
+            # 1. Custom Range (default)
             assert start_input.disabled is False
             assert end_input.disabled is False
 
-            # Select entire novel scope
-            scope_select.value = "entire"
-            await pilot.pause()
-
-            # Inputs should be disabled now
+            # 2. Beginning to Chapter X
+            scope_select.value = "beg_to_x"
+            await pilot.pause(0.05)
             assert start_input.disabled is True
+            assert start_input.value == "Beginning"
+            assert end_input.disabled is False
+
+            # 3. Chapter X to End
+            scope_select.value = "x_to_end"
+            await pilot.pause(0.05)
+            assert start_input.disabled is False
             assert end_input.disabled is True
+            assert end_input.value == "End of Novel"
+
+            # 4. Entire Novel
+            scope_select.value = "entire"
+            await pilot.pause(0.05)
+            assert start_input.disabled is True
+            assert start_input.value == "Beginning"
+            assert end_input.disabled is True
+            assert end_input.value == "End of Novel"
 
     asyncio.run(run_test_helper())
 

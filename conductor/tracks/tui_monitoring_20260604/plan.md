@@ -41,7 +41,13 @@
   - [x] Write tests verifying compiler triggering logic and output handling
   - [x] Implement inputs (start, end, formats, output path) and trigger orchestrated compile
   - [x] Run test suite and confirm tests pass
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Cache Browser & Compiler Launcher' (Protocol in workflow.md)
+- [x] Task: Extra Features and TUI UX Improvements (Post-Feedback)
+  - [x] Fix thread status finished warning message on download failure
+  - [x] Add Stop button to abort ongoing scrapes mid-action with worker cancellation cleanup
+  - [x] Implement Scope Preset dropdown to dynamically disable and auto-populate start/end inputs
+  - [x] Decouple compilation from scrape dashboard tab to resolve compiler tab redundancy
+  - [x] Bind Escape key to unfocus active text inputs, enabling global 'q' hotkey exits
+- [~] Task: Conductor - User Manual Verification 'Phase 4: Cache Browser & Compiler Launcher' (Protocol in workflow.md)
 - [ ] Task: Update project documentation
   - [ ] Update README.md
   - [ ] Update AGENTS.md
