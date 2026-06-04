@@ -332,16 +332,62 @@ class ScraperApp(App[None]):
         elif event.button.id == "stop_scrape_btn":
             self.stop_scraping_job()
         elif event.button.id == "refresh_cache_btn":
-            self.refresh_cache()
+            self.refresh_cache(fetch_url=True)
         elif event.button.id == "clear_cache_btn":
             self.clear_cache()
         elif event.button.id == "compile_btn":
             self.start_compilation_job()
 
-    def refresh_cache(self) -> None:
+    def refresh_cache(self, fetch_url: bool = False) -> None:
         """Scan the cache directory and update the UI list and summary."""
+        self.run_worker(self._refresh_cache_worker(fetch_url))
+
+    async def _refresh_cache_worker(self, fetch_url: bool) -> None:
+        url = None
+        if fetch_url:
+            url_val = self.query_one("#scrape_url", Input).value.strip()
+            if url_val:
+                url = url_val
+
+        # Scan cached chapters
         chapters = get_cached_chapters(self.cache_dir)
-        gaps = calculate_gaps(chapters)
+        
+        last_chapter = None
+        if url:
+            # Update summary to show we are checking online
+            self.query_one("#cache_summary", Label).update(
+                f"Total Chapters Cached: {len(chapters)}\n"
+                "Checking latest chapters from landing page..."
+            )
+            try:
+                def fetch_latest():
+                    headers = {
+                        "User-Agent": (
+                            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                            "AppleWebKit/537.36 (KHTML, like Gecko) "
+                            "Chrome/120.0.0.0 Safari/537.36"
+                        )
+                    }
+                    import requests
+                    from src.orchestrator import extract_chapters_from_landing_page
+                    response = requests.get(url, headers=headers, timeout=10)
+                    response.raise_for_status()
+                    url_map = extract_chapters_from_landing_page(response.text, url)
+                    if url_map:
+                        return max(url_map.keys())
+                    return None
+
+                last_chapter = await asyncio.to_thread(fetch_latest)
+            except Exception as e:
+                self.log_to_pane(f"[yellow]Failed to fetch latest chapter from landing page: {str(e)}[/yellow]")
+
+        if last_chapter is not None:
+            gaps = calculate_gaps(chapters)
+            max_cached = max(chapters) if chapters else 0
+            if last_chapter > max_cached:
+                gaps.append((max_cached + 1, int(last_chapter)))
+        else:
+            gaps = calculate_gaps(chapters)
 
         if gaps:
             gaps_str = ", ".join(
@@ -350,8 +396,9 @@ class ScraperApp(App[None]):
         else:
             gaps_str = "None"
 
+        online_status = f"\nLatest Online Chapter: {last_chapter}" if last_chapter else ""
         summary_text = (
-            f"Total Chapters Cached: {len(chapters)}\n"
+            f"Total Chapters Cached: {len(chapters)}{online_status}\n"
             f"Missing Chapter Gaps: {gaps_str}"
         )
         self.query_one("#cache_summary", Label).update(summary_text)
