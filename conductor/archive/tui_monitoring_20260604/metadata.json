@@ -1,0 +1,8 @@
+{
+  "track_id": "tui_monitoring_20260604",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-06-04T16:55:00Z",
+  "updated_at": "2026-06-04T16:55:00Z",
+  "description": "Add interactive TUI/CLI/monitoring mode for managing scrapes and cached files"
+}
