@@ -570,6 +570,11 @@ class ScraperApp(App[None]):
         # Reset progress bar
         pbar = self.query_one("#scrape_progress", ProgressBar)
         pbar.progress = 0
+        if hasattr(pbar, "_eta"):
+            try:
+                pbar._eta.reset()
+            except Exception:
+                pass
         if start is not None and end is not None:
             pbar.update(total=max(1, end - start + 1))
 
@@ -660,6 +665,11 @@ class ScraperApp(App[None]):
         # Reset progress bar to stop the ETA timer countdown
         pbar = self.query_one("#scrape_progress", ProgressBar)
         pbar.progress = 0
+        if hasattr(pbar, "_eta"):
+            try:
+                pbar._eta.reset()
+            except Exception:
+                pass
 
         if success:
             self.query_one("#thread_status_text", Label).update("Finished!")
