@@ -19,6 +19,7 @@ def test_main_execution():
         mock_args.url = None
         mock_args.update = None
         mock_args.ad_pattern = None
+        mock_args.tui = False
         mock_parse_args.return_value = mock_args
 
         # Mock sys.argv
@@ -47,6 +48,7 @@ def test_main_execution_error():
         mock_args = MagicMock()
         mock_args.cover = None
         mock_args.update = None
+        mock_args.tui = False
         mock_parse_args.return_value = mock_args
         mock_run_orchestrator.side_effect = Exception("Orchestrator failed")
 
@@ -55,3 +57,20 @@ def test_main_execution_error():
             main()
         
         assert exc_info.value.code == 1
+
+
+def test_main_tui_routing():
+    with patch('main.parse_args') as mock_parse_args, \
+         patch('src.tui.run_tui') as mock_run_tui, \
+         patch('main.run_orchestrator') as mock_run_orchestrator:
+        
+        mock_args = MagicMock()
+        mock_args.tui = True
+        mock_parse_args.return_value = mock_args
+
+        with patch.object(sys, 'argv', ['main.py']):
+            main()
+
+        mock_run_tui.assert_called_once()
+        mock_run_orchestrator.assert_not_called()
+

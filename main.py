@@ -16,6 +16,15 @@ def main():
     logging.basicConfig(level=logging.WARNING)
 
     args = parse_args(sys.argv[1:])
+    if getattr(args, "tui", False):
+        try:
+            from src.tui import run_tui
+            run_tui()
+            return
+        except Exception as e:
+            print(f"Error launching TUI: {str(e)}", file=sys.stderr)
+            sys.exit(1)
+
     try:
         run_orchestrator(
             start=args.start,

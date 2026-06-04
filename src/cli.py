@@ -105,6 +105,12 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
             "(can be specified multiple times or comma-separated)"
         ),
     )
+    parser.add_argument(
+        "--tui",
+        "-i",
+        action="store_true",
+        help="Launch the interactive terminal user interface",
+    )
     parsed_args = parser.parse_args(args)
 
     # Post-process ad patterns: split comma-separated entries

@@ -110,4 +110,17 @@ def test_cli_ad_pattern_default():
     assert args.ad_pattern is None
 
 
+def test_cli_tui_default():
+    args = parse_args([])
+    assert args.tui is False
+
+
+def test_cli_tui_flag():
+    args = parse_args(["--tui"])
+    assert args.tui is True
+    args_short = parse_args(["-i"])
+    assert args_short.tui is True
+
+
+
 
