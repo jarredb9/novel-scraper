@@ -33,13 +33,15 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
    - Generates a standard `.epub` file using `ebooklib`.
    - Includes navigation metadata, a Table of Contents (TOC), book spine, and styled pages using an embedded stylesheet.
 5. **Command Line Interface (CLI)**:
-   - Configurable CLI parameters for start/end chapters, rate limiting, concurrent scraping threads using `--threads` / `-t` (default: 4), output path, updating/merging existing EPUB or PDF files using `--update <path>`, cover art using `--cover`, compiling to specific formats using `--format` (choices: `pdf`, `epub`, or `both`), landing page URL for chapter link auto-detection using `--url`, and custom ad/branding filtering patterns using `--ad-pattern`.
+   - Configurable CLI parameters for start/end chapters, rate limiting, concurrent scraping threads using `--threads` / `-t` (default: 4), output path, updating/merging existing EPUB or PDF files using `--update <path>`, cover art using `--cover`, compiling to specific formats using `--format` (choices: `pdf`, `epub`, or `both`), landing page URL for chapter link auto-detection using `--url`, custom ad/branding filtering patterns using `--ad-pattern`, and launching the interactive TUI using `--tui`/`-i`.
 6. **Cover Art & EPUB Updating**:
    - Automatically scraping the cover image from the landing page using XPath, downloading from a URL, or using a local path.
    - Caching the cover image locally as `cache/cover.jpg` to avoid redundant network requests.
    - Embedding the cover page at the beginning of compiled PDFs and as a native cover page in EPUBs.
    - Reading/extracting chapters from an existing EPUB to allow merging new chapters without redownloading.
    - Preserving the landing page URL in EPUB `DC:source` and PDF `Subject` metadata to support subsequent auto-updates.
+7. **Interactive TUI Dashboard**:
+   - A visual terminal user interface utilizing the `textual` framework. Includes a Scrape Dashboard tab with download configurations, live logging, and thread state tracking, a Cache Browser tab showing range gap summaries, and an Interactive Compiler tab for selecting ranges/formats and triggering compilation.
 
 ## Non-Functional Requirements
 - **Performance**: Graceful recovery on socket timeouts or 404 errors.

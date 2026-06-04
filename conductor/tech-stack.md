@@ -25,6 +25,7 @@ This document specifies the chosen technology stack, development environments, a
 
 ### Developer UX & Tooling
 - **`tqdm`**: Command-line visual progress bar framework.
+- **`textual`**: Terminal User Interface (TUI) application framework.
 - **`pytest`**: Python testing framework to write tests for HTML fetching, parsing selectors, and cache directories.
 
 ## Project Structure & Tooling
