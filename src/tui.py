@@ -121,7 +121,7 @@ class ScraperApp(App[None]):
         height: 1fr;
     }
     #cache_left_pane {
-        width: 46;
+        width: 1fr;
         height: 1fr;
         margin-right: 1;
     }
@@ -129,15 +129,7 @@ class ScraperApp(App[None]):
         width: 1fr;
         height: 1fr;
     }
-    #cover_preview {
-        background: $panel;
-        border: solid $secondary;
-        margin-top: 1;
-        width: 42;
-        height: 18;
-        content-align: center middle;
-    }
-    #change_cover_title, #cover_preview_title {
+    #change_cover_title {
         margin-top: 1;
         text-style: bold;
     }
@@ -269,8 +261,6 @@ class ScraperApp(App[None]):
                             yield Button("Update Cover", id="update_cover_btn")
                             yield Button("Open Cover", id="open_cover_btn")
                             yield Button("Clear Cover", id="clear_cover_btn", variant="error")
-                        yield Label("Cover Art Preview:", id="cover_preview_title")
-                        yield Label("No Cover Image Cached", id="cover_preview")
 
                     with Vertical(id="cache_right_pane"):
                         yield Label("Cached Chapters List:")
@@ -463,10 +453,7 @@ class ScraperApp(App[None]):
         for ch in chapters:
             opt_list.add_option(f"Chapter {ch}")
 
-        # Update cover preview
-        cover_path = os.path.join(self.cache_dir, "cover.jpg")
-        ansi_art = render_ansi_cover(cover_path, width=40, height=16)
-        self.query_one("#cover_preview", Label).update(ansi_art)
+
 
     def clear_cache(self) -> None:
         """Delete all chapter files from the cache directory and update the UI."""
@@ -948,53 +935,3 @@ def parse_field_chapter(val: str) -> Optional[int]:
         if "must be >= 1" in str(e):
             raise
         raise ValueError(f"Invalid chapter number: {s}")
-
-
-def render_ansi_cover(image_path: str, width: int = 40, height: int = 16) -> str:
-    """Render a low-resolution colored ANSI representation of an image using half-blocks.
-
-    Args:
-        image_path: Path to the image file.
-        width: Character width of rendering.
-        height: Character height of rendering (rows of text).
-
-    Returns:
-        ANSI string containing colored half-blocks mapping to image pixels.
-    """
-    try:
-        from PIL import Image
-        if not os.path.exists(image_path):
-            return "[yellow]No Cover Image Cached[/yellow]"
-        
-        with Image.open(image_path) as img:
-            # Each character cell contains 2 vertical pixels
-            pixel_width = width
-            pixel_height = height * 2
-            
-            # Use Lanczos resampling for high-quality downscaling/anti-aliasing
-            try:
-                resample_filter = Image.Resampling.LANCZOS
-            except AttributeError:
-                resample_filter = Image.LANCZOS
-                
-            img = img.resize((pixel_width, pixel_height), resample=resample_filter).convert("RGB")
-            lines = []
-            for y_char in range(height):
-                line = []
-                for x in range(width):
-                    # Get top pixel color
-                    r1, g1, b1 = img.getpixel((x, y_char * 2))
-                    hex_top = f"#{r1:02x}{g1:02x}{b1:02x}"
-                    
-                    # Get bottom pixel color
-                    r2, g2, b2 = img.getpixel((x, y_char * 2 + 1))
-                    hex_bottom = f"#{r2:02x}{g2:02x}{b2:02x}"
-                    
-                    # Lower half block character '▄'
-                    # Foreground color (color of '▄') = hex_bottom
-                    # Background color (rest of cell) = hex_top
-                    line.append(f"[{hex_bottom} on {hex_top}]▄[/]")
-                lines.append("".join(line))
-            return "\n".join(lines)
-    except Exception as e:
-        return f"[red]Error rendering cover: {str(e)}[/red]"
