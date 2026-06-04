@@ -68,6 +68,7 @@ def test_cache_browser_ui(tmp_path):
 
             # Let's test clearing cache
             await pilot.click("#clear_cache_btn")
+            await pilot.pause(0.1)
             
             # Verify files are deleted
             assert not (tmp_path / "chapter_2.html").exists()

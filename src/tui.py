@@ -948,7 +948,13 @@ def render_ansi_cover(image_path: str, width: int = 40, height: int = 16) -> str
             pixel_width = width
             pixel_height = height * 2
             
-            img = img.resize((pixel_width, pixel_height)).convert("RGB")
+            # Use Lanczos resampling for high-quality downscaling/anti-aliasing
+            try:
+                resample_filter = Image.Resampling.LANCZOS
+            except AttributeError:
+                resample_filter = Image.LANCZOS
+                
+            img = img.resize((pixel_width, pixel_height), resample=resample_filter).convert("RGB")
             lines = []
             for y_char in range(height):
                 line = []
