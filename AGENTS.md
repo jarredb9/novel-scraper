@@ -10,7 +10,8 @@ This file provides persistent, project-specific context and operational guidelin
 
 ### Architecture Map
 - [main.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/main.py): Entry point of the application.
-- [src/cli.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cli.py): Defines arguments (`--start`, `--end`, `--delay`, `--output`, `--format`, `--update`, `--cover`, `--threads`, `--url`, `--ad-pattern`).
+- [src/cli.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cli.py): Defines arguments (`--start`, `--end`, `--delay`, `--output`, `--format`, `--update`, `--cover`, `--threads`, `--url`, `--ad-pattern`, `--tui`).
+- [src/tui.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/tui.py): Terminal User Interface dashboard built with `textual` for visual scraper execution, log monitoring, cache scanning, and interactive compilation.
 - [src/orchestrator.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/orchestrator.py): Unified workflow runner executing parsing, caching, scraping, and compiling. Automatically parses landing pages for chapter link mapping when `--url` is specified.
 - [src/scraper.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/scraper.py): Fetching engine with polite rate limiting, exponential backoff (retries on HTTP 429), and a thread lock for safe concurrent rate-limiting. Supports custom URL mapping.
 - [src/cache.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cache.py): `CachingManager` storing/retrieving raw chapter HTML files under `./cache`.
@@ -37,6 +38,9 @@ pip install -r requirements.txt
 ```powershell
 # Scrape specific range and output both formats
 python main.py --start 800 --end 850 --output fantasy_novel --format both
+
+# Run the interactive TUI dashboard
+python main.py --tui
 
 # Run auto-detecting chapter links from landing page URL
 python main.py --url https://freewebnovel.com/the-first-legendary-beast-master.html --start 800 --end 805 --output novel.epub --format epub

@@ -20,7 +20,7 @@ A modular Python command-line application that scrapes a specified range of chap
 - **Cover Art Caching & Embedding**: Auto-scrapes the novel's cover from the landing page using XPath, downloads from a URL, or accepts a local path, caching it as `cache/cover.jpg` to avoid redundant requests.
 - **CLI Configuration**: Fully configurable execution using arguments for start chapter, end chapter, delay, cache directory, output filename, compilation format, existing PDF/EPUB merging, cover art, concurrent threads, and landing page URL.
 - **Verbose Logging**: Detailed network events, HTTP statuses, and errors are written directly to `scraper.log` to keep standard console output clean.
-- **Interactive UI**: CLI progress tracking is animated using `tqdm`.
+- **Interactive UI**: CLI progress tracking is animated using `tqdm`. Alternatively, a fully interactive Terminal User Interface (TUI) built on `textual` can be launched to configure, run, and abort scrapes, browse cache statistics/gaps, and trigger compiling workflows visually.
 
 ---
 
@@ -38,7 +38,8 @@ A modular Python command-line application that scrapes a specified range of chap
 │   ├── pdf_compiler.py      # ReportLab PDF compiler and canvas manager
 │   ├── pdf_reader.py        # PDF outline and bookmark parser
 │   ├── sanitizer.py         # ContentSanitizer for raw text extraction
-│   └── scraper.py           # HTTP Scraping engine with rate limiting
+│   ├── scraper.py           # HTTP Scraping engine with rate limiting
+│   └── tui.py               # Textual interactive TUI monitoring dashboard
 ├── tests/                   # Python unit tests matching the src modules
 ├── main.py                  # Entry point script
 ├── requirements.txt         # Project package dependencies
@@ -93,6 +94,7 @@ Customize the scrape range, politeness delay, and output file path using the com
 | `--threads` / `-t` | `int` | `4` | Number of concurrent scraper threads. |
 | `--url` | `str` | `None` | Landing page URL for chapter link auto-detection. |
 | `--ad-pattern` | `str` | `None` | Custom ad/branding regex pattern to exclude. Can be specified multiple times or comma-separated. |
+| `--tui` / `-i` | `bool` | `False` | Launch the interactive Textual monitoring dashboard (bypasses default argument requirements). |
 
 ### Example
 
@@ -100,6 +102,12 @@ To scrape chapters 800 through 850 with a 2-second rate-limiting delay and compi
 
 ```bash
 python3 main.py --start 800 --end 850 --delay 2.0 --output fantasy_novel.pdf
+```
+
+To launch the interactive TUI dashboard:
+
+```bash
+python3 main.py --tui
 ```
 
 To auto-detect all chapters on the landing page and compile them as an EPUB:
