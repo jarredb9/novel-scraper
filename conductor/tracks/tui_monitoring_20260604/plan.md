@@ -37,10 +37,10 @@
   - [x] Write tests for cache checking and range gap calculation functions used by TUI
   - [x] Implement list view of cached chapters and logic to detect gap ranges in `./cache`
   - [x] Run test suite and confirm tests pass
-- [ ] Task: Compiler Interactive Interface
-  - [ ] Write tests verifying compiler triggering logic and output handling
-  - [ ] Implement inputs (start, end, formats, output path) and trigger orchestrated compile
-  - [ ] Run test suite and confirm tests pass
+- [x] Task: Compiler Interactive Interface (3f9c96f)
+  - [x] Write tests verifying compiler triggering logic and output handling
+  - [x] Implement inputs (start, end, formats, output path) and trigger orchestrated compile
+  - [x] Run test suite and confirm tests pass
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Cache Browser & Compiler Launcher' (Protocol in workflow.md)
 - [ ] Task: Update project documentation
   - [ ] Update README.md
