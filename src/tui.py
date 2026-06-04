@@ -624,6 +624,15 @@ class ScraperApp(App[None]):
         self, chapter_num: int, status: str, message: str
     ) -> None:
         """Update TUI elements based on callback status from threads."""
+        if status == "total":
+            pbar = self.query_one("#scrape_progress", ProgressBar)
+            pbar.update(total=max(1, chapter_num))
+            return
+        elif status == "initial_hits":
+            pbar = self.query_one("#scrape_progress", ProgressBar)
+            pbar.progress = chapter_num
+            return
+
         self.active_threads_status[chapter_num] = status
 
         # Update thread status label
@@ -635,8 +644,8 @@ class ScraperApp(App[None]):
         status_str = ", ".join(active_chaps) if active_chaps else "Idle"
         self.query_one("#thread_status_text", Label).update(status_str)
 
-        # Update progress bar on success/hit
-        if status in ("success", "hit"):
+        # Update progress bar on success
+        if status == "success":
             pbar = self.query_one("#scrape_progress", ProgressBar)
             pbar.advance(1)
 

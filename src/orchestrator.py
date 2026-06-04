@@ -297,6 +297,12 @@ def run_orchestrator(
     def process_chapter(chap_num: int) -> dict:
         if chap_num in extracted_epub_chapters:
             logger.info(f"Using extracted EPUB data for chapter {chap_num}")
+            if status_callback:
+                status_callback(
+                    chap_num,
+                    "hit",
+                    f"Using extracted EPUB data for chapter {chap_num}"
+                )
             return extracted_epub_chapters[chap_num]
 
         logger.info(f"Processing chapter {chap_num}")
@@ -313,6 +319,24 @@ def run_orchestrator(
 
     chapters_data_map = {}
     total_chapters = len(all_chap_nums)
+
+    # Determine initial cache hits (including extracted EPUB chapters and cached chapters)
+    initial_hits = sum(
+        1 for chap in all_chap_nums
+        if chap in extracted_epub_chapters or cache_manager.is_cached(chap)
+    )
+
+    if status_callback:
+        status_callback(
+            total_chapters,
+            "total",
+            f"Total chapters to process: {total_chapters}"
+        )
+        status_callback(
+            initial_hits,
+            "initial_hits",
+            f"Initial cache hits: {initial_hits}"
+        )
 
     # Wrap the chapter iteration in a tqdm progress bar
     pbar = tqdm(all_chap_nums, desc="Compiling Novel")
