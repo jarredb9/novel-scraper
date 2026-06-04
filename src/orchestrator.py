@@ -5,7 +5,7 @@ sub-components into a single unified extraction and assembly workflow.
 """
 
 import logging
-from typing import List, Optional
+from typing import List, Optional, Callable
 from tqdm import tqdm
 from src.cache import CachingManager
 from src.scraper import NovelScraper
@@ -132,6 +132,7 @@ def run_orchestrator(
     url: Optional[str] = None,
     update: Optional[str] = None,
     ad_patterns: Optional[List[str]] = None,
+    status_callback: Optional[Callable[[int, str, str], None]] = None,
 ) -> None:
     """Orchestrates novel scraping and PDF/EPUB compilation.
 
@@ -207,6 +208,8 @@ def run_orchestrator(
         delay=delay,
         url_map=url_map,
     )
+    if status_callback:
+        scraper.status_callback = status_callback
     if url:
         scraper.base_url = url
     parser = XPathParser()

@@ -8,7 +8,7 @@ scraped chapters.
 import logging
 import threading
 import time
-from typing import Optional
+from typing import Optional, Callable
 import requests
 from src.cache import CachingManager
 
@@ -43,6 +43,7 @@ class NovelScraper:
         timeout: int = 10,
         retries: int = 3,
         url_map: Optional[dict] = None,
+        status_callback: Optional[Callable[[int, str, str], None]] = None,
     ):
         """Initializes the scraper with caching and network settings.
 
@@ -53,6 +54,7 @@ class NovelScraper:
             timeout (int): HTTP request timeout in seconds.
             retries (int): Number of retries on failure.
             url_map (dict, optional): Map of chapter number to specific URL.
+            status_callback (callable, optional): Callback for thread/progress status.
         """
         self.cache_manager = cache_manager
         self.base_url = base_url
@@ -60,6 +62,7 @@ class NovelScraper:
         self.timeout = timeout
         self.retries = retries
         self.url_map = url_map
+        self.status_callback = status_callback
         self.last_request_time: float = 0.0
         self._lock = threading.Lock()
         self.headers = {
@@ -102,6 +105,8 @@ class NovelScraper:
             logger.info(f"Cache hit for chapter {chapter_num}")
             content = self.cache_manager.read_chapter(chapter_num)
             if content is not None:
+                if self.status_callback:
+                    self.status_callback(chapter_num, "hit", f"Cache hit for chapter {chapter_num}")
                 return content
 
         # Cache miss - perform HTTP request
@@ -109,6 +114,8 @@ class NovelScraper:
         logger.info(
             f"Cache miss for chapter {chapter_num}. Fetching from {url}"
         )
+        if self.status_callback:
+            self.status_callback(chapter_num, "start", f"Fetching chapter {chapter_num}")
 
         attempt = 0
         while attempt < self.retries:
@@ -122,6 +129,8 @@ class NovelScraper:
                     logger.debug(
                         f"Sleeping for {sleep_time:.2f}s to respect rate limits"
                     )
+                    if self.status_callback:
+                        self.status_callback(chapter_num, "sleep", f"Sleeping for {sleep_time:.2f}s to respect rate limits")
                     time.sleep(sleep_time)
 
                 self.last_request_time = time.time()
@@ -130,6 +139,8 @@ class NovelScraper:
                 logger.info(
                     f"HTTP GET {url} (Attempt {attempt}/{self.retries})"
                 )
+                if self.status_callback:
+                    self.status_callback(chapter_num, "fetching", f"HTTP GET Attempt {attempt}/{self.retries}")
                 response = requests.get(
                     url, headers=self.headers, timeout=self.timeout
                 )
@@ -140,6 +151,8 @@ class NovelScraper:
 
                 # Save to cache
                 self.cache_manager.save_chapter(chapter_num, response.text)
+                if self.status_callback:
+                    self.status_callback(chapter_num, "success", f"Successfully fetched chapter {chapter_num}")
                 return response.text
 
             except requests.RequestException as e:
@@ -147,6 +160,8 @@ class NovelScraper:
                     f"Error fetching chapter {chapter_num} "
                     f"(attempt {attempt}): {str(e)}"
                 )
+                if self.status_callback:
+                    self.status_callback(chapter_num, "error", f"Error on attempt {attempt}: {str(e)}")
                 if attempt == self.retries:
                     logger.error(
                         f"Failed to fetch chapter {chapter_num} after "
@@ -166,6 +181,8 @@ class NovelScraper:
                         f"Rate limited (429) on chapter {chapter_num}. "
                         f"Sleeping for {backoff_delay:.1f}s before retrying."
                     )
+                    if self.status_callback:
+                        self.status_callback(chapter_num, "sleep", f"Rate limited. Sleeping for {backoff_delay:.1f}s")
                     time.sleep(backoff_delay)
                 else:
                     # Short delay before retrying
