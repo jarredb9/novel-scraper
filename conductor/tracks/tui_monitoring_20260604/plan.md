@@ -42,11 +42,12 @@
   - [x] Implement inputs (start, end, formats, output path) and trigger orchestrated compile
   - [x] Run test suite and confirm tests pass
 - [x] Task: Extra Features and TUI UX Improvements (Post-Feedback)
-  - [x] Fix thread status finished warning message on download failure
-  - [x] Add Stop button to abort ongoing scrapes mid-action with worker cancellation cleanup
-  - [x] Implement Scope Preset dropdown to dynamically disable and auto-populate start/end inputs
-  - [x] Decouple compilation from scrape dashboard tab to resolve compiler tab redundancy
-  - [x] Bind Escape key to unfocus active text inputs, enabling global 'q' hotkey exits
+  - [x] Fix thread status finished warning message on download failure (d0995a2)
+  - [x] Add Stop button to abort ongoing scrapes mid-action with worker cancellation cleanup (236d2eb, 07b9b5a, 1a33a2e)
+  - [x] Implement Scope Preset dropdown to dynamically disable and auto-populate start/end inputs (6ce888f, 52fdb20)
+  - [x] Decouple compilation from scrape dashboard tab to resolve compiler tab redundancy (52fdb20)
+  - [x] Bind Escape key to unfocus active text inputs, enabling global 'q' hotkey exits (52fdb20)
+  - [x] Format single-chapter gaps as a single number rather than a range of the same number (52fdb20)
 - [~] Task: Conductor - User Manual Verification 'Phase 4: Cache Browser & Compiler Launcher' (Protocol in workflow.md)
 - [ ] Task: Update project documentation
   - [ ] Update README.md
