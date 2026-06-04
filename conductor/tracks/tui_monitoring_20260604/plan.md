@@ -31,7 +31,7 @@
   - [x] Run test suite and confirm tests pass
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Active Scrape Dashboard & Live Logging' (Protocol in workflow.md) (e4412cb)
 
-## Phase 4: Cache Browser & Compiler Launcher
+## Phase 4: Cache Browser & Compiler Launcher [checkpoint: 90151a5]
 
 - [x] Task: Cache Browser Screen (56f51b8)
   - [x] Write tests for cache checking and range gap calculation functions used by TUI
@@ -48,7 +48,7 @@
   - [x] Decouple compilation from scrape dashboard tab to resolve compiler tab redundancy (52fdb20)
   - [x] Bind Escape key to unfocus active text inputs, enabling global 'q' hotkey exits (52fdb20)
   - [x] Format single-chapter gaps as a single number rather than a range of the same number (52fdb20)
-- [~] Task: Conductor - User Manual Verification 'Phase 4: Cache Browser & Compiler Launcher' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Cache Browser & Compiler Launcher' (Protocol in workflow.md) (90151a5)
 - [ ] Task: Update project documentation
   - [ ] Update README.md
   - [ ] Update AGENTS.md
