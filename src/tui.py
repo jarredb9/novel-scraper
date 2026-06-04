@@ -4,13 +4,32 @@ This module provides the Textual application interface for monitoring downloads,
 managing cached files, and compiling novels.
 """
 
-import logging
 import asyncio
+import logging
+import os
+from pathlib import Path
+import re
 from typing import Optional, Callable
+
 from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, TabbedContent, TabPane, Label, Input, Button, ProgressBar, RichLog, OptionList, Select
 from textual.containers import Vertical, Horizontal
+from textual.widgets import (
+    Header,
+    Footer,
+    TabbedContent,
+    TabPane,
+    Label,
+    Input,
+    Button,
+    ProgressBar,
+    RichLog,
+    OptionList,
+    Select,
+)
+
 from src.orchestrator import run_orchestrator
+
+
 
 class TUILogHandler(logging.Handler):
     """Custom logging handler to redirect logs to Textual widgets."""
@@ -26,6 +45,7 @@ class TUILogHandler(logging.Handler):
                 self.write_func(msg)
         except Exception:
             self.handleError(record)
+
 
 class ScraperApp(App[None]):
     """The main Textual application for the novel scraper."""
@@ -135,8 +155,11 @@ class ScraperApp(App[None]):
                     with Horizontal(classes="field-row"):
                         yield Label("Novel / Landing URL:")
                         yield Input(
-                            value="https://freewebnovel.com/the-first-legendary-beast-master.html",
-                            id="scrape_url"
+                            value=(
+                                "https://freewebnovel.com/"
+                                "the-first-legendary-beast-master.html"
+                            ),
+                            id="scrape_url",
                         )
                     with Horizontal(classes="field-row"):
                         yield Label("Scope Preset:")
@@ -145,18 +168,26 @@ class ScraperApp(App[None]):
                                 ("Custom Range", "custom"),
                                 ("Beginning to Chapter X", "beg_to_x"),
                                 ("Chapter X to End", "x_to_end"),
-                                ("Entire Novel", "entire")
+                                ("Entire Novel", "entire"),
                             ],
                             value="custom",
                             id="scrape_scope",
-                            allow_blank=False
+                            allow_blank=False,
                         )
                     with Horizontal(classes="field-row"):
                         yield Label("Start Chapter:")
-                        yield Input(value="800", placeholder="Start Chapter", id="scrape_start")
+                        yield Input(
+                            value="800",
+                            placeholder="Start Chapter",
+                            id="scrape_start",
+                        )
                     with Horizontal(classes="field-row"):
                         yield Label("End Chapter:")
-                        yield Input(value="805", placeholder="End Chapter", id="scrape_end")
+                        yield Input(
+                            value="805",
+                            placeholder="End Chapter",
+                            id="scrape_end",
+                        )
                     with Horizontal(classes="field-row"):
                         yield Label("Threads:")
                         yield Input(value="4", id="scrape_threads")
@@ -165,11 +196,20 @@ class ScraperApp(App[None]):
                         yield Input(value="1.0", id="scrape_delay")
                     with Horizontal(classes="field-row"):
                         yield Button("Start Scraping", id="start_scrape_btn")
-                        yield Button("Stop Scraping", id="stop_scrape_btn", variant="error", disabled=True)
-                
-                yield ProgressBar(id="scrape_progress", total=100, show_percentage=True)
+                        yield Button(
+                            "Stop Scraping",
+                            id="stop_scrape_btn",
+                            variant="error",
+                            disabled=True,
+                        )
+
+                yield ProgressBar(
+                    id="scrape_progress", total=100, show_percentage=True
+                )
                 with Vertical(id="thread_status_pane"):
-                    yield Label("Active Threads Status:", id="thread_status_title")
+                    yield Label(
+                        "Active Threads Status:", id="thread_status_title"
+                    )
                     yield Label("Idle", id="thread_status_text")
                 with Vertical(id="log_pane_container"):
                     yield Label("Live Logs:")
@@ -178,8 +218,13 @@ class ScraperApp(App[None]):
             with TabPane("Cache Browser", id="cache_tab"):
                 with Horizontal(classes="form-group"):
                     yield Button("Refresh Cache", id="refresh_cache_btn")
-                    yield Button("Clear Cache", id="clear_cache_btn", variant="error")
-                yield Label("Total Chapters Cached: 0\nMissing Chapter Gaps: None", id="cache_summary")
+                    yield Button(
+                        "Clear Cache", id="clear_cache_btn", variant="error"
+                    )
+                yield Label(
+                    "Total Chapters Cached: 0\nMissing Chapter Gaps: None",
+                    id="cache_summary",
+                )
                 yield OptionList(id="cached_chapters_list")
             with TabPane("Interactive Compiler", id="compile_tab"):
                 with Vertical(classes="form-group"):
@@ -190,28 +235,40 @@ class ScraperApp(App[None]):
                                 ("Custom Range", "custom"),
                                 ("Beginning to Chapter X", "beg_to_x"),
                                 ("Chapter X to End", "x_to_end"),
-                                ("Entire Novel", "entire")
+                                ("Entire Novel", "entire"),
                             ],
                             value="custom",
                             id="compile_scope",
-                            allow_blank=False
+                            allow_blank=False,
                         )
                     with Horizontal(classes="field-row"):
                         yield Label("Start Chapter:")
-                        yield Input(value="800", placeholder="Start Chapter", id="compile_start")
+                        yield Input(
+                            value="800",
+                            placeholder="Start Chapter",
+                            id="compile_start",
+                        )
                     with Horizontal(classes="field-row"):
                         yield Label("End Chapter:")
-                        yield Input(value="805", placeholder="End Chapter", id="compile_end")
+                        yield Input(
+                            value="805",
+                            placeholder="End Chapter",
+                            id="compile_end",
+                        )
                     with Horizontal(classes="field-row"):
                         yield Label("Output Filename:")
                         yield Input(value="novel_compiled", id="compile_output")
                     with Horizontal(classes="field-row"):
                         yield Label("Format:")
                         yield Select(
-                            options=[("EPUB", "epub"), ("PDF", "pdf"), ("Both", "both")],
+                            options=[
+                                ("EPUB", "epub"),
+                                ("PDF", "pdf"),
+                                ("Both", "both"),
+                            ],
                             value="both",
                             id="compile_format",
-                            allow_blank=False
+                            allow_blank=False,
                         )
                     yield Button("Compile Chapters", id="compile_btn")
                 yield Label("Idle", id="compile_status")
@@ -285,18 +342,20 @@ class ScraperApp(App[None]):
         """Scan the cache directory and update the UI list and summary."""
         chapters = get_cached_chapters(self.cache_dir)
         gaps = calculate_gaps(chapters)
-        
+
         if gaps:
-            gaps_str = ", ".join(f"{g[0]}" if g[0] == g[1] else f"{g[0]}-{g[1]}" for g in gaps)
+            gaps_str = ", ".join(
+                f"{g[0]}" if g[0] == g[1] else f"{g[0]}-{g[1]}" for g in gaps
+            )
         else:
             gaps_str = "None"
-            
+
         summary_text = (
             f"Total Chapters Cached: {len(chapters)}\n"
             f"Missing Chapter Gaps: {gaps_str}"
         )
         self.query_one("#cache_summary", Label).update(summary_text)
-        
+
         opt_list = self.query_one("#cached_chapters_list", OptionList)
         opt_list.clear_options()
         for ch in chapters:
@@ -304,10 +363,6 @@ class ScraperApp(App[None]):
 
     def clear_cache(self) -> None:
         """Delete all chapter files from the cache directory and update the UI."""
-        import os
-        from pathlib import Path
-        import re
-        
         path = Path(self.cache_dir)
         if path.exists():
             pattern = re.compile(r"^chapter_\d+\.html$")
@@ -323,33 +378,45 @@ class ScraperApp(App[None]):
         """Initiate the background compilation task."""
         scope = self.query_one("#compile_scope", Select).value
         try:
-            start = parse_field_chapter(self.query_one("#compile_start", Input).value)
+            start_val = self.query_one("#compile_start", Input).value
+            start = parse_field_chapter(start_val)
         except ValueError as e:
-            self.query_one("#compile_status", Label).update(f"[red]Cannot compile: {str(e)}[/red]")
+            self.query_one("#compile_status", Label).update(
+                f"[red]Cannot compile: {str(e)}[/red]"
+            )
             return
 
         try:
-            end = parse_field_chapter(self.query_one("#compile_end", Input).value)
+            end_val = self.query_one("#compile_end", Input).value
+            end = parse_field_chapter(end_val)
         except ValueError as e:
-            self.query_one("#compile_status", Label).update(f"[red]Cannot compile: {str(e)}[/red]")
+            self.query_one("#compile_status", Label).update(
+                f"[red]Cannot compile: {str(e)}[/red]"
+            )
             return
 
         if scope == "beg_to_x":
             start = None
             if end is None:
-                self.query_one("#compile_status", Label).update("[red]Error: End Chapter X is required[/red]")
+                self.query_one("#compile_status", Label).update(
+                    "[red]Error: End Chapter X is required[/red]"
+                )
                 return
         elif scope == "x_to_end":
             end = None
             if start is None:
-                self.query_one("#compile_status", Label).update("[red]Error: Start Chapter X is required[/red]")
+                self.query_one("#compile_status", Label).update(
+                    "[red]Error: Start Chapter X is required[/red]"
+                )
                 return
         elif scope == "entire":
             start = None
             end = None
 
         if start is not None and end is not None and start > end:
-            self.query_one("#compile_status", Label).update("[red]Error: Start chapter must be <= End chapter[/red]")
+            self.query_one("#compile_status", Label).update(
+                "[red]Error: Start chapter must be <= End chapter[/red]"
+            )
             return
 
         # Resolve None values to beginning/end of cache
@@ -364,18 +431,22 @@ class ScraperApp(App[None]):
         fmt = self.query_one("#compile_format", Select).value
 
         if not output:
-            self.query_one("#compile_status", Label).update("[red]Error: Invalid output name[/red]")
+            self.query_one("#compile_status", Label).update(
+                "[red]Error: Invalid output name[/red]"
+            )
             return
 
         self.query_one("#compile_btn", Button).disabled = True
         self.query_one("#compile_status", Label).update("Compiling...")
-        
+
         self.run_worker(
             self.compile_worker(start, end, output, fmt),
             exclusive=True
         )
 
-    async def compile_worker(self, start: int, end: int, output: str, fmt: str) -> None:
+    async def compile_worker(
+        self, start: int, end: int, output: str, fmt: str
+    ) -> None:
         """Background worker that calls the orchestrator for compilation."""
         try:
             # Run the blocking orchestrator in a thread pool via asyncio.to_thread
@@ -391,9 +462,13 @@ class ScraperApp(App[None]):
                 url=None,
                 status_callback=None
             )
-            self.query_one("#compile_status", Label).update("[green]Compilation complete![/green]")
+            self.query_one("#compile_status", Label).update(
+                "[green]Compilation complete![/green]"
+            )
         except Exception as e:
-            self.query_one("#compile_status", Label).update(f"[red]Compilation failed: {str(e)}[/red]")
+            self.query_one("#compile_status", Label).update(
+                f"[red]Compilation failed: {str(e)}[/red]"
+            )
         finally:
             self.query_one("#compile_btn", Button).disabled = False
 
@@ -412,43 +487,69 @@ class ScraperApp(App[None]):
         scope = self.query_one("#scrape_scope", Select).value
 
         try:
-            start = parse_field_chapter(self.query_one("#scrape_start", Input).value)
+            start_val = self.query_one("#scrape_start", Input).value
+            start = parse_field_chapter(start_val)
         except ValueError as e:
-            self.query_one("#thread_status_text", Label).update("Error: Invalid Start Chapter")
+            self.query_one("#thread_status_text", Label).update(
+                "Error: Invalid Start Chapter"
+            )
             self.log_to_pane(f"[red]Cannot start scrape: {str(e)}[/red]")
             return
 
         try:
-            end = parse_field_chapter(self.query_one("#scrape_end", Input).value)
+            end_val = self.query_one("#scrape_end", Input).value
+            end = parse_field_chapter(end_val)
         except ValueError as e:
-            self.query_one("#thread_status_text", Label).update("Error: Invalid End Chapter")
+            self.query_one("#thread_status_text", Label).update(
+                "Error: Invalid End Chapter"
+            )
             self.log_to_pane(f"[red]Cannot start scrape: {str(e)}[/red]")
             return
 
         if scope == "beg_to_x":
             start = None
             if end is None:
-                self.query_one("#thread_status_text", Label).update("Error: End chapter required")
-                self.log_to_pane("[red]Cannot start scrape: End Chapter X is required for 'Beginning to Chapter X'[/red]")
+                self.query_one("#thread_status_text", Label).update(
+                    "Error: End chapter required"
+                )
+                self.log_to_pane(
+                    "[red]Cannot start scrape: End Chapter X is required "
+                    "for 'Beginning to Chapter X'[/red]"
+                )
                 return
         elif scope == "x_to_end":
             end = None
             if start is None:
-                self.query_one("#thread_status_text", Label).update("Error: Start chapter required")
-                self.log_to_pane("[red]Cannot start scrape: Start Chapter X is required for 'Chapter X to End'[/red]")
+                self.query_one("#thread_status_text", Label).update(
+                    "Error: Start chapter required"
+                )
+                self.log_to_pane(
+                    "[red]Cannot start scrape: Start Chapter X is required "
+                    "for 'Chapter X to End'[/red]"
+                )
                 return
         elif scope == "entire":
             start = None
             end = None
 
         if start is not None and end is not None and start > end:
-            self.query_one("#thread_status_text", Label).update("Error: Start > End")
-            self.log_to_pane("[red]Cannot start scrape: Start chapter must be <= End chapter[/red]")
+            self.query_one("#thread_status_text", Label).update(
+                "Error: Start > End"
+            )
+            self.log_to_pane(
+                "[red]Cannot start scrape: Start chapter must be "
+                "<= End chapter[/red]"
+            )
             return
 
         if not url and (start is None or end is None):
-            self.query_one("#thread_status_text", Label).update("Error: URL required")
-            self.log_to_pane("[red]Cannot start scrape: A landing page URL is required when using open-ended ranges or entire novel preset[/red]")
+            self.query_one("#thread_status_text", Label).update(
+                "Error: URL required"
+            )
+            self.log_to_pane(
+                "[red]Cannot start scrape: A landing page URL is required "
+                "when using open-ended ranges or entire novel preset[/red]"
+            )
             return
 
         try:
@@ -465,13 +566,13 @@ class ScraperApp(App[None]):
         btn.disabled = True
         stop_btn = self.query_one("#stop_scrape_btn", Button)
         stop_btn.disabled = False
-        
+
         # Reset progress bar
         pbar = self.query_one("#scrape_progress", ProgressBar)
         pbar.progress = 0
         if start is not None and end is not None:
             pbar.update(total=max(1, end - start + 1))
-        
+
         self.active_threads_status = {}
         self.query_one("#thread_status_text", Label).update("Starting...")
         self.scrape_cancelled = False
@@ -481,12 +582,21 @@ class ScraperApp(App[None]):
             exclusive=True
         )
 
-    async def scrape_worker(self, start, end, delay, threads, url) -> None:
+    async def scrape_worker(
+        self,
+        start: Optional[int],
+        end: Optional[int],
+        delay: float,
+        threads: int,
+        url: Optional[str],
+    ) -> None:
         """Background worker that calls the orchestrator."""
         def status_callback(chapter_num: int, status: str, message: str):
             if self.scrape_cancelled:
                 raise RuntimeError("Scrape cancelled by user")
-            self.call_from_thread(self.handle_scraper_status, chapter_num, status, message)
+            self.call_from_thread(
+                self.handle_scraper_status, chapter_num, status, message
+            )
 
         try:
             # Run the blocking orchestrator in a thread pool via asyncio.to_thread
@@ -510,10 +620,12 @@ class ScraperApp(App[None]):
             self.log_to_pane(f"[red]Scraping failed: {str(e)}[/red]")
             self.finish_scrape(False)
 
-    def handle_scraper_status(self, chapter_num: int, status: str, message: str) -> None:
+    def handle_scraper_status(
+        self, chapter_num: int, status: str, message: str
+    ) -> None:
         """Update TUI elements based on callback status from threads."""
         self.active_threads_status[chapter_num] = status
-        
+
         # Update thread status label
         active_chaps = [
             f"Ch {ch} ({stat})"
@@ -535,32 +647,44 @@ class ScraperApp(App[None]):
         stop_btn = self.query_one("#stop_scrape_btn", Button)
         stop_btn.disabled = True
         self.scrape_worker_task = None
-        
+
         # Reset progress bar to stop the ETA timer countdown
         pbar = self.query_one("#scrape_progress", ProgressBar)
         pbar.progress = 0
-        
+
         if success:
             self.query_one("#thread_status_text", Label).update("Finished!")
-            self.log_to_pane("[green]Scraping complete! Chapters cached.[/green]")
+            self.log_to_pane(
+                "[green]Scraping complete! Chapters cached.[/green]"
+            )
         elif self.scrape_cancelled:
             self.query_one("#thread_status_text", Label).update("Cancelled!")
         else:
             failed_chaps = [
-                ch for ch, stat in self.active_threads_status.items() if stat == "error"
+                ch
+                for ch, stat in self.active_threads_status.items()
+                if stat == "error"
             ]
             if failed_chaps:
+                err_str = ", ".join(map(str, failed_chaps))
                 self.query_one("#thread_status_text", Label).update(
-                    f"Failed! Errors in chapters: {', '.join(map(str, failed_chaps))}"
+                    f"Failed! Errors in chapters: {err_str}"
                 )
             else:
-                self.query_one("#thread_status_text", Label).update("Finished with errors!")
-            self.log_to_pane("[red]Scraping failed. See scraper.log for full details.[/red]")
+                self.query_one("#thread_status_text", Label).update(
+                    "Finished with errors!"
+                )
+            self.log_to_pane(
+                "[red]Scraping failed. See scraper.log for "
+                "full details.[/red]"
+            )
+
 
 def run_tui() -> None:
     """Run the interactive TUI application."""
     app = ScraperApp()
     app.run()
+
 
 def get_cached_chapters(cache_dir: str) -> list[int]:
     """Scan the cache directory and return a sorted list of cached chapter numbers.
@@ -571,8 +695,6 @@ def get_cached_chapters(cache_dir: str) -> list[int]:
     Returns:
         A sorted list of chapter numbers (integers).
     """
-    import re
-    from pathlib import Path
     chapters = []
     pattern = re.compile(r"^chapter_(\d+)\.html$")
     path = Path(cache_dir)
@@ -583,6 +705,7 @@ def get_cached_chapters(cache_dir: str) -> list[int]:
                 if match:
                     chapters.append(int(match.group(1)))
     return sorted(chapters)
+
 
 def calculate_gaps(cached_chapters: list[int]) -> list[tuple[int, int]]:
     """Identify missing chapter ranges in a sorted list of chapter numbers.
@@ -595,7 +718,7 @@ def calculate_gaps(cached_chapters: list[int]) -> list[tuple[int, int]]:
     """
     if not cached_chapters:
         return []
-    
+
     gaps = []
     # Find gaps between the first and last chapters
     for i in range(len(cached_chapters) - 1):
@@ -603,7 +726,7 @@ def calculate_gaps(cached_chapters: list[int]) -> list[tuple[int, int]]:
         nxt = cached_chapters[i + 1]
         if nxt > curr + 1:
             gaps.append((curr + 1, nxt - 1))
-            
+
     return gaps
 
 

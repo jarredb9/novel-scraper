@@ -166,5 +166,58 @@ def test_tui_scrape_scope_toggles():
     asyncio.run(run_test_helper())
 
 
+def test_tui_scraping_flow():
+    """Verify that starting a scrape triggers orchestrator and updates UI."""
+    from src.tui import ScraperApp
+    from textual.widgets import Button, Label
+    import asyncio
+    from unittest.mock import patch
+
+    app = ScraperApp()
+
+    async def run_test_helper():
+        async with app.run_test() as pilot:
+            # Set inputs
+            app.query_one("#scrape_start").value = "100"
+            app.query_one("#scrape_end").value = "102"
+            app.query_one("#scrape_threads").value = "2"
+            app.query_one("#scrape_delay").value = "1.5"
+            await pilot.pause()
+
+            # Mock run_orchestrator to simulate status callbacks
+            def mock_run(*args, **kwargs):
+                callback = kwargs.get("status_callback")
+                if callback:
+                    callback(100, "fetching", "fetching 100")
+                    callback(100, "success", "fetched 100")
+                    callback(101, "sleep", "sleeping")
+                    callback(101, "success", "fetched 101")
+                    callback(102, "error", "error 102")
+                raise RuntimeError("Failed to fetch chapter 102")
+
+            with patch("src.tui.run_orchestrator", side_effect=mock_run):
+                # Click start scraping
+                start_btn = app.query_one("#start_scrape_btn", Button)
+                start_btn.press()
+
+                # Allow event to dispatch and worker to run
+                await pilot.pause(0.05)
+
+                # Wait for scraping worker to finish
+                for _ in range(100):
+                    if not start_btn.disabled:
+                        break
+                    await pilot.pause(0.01)
+
+                # Verify UI elements updated
+                status_text = app.query_one("#thread_status_text", Label)
+                assert "Failed! Errors in chapters: 102" in str(
+                    status_text.content
+                )
+
+    asyncio.run(run_test_helper())
+
+
+
 
 
