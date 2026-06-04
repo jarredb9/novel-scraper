@@ -2,9 +2,9 @@
 
 ## Phase 1: Environment Setup & CLI Integration
 
-- [ ] Task: Setup Dependencies and Requirements
-    - [ ] Add `textual>=0.50.0` to `requirements.txt`
-    - [ ] Install dependency in the virtual environment
+- [x] Task: Setup Dependencies and Requirements (129dae1)
+    - [x] Add `textual>=0.50.0` to `requirements.txt`
+    - [x] Install dependency in the virtual environment
 - [ ] Task: Integrate `--tui` / `-i` CLI Flags
     - [ ] Write failing test in `tests/test_cli.py` for routing `--tui` and bypassing default required args
     - [ ] Implement CLI flag parsing in `src/cli.py` and action routing in `main.py`
