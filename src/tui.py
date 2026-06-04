@@ -8,7 +8,7 @@ import logging
 import asyncio
 from typing import Optional, Callable
 from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, TabbedContent, TabPane, Label, Input, Button, ProgressBar, RichLog, OptionList
+from textual.widgets import Header, Footer, TabbedContent, TabPane, Label, Input, Button, ProgressBar, RichLog, OptionList, Select
 from textual.containers import Vertical, Horizontal
 from src.orchestrator import run_orchestrator
 
@@ -81,6 +81,18 @@ class ScraperApp(App[None]):
         height: 1fr;
         border: tall $secondary;
     }
+    #compile_status {
+        margin-top: 1;
+        padding: 1;
+        background: $panel;
+        border: solid $primary;
+        height: auto;
+    }
+    #compile_btn {
+        margin-top: 1;
+        width: 100%;
+        background: $success;
+    }
     """
 
     TITLE = "Novel Scraper Dashboard"
@@ -148,7 +160,26 @@ class ScraperApp(App[None]):
                 yield Label("Total Chapters Cached: 0\nMissing Chapter Gaps: None", id="cache_summary")
                 yield OptionList(id="cached_chapters_list")
             with TabPane("Interactive Compiler", id="compile_tab"):
-                yield Label("Interactive Compiler Content")
+                with Vertical(classes="form-group"):
+                    with Horizontal(classes="field-row"):
+                        yield Label("Start Chapter:")
+                        yield Input(value="800", id="compile_start")
+                    with Horizontal(classes="field-row"):
+                        yield Label("End Chapter:")
+                        yield Input(value="805", id="compile_end")
+                    with Horizontal(classes="field-row"):
+                        yield Label("Output Filename:")
+                        yield Input(value="novel_compiled", id="compile_output")
+                    with Horizontal(classes="field-row"):
+                        yield Label("Format:")
+                        yield Select(
+                            options=[("EPUB", "epub"), ("PDF", "pdf"), ("Both", "both")],
+                            value="both",
+                            id="compile_format",
+                            allow_blank=False
+                        )
+                    yield Button("Compile Chapters", id="compile_btn")
+                yield Label("Idle", id="compile_status")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -163,6 +194,8 @@ class ScraperApp(App[None]):
             self.refresh_cache()
         elif event.button.id == "clear_cache_btn":
             self.clear_cache()
+        elif event.button.id == "compile_btn":
+            self.start_compilation_job()
 
     def refresh_cache(self) -> None:
         """Scan the cache directory and update the UI list and summary."""
@@ -201,6 +234,54 @@ class ScraperApp(App[None]):
                     except Exception:
                         pass
         self.refresh_cache()
+
+    def start_compilation_job(self) -> None:
+        """Initiate the background compilation task."""
+        try:
+            start = int(self.query_one("#compile_start", Input).value)
+        except ValueError:
+            start = None
+        try:
+            end = int(self.query_one("#compile_end", Input).value)
+        except ValueError:
+            end = None
+        output = self.query_one("#compile_output", Input).value
+        fmt = self.query_one("#compile_format", Select).value
+
+        # Validate inputs
+        if start is None or end is None or not output:
+            self.query_one("#compile_status", Label).update("[red]Error: Invalid start/end chapter or output name[/red]")
+            return
+
+        self.query_one("#compile_btn", Button).disabled = True
+        self.query_one("#compile_status", Label).update("Compiling...")
+        
+        self.run_worker(
+            self.compile_worker(start, end, output, fmt),
+            exclusive=True
+        )
+
+    async def compile_worker(self, start: int, end: int, output: str, fmt: str) -> None:
+        """Background worker that calls the orchestrator for compilation."""
+        try:
+            # Run the blocking orchestrator in a thread pool via asyncio.to_thread
+            await asyncio.to_thread(
+                run_orchestrator,
+                start=start,
+                end=end,
+                delay=1.0,
+                cache_dir=self.cache_dir,
+                output=output,
+                format=fmt,
+                threads=4,
+                url=None,
+                status_callback=None
+            )
+            self.query_one("#compile_status", Label).update("[green]Compilation complete![/green]")
+        except Exception as e:
+            self.query_one("#compile_status", Label).update(f"[red]Compilation failed: {str(e)}[/red]")
+        finally:
+            self.query_one("#compile_btn", Button).disabled = False
 
     def start_scraping_job(self) -> None:
         """Initiate the background scraping task."""
