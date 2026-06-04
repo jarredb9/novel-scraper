@@ -33,10 +33,10 @@
 
 ## Phase 4: Cache Browser & Compiler Launcher
 
-- [ ] Task: Cache Browser Screen
-  - [ ] Write tests for cache checking and range gap calculation functions used by TUI
-  - [ ] Implement list view of cached chapters and logic to detect gap ranges in `./cache`
-  - [ ] Run test suite and confirm tests pass
+- [x] Task: Cache Browser Screen (56f51b8)
+  - [x] Write tests for cache checking and range gap calculation functions used by TUI
+  - [x] Implement list view of cached chapters and logic to detect gap ranges in `./cache`
+  - [x] Run test suite and confirm tests pass
 - [ ] Task: Compiler Interactive Interface
   - [ ] Write tests verifying compiler triggering logic and output handling
   - [ ] Implement inputs (start, end, formats, output path) and trigger orchestrated compile
