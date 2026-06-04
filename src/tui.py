@@ -116,6 +116,39 @@ class ScraperApp(App[None]):
         width: 100%;
         background: $success;
     }
+    #cache_tab_layout {
+        layout: horizontal;
+        height: 1fr;
+    }
+    #cache_left_pane {
+        width: 45;
+        height: 1fr;
+        margin-right: 1;
+    }
+    #cache_right_pane {
+        width: 1fr;
+        height: 1fr;
+    }
+    #cover_preview {
+        background: $panel;
+        border: solid $secondary;
+        margin-top: 1;
+        width: 32;
+        height: 14;
+        content-align: center middle;
+    }
+    #change_cover_title, #cover_preview_title {
+        margin-top: 1;
+        text-style: bold;
+    }
+    #custom_cover_input {
+        margin-top: 1;
+        margin-bottom: 1;
+    }
+    #update_cover_btn, #clear_cover_btn {
+        width: 1fr;
+        margin-right: 1;
+    }
     """
 
     TITLE = "Novel Scraper Dashboard"
@@ -216,16 +249,31 @@ class ScraperApp(App[None]):
                     yield RichLog(id="live_logs", highlight=True, markup=True)
 
             with TabPane("Cache Browser", id="cache_tab"):
-                with Horizontal(classes="form-group"):
-                    yield Button("Refresh Cache", id="refresh_cache_btn")
-                    yield Button(
-                        "Clear Cache", id="clear_cache_btn", variant="error"
-                    )
-                yield Label(
-                    "Total Chapters Cached: 0\nMissing Chapter Gaps: None",
-                    id="cache_summary",
-                )
-                yield OptionList(id="cached_chapters_list")
+                with Horizontal(id="cache_tab_layout"):
+                    with Vertical(id="cache_left_pane"):
+                        with Horizontal(classes="form-group"):
+                            yield Button("Refresh Cache", id="refresh_cache_btn")
+                            yield Button(
+                                "Clear Cache", id="clear_cache_btn", variant="error"
+                            )
+                        yield Label(
+                            "Total Chapters Cached: 0\nMissing Chapter Gaps: None",
+                            id="cache_summary",
+                        )
+                        yield Label("Change Cover Art:", id="change_cover_title")
+                        yield Input(
+                            placeholder="Local path or URL (leave blank to scrape auto)",
+                            id="custom_cover_input"
+                        )
+                        with Horizontal(classes="form-group"):
+                            yield Button("Update Cover", id="update_cover_btn")
+                            yield Button("Clear Cover", id="clear_cover_btn", variant="error")
+                        yield Label("Cover Art Preview:", id="cover_preview_title")
+                        yield Label("No Cover Image Cached", id="cover_preview")
+
+                    with Vertical(id="cache_right_pane"):
+                        yield Label("Cached Chapters List:")
+                        yield OptionList(id="cached_chapters_list")
             with TabPane("Interactive Compiler", id="compile_tab"):
                 with Vertical(classes="form-group"):
                     with Horizontal(classes="field-row"):
@@ -337,6 +385,10 @@ class ScraperApp(App[None]):
             self.clear_cache()
         elif event.button.id == "compile_btn":
             self.start_compilation_job()
+        elif event.button.id == "update_cover_btn":
+            self.start_update_cover_job()
+        elif event.button.id == "clear_cover_btn":
+            self.clear_cover_art()
 
     def refresh_cache(self, fetch_url: bool = False) -> None:
         """Scan the cache directory and update the UI list and summary."""
@@ -408,6 +460,11 @@ class ScraperApp(App[None]):
         for ch in chapters:
             opt_list.add_option(f"Chapter {ch}")
 
+        # Update cover preview
+        cover_path = os.path.join(self.cache_dir, "cover.jpg")
+        ansi_art = render_ansi_cover(cover_path, width=30, height=12)
+        self.query_one("#cover_preview", Label).update(ansi_art)
+
     def clear_cache(self) -> None:
         """Delete all chapter files from the cache directory and update the UI."""
         path = Path(self.cache_dir)
@@ -420,6 +477,52 @@ class ScraperApp(App[None]):
                     except Exception:
                         pass
         self.refresh_cache()
+
+    def start_update_cover_job(self) -> None:
+        """Trigger update of the cover art image."""
+        cover_input = self.query_one("#custom_cover_input", Input).value.strip()
+        url_val = self.query_one("#scrape_url", Input).value.strip()
+        self.run_worker(self._update_cover_worker(cover_input, url_val))
+
+    async def _update_cover_worker(self, cover_input: str, base_url: str) -> None:
+        """Background worker to download/resolve cover art."""
+        from src.cover_resolver import resolve_cover
+        
+        # If input is blank, we auto-scrape, which requires deleting current cover first
+        cached_path = os.path.join(self.cache_dir, "cover.jpg")
+        if not cover_input and os.path.exists(cached_path):
+            try:
+                os.remove(cached_path)
+            except Exception:
+                pass
+
+        self.query_one("#cache_summary", Label).update("Resolving and downloading cover image...")
+        try:
+            result = await asyncio.to_thread(
+                resolve_cover,
+                cover_input=cover_input if cover_input else None,
+                base_url=base_url,
+                cache_dir=self.cache_dir
+            )
+            if result and os.path.exists(result):
+                self.log_to_pane("[green]Cover image updated successfully![/green]")
+            else:
+                self.log_to_pane("[red]Failed to resolve cover image.[/red]")
+        except Exception as e:
+            self.log_to_pane(f"[red]Error updating cover: {str(e)}[/red]")
+            
+        self.refresh_cache(fetch_url=False)
+
+    def clear_cover_art(self) -> None:
+        """Delete the cached cover image."""
+        cached_path = os.path.join(self.cache_dir, "cover.jpg")
+        if os.path.exists(cached_path):
+            try:
+                os.remove(cached_path)
+                self.log_to_pane("[yellow]Cover image cleared.[/yellow]")
+            except Exception as e:
+                self.log_to_pane(f"[red]Failed to delete cover: {str(e)}[/red]")
+        self.refresh_cache(fetch_url=False)
 
     def start_compilation_job(self) -> None:
         """Initiate the background compilation task."""
@@ -822,3 +925,34 @@ def parse_field_chapter(val: str) -> Optional[int]:
         if "must be >= 1" in str(e):
             raise
         raise ValueError(f"Invalid chapter number: {s}")
+
+
+def render_ansi_cover(image_path: str, width: int = 30, height: int = 12) -> str:
+    """Render a low-resolution colored ANSI representation of an image.
+
+    Args:
+        image_path: Path to the image file.
+        width: Character width of rendering.
+        height: Character height of rendering.
+
+    Returns:
+        ANSI string containing colored spaces mapping to image pixels.
+    """
+    try:
+        from PIL import Image
+        if not os.path.exists(image_path):
+            return "[yellow]No Cover Image Cached[/yellow]"
+        
+        with Image.open(image_path) as img:
+            img = img.resize((width, height)).convert("RGB")
+            lines = []
+            for y in range(height):
+                line = []
+                for x in range(width):
+                    r, g, b = img.getpixel((x, y))
+                    hex_color = f"#{r:02x}{g:02x}{b:02x}"
+                    line.append(f"[on {hex_color}] [/]")
+                lines.append("".join(line))
+            return "\n".join(lines)
+    except Exception as e:
+        return f"[red]Error rendering cover: {str(e)}[/red]"
