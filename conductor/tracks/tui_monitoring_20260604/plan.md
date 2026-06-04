@@ -13,10 +13,10 @@
 
 ## Phase 2: Core TUI Layout and Navigation
 
-- [ ] Task: Design Base Textual App and Screens
-    - [ ] Write tests in `tests/test_tui_layout.py` that mock the Textual App and verify structure/tabs
-    - [ ] Implement `src/tui.py` with standard textual application tabs (Dashboard, Cache, Compile)
-    - [ ] Run test suite and confirm tests pass
+- [x] Task: Design Base Textual App and Screens (687067c)
+    - [x] Write tests in `tests/test_tui_layout.py` that mock the Textual App and verify structure/tabs
+    - [x] Implement `src/tui.py` with standard textual application tabs (Dashboard, Cache, Compile)
+    - [x] Run test suite and confirm tests pass
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Core TUI Layout and Navigation' (Protocol in workflow.md)
 
 ## Phase 3: Active Scrape Dashboard & Live Logging
