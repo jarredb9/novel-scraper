@@ -395,6 +395,11 @@ class ScraperApp(App[None]):
         stop_btn = self.query_one("#stop_scrape_btn", Button)
         stop_btn.disabled = True
         self.scrape_worker_task = None
+        
+        # Reset progress bar to stop the ETA timer countdown
+        pbar = self.query_one("#scrape_progress", ProgressBar)
+        pbar.progress = 0
+        
         if success:
             self.query_one("#thread_status_text", Label).update("Finished!")
             self.log_to_pane("[green]Scraping and compilation complete![/green]")
