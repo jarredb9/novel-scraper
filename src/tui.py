@@ -8,7 +8,7 @@ import logging
 import asyncio
 from typing import Optional, Callable
 from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, TabbedContent, TabPane, Label, Input, Button, ProgressBar, RichLog
+from textual.widgets import Header, Footer, TabbedContent, TabPane, Label, Input, Button, ProgressBar, RichLog, OptionList
 from textual.containers import Vertical, Horizontal
 from src.orchestrator import run_orchestrator
 
@@ -67,6 +67,20 @@ class ScraperApp(App[None]):
         margin-top: 1;
         background: $panel;
     }
+    #refresh_cache_btn, #clear_cache_btn {
+        margin-right: 1;
+    }
+    #cache_summary {
+        margin: 1 0;
+        background: $panel;
+        padding: 1;
+        border: solid $primary;
+        height: auto;
+    }
+    #cached_chapters_list {
+        height: 1fr;
+        border: tall $secondary;
+    }
     """
 
     TITLE = "Novel Scraper Dashboard"
@@ -83,6 +97,7 @@ class ScraperApp(App[None]):
         logger = logging.getLogger("novel_scraper")
         logger.addHandler(self.log_handler)
         self.active_threads_status = {}
+        self.cache_dir = "./cache"
 
     def log_to_pane(self, message: str) -> None:
         """Route log messages to the TUI RichLog widget."""
@@ -127,15 +142,65 @@ class ScraperApp(App[None]):
                     yield RichLog(id="live_logs", highlight=True, markup=True)
 
             with TabPane("Cache Browser", id="cache_tab"):
-                yield Label("Cache Browser Content")
+                with Horizontal(classes="form-group"):
+                    yield Button("Refresh Cache", id="refresh_cache_btn")
+                    yield Button("Clear Cache", id="clear_cache_btn", variant="error")
+                yield Label("Total Chapters Cached: 0\nMissing Chapter Gaps: None", id="cache_summary")
+                yield OptionList(id="cached_chapters_list")
             with TabPane("Interactive Compiler", id="compile_tab"):
                 yield Label("Interactive Compiler Content")
         yield Footer()
+
+    def on_mount(self) -> None:
+        """Called when the app is mounted."""
+        self.refresh_cache()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button press events."""
         if event.button.id == "start_scrape_btn":
             self.start_scraping_job()
+        elif event.button.id == "refresh_cache_btn":
+            self.refresh_cache()
+        elif event.button.id == "clear_cache_btn":
+            self.clear_cache()
+
+    def refresh_cache(self) -> None:
+        """Scan the cache directory and update the UI list and summary."""
+        chapters = get_cached_chapters(self.cache_dir)
+        gaps = calculate_gaps(chapters)
+        
+        if gaps:
+            gaps_str = ", ".join(f"{g[0]}-{g[1]}" for g in gaps)
+        else:
+            gaps_str = "None"
+            
+        summary_text = (
+            f"Total Chapters Cached: {len(chapters)}\n"
+            f"Missing Chapter Gaps: {gaps_str}"
+        )
+        self.query_one("#cache_summary", Label).update(summary_text)
+        
+        opt_list = self.query_one("#cached_chapters_list", OptionList)
+        opt_list.clear_options()
+        for ch in chapters:
+            opt_list.add_option(f"Chapter {ch}")
+
+    def clear_cache(self) -> None:
+        """Delete all chapter files from the cache directory and update the UI."""
+        import os
+        from pathlib import Path
+        import re
+        
+        path = Path(self.cache_dir)
+        if path.exists():
+            pattern = re.compile(r"^chapter_\d+\.html$")
+            for item in path.iterdir():
+                if item.is_file() and pattern.match(item.name):
+                    try:
+                        item.unlink()
+                    except Exception:
+                        pass
+        self.refresh_cache()
 
     def start_scraping_job(self) -> None:
         """Initiate the background scraping task."""
@@ -229,3 +294,47 @@ def run_tui() -> None:
     """Run the interactive TUI application."""
     app = ScraperApp()
     app.run()
+
+def get_cached_chapters(cache_dir: str) -> list[int]:
+    """Scan the cache directory and return a sorted list of cached chapter numbers.
+
+    Args:
+        cache_dir: The path to the cache directory.
+
+    Returns:
+        A sorted list of chapter numbers (integers).
+    """
+    import re
+    from pathlib import Path
+    chapters = []
+    pattern = re.compile(r"^chapter_(\d+)\.html$")
+    path = Path(cache_dir)
+    if path.exists():
+        for item in path.iterdir():
+            if item.is_file():
+                match = pattern.match(item.name)
+                if match:
+                    chapters.append(int(match.group(1)))
+    return sorted(chapters)
+
+def calculate_gaps(cached_chapters: list[int]) -> list[tuple[int, int]]:
+    """Identify missing chapter ranges in a sorted list of chapter numbers.
+
+    Args:
+        cached_chapters: A sorted list of chapter numbers.
+
+    Returns:
+        A list of tuples (start, end) representing missing ranges.
+    """
+    if not cached_chapters:
+        return []
+    
+    gaps = []
+    # Find gaps between the first and last chapters
+    for i in range(len(cached_chapters) - 1):
+        curr = cached_chapters[i]
+        nxt = cached_chapters[i + 1]
+        if nxt > curr + 1:
+            gaps.append((curr + 1, nxt - 1))
+            
+    return gaps
