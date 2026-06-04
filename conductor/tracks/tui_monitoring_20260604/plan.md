@@ -11,13 +11,13 @@
     - [x] Verify test passes
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup & CLI Integration' (Protocol in workflow.md) (2f759cd)
 
-## Phase 2: Core TUI Layout and Navigation
+## Phase 2: Core TUI Layout and Navigation [checkpoint: f518435]
 
 - [x] Task: Design Base Textual App and Screens (687067c)
     - [x] Write tests in `tests/test_tui_layout.py` that mock the Textual App and verify structure/tabs
     - [x] Implement `src/tui.py` with standard textual application tabs (Dashboard, Cache, Compile)
     - [x] Run test suite and confirm tests pass
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Core TUI Layout and Navigation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Core TUI Layout and Navigation' (Protocol in workflow.md) (f518435)
 
 ## Phase 3: Active Scrape Dashboard & Live Logging
 
