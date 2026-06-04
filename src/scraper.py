@@ -12,9 +12,9 @@ from typing import Optional, Callable
 import requests
 from src.cache import CachingManager
 
-# Set up logging to scraper.log
 logger = logging.getLogger("novel_scraper")
 logger.setLevel(logging.DEBUG)
+logger.propagate = False
 # Prevent propagation or duplicate handlers
 if not logger.handlers:
     file_handler = logging.FileHandler("scraper.log", encoding="utf-8")
