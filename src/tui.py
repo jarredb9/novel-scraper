@@ -5,6 +5,7 @@ managing cached files, and compiling novels.
 """
 
 import logging
+import asyncio
 from typing import Optional, Callable
 from textual.app import App, ComposeResult
 from textual.widgets import Header, Footer, TabbedContent, TabPane, Label, Input, Button, ProgressBar, RichLog
@@ -180,8 +181,8 @@ class ScraperApp(App[None]):
             self.call_from_thread(self.handle_scraper_status, chapter_num, status, message)
 
         try:
-            # Run the blocking orchestrator in a thread pool via run_orchestrator
-            await self.run_in_thread(
+            # Run the blocking orchestrator in a thread pool via asyncio.to_thread
+            await asyncio.to_thread(
                 run_orchestrator,
                 start=start,
                 end=end,
@@ -193,10 +194,10 @@ class ScraperApp(App[None]):
                 url=url,
                 status_callback=status_callback
             )
-            self.call_from_thread(self.finish_scrape, True)
+            self.finish_scrape(True)
         except Exception as e:
             self.log_to_pane(f"[red]Scraping failed: {str(e)}[/red]")
-            self.call_from_thread(self.finish_scrape, False)
+            self.finish_scrape(False)
 
     def handle_scraper_status(self, chapter_num: int, status: str, message: str) -> None:
         """Update TUI elements based on callback status from threads."""
