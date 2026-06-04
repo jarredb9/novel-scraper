@@ -21,15 +21,15 @@
 
 ## Phase 3: Active Scrape Dashboard & Live Logging
 
-- [ ] Task: Scraping Progress & Thread Dashboard
-    - [ ] Write tests for thread status updating and log event formatting
-    - [ ] Implement thread activity display in TUI and progress indicators linked to downloader
-    - [ ] Run test suite and confirm tests pass
-- [ ] Task: Live Log Pane
-    - [ ] Write tests for TUI log handler
-    - [ ] Implement custom Log Handler sending scraper/orchestrator log logs directly to Textual's Rich Log widget
-    - [ ] Run test suite and confirm tests pass
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Active Scrape Dashboard & Live Logging' (Protocol in workflow.md)
+- [x] Task: Scraping Progress & Thread Dashboard (a4a3c10)
+    - [x] Write tests for thread status updating and log event formatting
+    - [x] Implement thread activity display in TUI and progress indicators linked to downloader
+    - [x] Run test suite and confirm tests pass
+- [x] Task: Live Log Pane (c6a96e8)
+    - [x] Write tests for TUI log handler
+    - [x] Implement custom Log Handler sending scraper/orchestrator log logs directly to Textual's Rich Log widget
+    - [x] Run test suite and confirm tests pass
+- [~] Task: Conductor - User Manual Verification 'Phase 3: Active Scrape Dashboard & Live Logging' (Protocol in workflow.md)
 
 ## Phase 4: Cache Browser & Compiler Launcher
 
