@@ -52,9 +52,12 @@ class ScraperApp(App[None]):
         width: 1fr;
     }
     #start_scrape_btn {
-        margin-top: 1;
-        width: 100%;
         background: $success;
+        margin-right: 1;
+        width: 1fr;
+    }
+    #stop_scrape_btn {
+        width: 1fr;
     }
     #log_pane_container {
         height: 1fr;
@@ -110,6 +113,8 @@ class ScraperApp(App[None]):
         logger.addHandler(self.log_handler)
         self.active_threads_status = {}
         self.cache_dir = "./cache"
+        self.scrape_cancelled = False
+        self.scrape_worker_task = None
 
     def log_to_pane(self, message: str) -> None:
         """Route log messages to the TUI RichLog widget."""
@@ -143,7 +148,9 @@ class ScraperApp(App[None]):
                     with Horizontal(classes="field-row"):
                         yield Label("Delay (s):")
                         yield Input(value="1.0", id="scrape_delay")
-                    yield Button("Start Scraping", id="start_scrape_btn")
+                    with Horizontal(classes="field-row"):
+                        yield Button("Start Scraping", id="start_scrape_btn")
+                        yield Button("Stop Scraping", id="stop_scrape_btn", variant="error", disabled=True)
                 
                 yield ProgressBar(id="scrape_progress", total=100, show_percentage=True)
                 with Vertical(id="thread_status_pane"):
@@ -190,6 +197,8 @@ class ScraperApp(App[None]):
         """Handle button press events."""
         if event.button.id == "start_scrape_btn":
             self.start_scraping_job()
+        elif event.button.id == "stop_scrape_btn":
+            self.stop_scraping_job()
         elif event.button.id == "refresh_cache_btn":
             self.refresh_cache()
         elif event.button.id == "clear_cache_btn":
@@ -283,6 +292,14 @@ class ScraperApp(App[None]):
         finally:
             self.query_one("#compile_btn", Button).disabled = False
 
+    def stop_scraping_job(self) -> None:
+        """Cancel the active scraping job."""
+        if self.scrape_worker_task:
+            self.scrape_cancelled = True
+            self.scrape_worker_task.cancel()
+            self.log_to_pane("[yellow]Stopping scraper...[/yellow]")
+            self.query_one("#thread_status_text", Label).update("Stopping...")
+
     def start_scraping_job(self) -> None:
         """Initiate the background scraping task."""
         url = self.query_one("#scrape_url", Input).value
@@ -303,9 +320,11 @@ class ScraperApp(App[None]):
         except ValueError:
             delay = 1.0
 
-        # Disable button during scrape
+        # Disable start button, enable stop button during scrape
         btn = self.query_one("#start_scrape_btn", Button)
         btn.disabled = True
+        stop_btn = self.query_one("#stop_scrape_btn", Button)
+        stop_btn.disabled = False
         
         # Reset progress bar
         pbar = self.query_one("#scrape_progress", ProgressBar)
@@ -315,8 +334,9 @@ class ScraperApp(App[None]):
         
         self.active_threads_status = {}
         self.query_one("#thread_status_text", Label).update("Starting...")
+        self.scrape_cancelled = False
 
-        self.run_worker(
+        self.scrape_worker_task = self.run_worker(
             self.scrape_worker(start, end, delay, threads, url),
             exclusive=True
         )
@@ -324,6 +344,8 @@ class ScraperApp(App[None]):
     async def scrape_worker(self, start, end, delay, threads, url) -> None:
         """Background worker that calls the orchestrator."""
         def status_callback(chapter_num: int, status: str, message: str):
+            if self.scrape_cancelled:
+                raise RuntimeError("Scrape cancelled by user")
             self.call_from_thread(self.handle_scraper_status, chapter_num, status, message)
 
         try:
@@ -367,6 +389,9 @@ class ScraperApp(App[None]):
         """Re-enable start button and update statuses on completion."""
         btn = self.query_one("#start_scrape_btn", Button)
         btn.disabled = False
+        stop_btn = self.query_one("#stop_scrape_btn", Button)
+        stop_btn.disabled = True
+        self.scrape_worker_task = None
         if success:
             self.query_one("#thread_status_text", Label).update("Finished!")
             self.log_to_pane("[green]Scraping and compilation complete![/green]")

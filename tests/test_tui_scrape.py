@@ -72,3 +72,35 @@ def test_tui_finish_scrape_warning():
 
     asyncio.run(run_test_helper())
 
+def test_tui_cancel_scraping():
+    """Verify that clicking the Stop button sets cancel flag and cancels worker."""
+    from src.tui import ScraperApp
+    from textual.widgets import Button
+    import asyncio
+    from unittest.mock import MagicMock
+
+    app = ScraperApp()
+
+    async def run_test_helper():
+        async with app.run_test() as pilot:
+            stop_btn = app.query_one("#stop_scrape_btn", Button)
+            assert stop_btn.disabled is True
+
+            # Enable stop button to allow click
+            stop_btn.disabled = False
+            
+            # Mock a running worker task
+            mock_task = MagicMock()
+            app.scrape_worker_task = mock_task
+            
+            # Click stop button
+            stop_btn.press()
+            await pilot.pause()
+            
+            # Verify cancel flag is set and task cancelled
+            assert app.scrape_cancelled is True
+            mock_task.cancel.assert_called_once()
+
+    asyncio.run(run_test_helper())
+
+
