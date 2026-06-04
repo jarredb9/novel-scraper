@@ -123,5 +123,33 @@ def test_tui_cancelled_error_handling():
 
     asyncio.run(run_test_helper())
 
+def test_tui_scrape_scope_toggle():
+    """Verify that selecting Entire Novel disables the chapter inputs."""
+    from src.tui import ScraperApp
+    from textual.widgets import Select, Input
+    import asyncio
+
+    app = ScraperApp()
+
+    async def run_test_helper():
+        async with app.run_test() as pilot:
+            scope_select = app.query_one("#scrape_scope", Select)
+            start_input = app.query_one("#scrape_start", Input)
+            end_input = app.query_one("#scrape_end", Input)
+
+            assert start_input.disabled is False
+            assert end_input.disabled is False
+
+            # Select entire novel scope
+            scope_select.value = "entire"
+            await pilot.pause()
+
+            # Inputs should be disabled now
+            assert start_input.disabled is True
+            assert end_input.disabled is True
+
+    asyncio.run(run_test_helper())
+
+
 
 

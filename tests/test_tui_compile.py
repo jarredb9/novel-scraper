@@ -43,7 +43,7 @@ def test_tui_compiler_ui(tmp_path):
             # Mock run_orchestrator
             with patch("src.tui.run_orchestrator") as mock_orchestrator:
                 # Trigger compile button
-                await pilot.click("#compile_btn")
+                compile_btn.press()
                 await pilot.pause()
                 
                 # Check that run_orchestrator was called
@@ -63,3 +63,36 @@ def test_tui_compiler_ui(tmp_path):
                 assert any(msg in str(compile_status.content) for msg in ("Compiling...", "Compilation complete!"))
 
     asyncio.run(run_test_helper())
+
+def test_tui_compile_scope_toggle():
+    """Verify that selecting Entire Novel disables the chapter inputs in compiler."""
+    from src.tui import ScraperApp
+    from textual.widgets import Select, Input
+    import asyncio
+
+    app = ScraperApp()
+
+    async def run_test_helper():
+        async with app.run_test() as pilot:
+            # Switch to Compiler tab
+            from textual.widgets import TabbedContent
+            app.query_one(TabbedContent).active = "compile_tab"
+            await pilot.pause()
+
+            scope_select = app.query_one("#compile_scope", Select)
+            start_input = app.query_one("#compile_start", Input)
+            end_input = app.query_one("#compile_end", Input)
+
+            assert start_input.disabled is False
+            assert end_input.disabled is False
+
+            # Select entire novel scope
+            scope_select.value = "entire"
+            await pilot.pause()
+
+            # Inputs should be disabled now
+            assert start_input.disabled is True
+            assert end_input.disabled is True
+
+    asyncio.run(run_test_helper())
+

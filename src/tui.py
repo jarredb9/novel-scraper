@@ -137,6 +137,14 @@ class ScraperApp(App[None]):
                             id="scrape_url"
                         )
                     with Horizontal(classes="field-row"):
+                        yield Label("Scope:")
+                        yield Select(
+                            options=[("Custom Range", "custom"), ("Entire Novel", "entire")],
+                            value="custom",
+                            id="scrape_scope",
+                            allow_blank=False
+                        )
+                    with Horizontal(classes="field-row"):
                         yield Label("Start Chapter:")
                         yield Input(value="800", id="scrape_start")
                     with Horizontal(classes="field-row"):
@@ -169,6 +177,14 @@ class ScraperApp(App[None]):
             with TabPane("Interactive Compiler", id="compile_tab"):
                 with Vertical(classes="form-group"):
                     with Horizontal(classes="field-row"):
+                        yield Label("Scope:")
+                        yield Select(
+                            options=[("Custom Range", "custom"), ("Entire Novel", "entire")],
+                            value="custom",
+                            id="compile_scope",
+                            allow_blank=False
+                        )
+                    with Horizontal(classes="field-row"):
                         yield Label("Start Chapter:")
                         yield Input(value="800", id="compile_start")
                     with Horizontal(classes="field-row"):
@@ -192,6 +208,17 @@ class ScraperApp(App[None]):
     def on_mount(self) -> None:
         """Called when the app is mounted."""
         self.refresh_cache()
+
+    def on_select_changed(self, event: Select.Changed) -> None:
+        """Handle select dropdown selection changes."""
+        if event.select.id == "scrape_scope":
+            is_entire = (event.value == "entire")
+            self.query_one("#scrape_start", Input).disabled = is_entire
+            self.query_one("#scrape_end", Input).disabled = is_entire
+        elif event.select.id == "compile_scope":
+            is_entire = (event.value == "entire")
+            self.query_one("#compile_start", Input).disabled = is_entire
+            self.query_one("#compile_end", Input).disabled = is_entire
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button press events."""
@@ -246,19 +273,27 @@ class ScraperApp(App[None]):
 
     def start_compilation_job(self) -> None:
         """Initiate the background compilation task."""
-        try:
-            start = int(self.query_one("#compile_start", Input).value)
-        except ValueError:
+        scope = self.query_one("#compile_scope", Select).value
+        if scope == "entire":
             start = None
-        try:
-            end = int(self.query_one("#compile_end", Input).value)
-        except ValueError:
             end = None
+        else:
+            try:
+                start = int(self.query_one("#compile_start", Input).value)
+            except ValueError:
+                start = None
+            try:
+                end = int(self.query_one("#compile_end", Input).value)
+            except ValueError:
+                end = None
         output = self.query_one("#compile_output", Input).value
         fmt = self.query_one("#compile_format", Select).value
 
         # Validate inputs
-        if start is None or end is None or not output:
+        if scope != "entire" and (start is None or end is None):
+            self.query_one("#compile_status", Label).update("[red]Error: Invalid start/end chapter[/red]")
+            return
+        if not output:
             self.query_one("#compile_status", Label).update("[red]Error: Invalid start/end chapter or output name[/red]")
             return
 
@@ -303,14 +338,19 @@ class ScraperApp(App[None]):
     def start_scraping_job(self) -> None:
         """Initiate the background scraping task."""
         url = self.query_one("#scrape_url", Input).value
-        try:
-            start = int(self.query_one("#scrape_start", Input).value)
-        except ValueError:
+        scope = self.query_one("#scrape_scope", Select).value
+        if scope == "entire":
             start = None
-        try:
-            end = int(self.query_one("#scrape_end", Input).value)
-        except ValueError:
             end = None
+        else:
+            try:
+                start = int(self.query_one("#scrape_start", Input).value)
+            except ValueError:
+                start = None
+            try:
+                end = int(self.query_one("#scrape_end", Input).value)
+            except ValueError:
+                end = None
         try:
             threads = int(self.query_one("#scrape_threads", Input).value)
         except ValueError:
