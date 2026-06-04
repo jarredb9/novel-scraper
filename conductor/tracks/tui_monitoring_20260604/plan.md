@@ -49,9 +49,9 @@
   - [x] Bind Escape key to unfocus active text inputs, enabling global 'q' hotkey exits (52fdb20)
   - [x] Format single-chapter gaps as a single number rather than a range of the same number (52fdb20)
 - [x] Task: Conductor - User Manual Verification 'Phase 4: Cache Browser & Compiler Launcher' (Protocol in workflow.md) (90151a5)
-- [ ] Task: Update project documentation
-  - [ ] Update README.md
-  - [ ] Update AGENTS.md
+- [x] Task: Update project documentation (9fdbdbb)
+  - [x] Update README.md
+  - [x] Update AGENTS.md
 
 ## Phase: Review Fixes
 - [x] Task: Apply review suggestions (1954f06)
