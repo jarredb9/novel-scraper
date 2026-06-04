@@ -1,6 +1,6 @@
 # Implementation Plan - Interactive TUI & Monitoring Dashboard
 
-## Phase 1: Environment Setup & CLI Integration
+## Phase 1: Environment Setup & CLI Integration [checkpoint: 2f759cd]
 
 - [x] Task: Setup Dependencies and Requirements (129dae1)
     - [x] Add `textual>=0.50.0` to `requirements.txt`
@@ -9,7 +9,7 @@
     - [x] Write failing test in `tests/test_cli.py` for routing `--tui` and bypassing default required args
     - [x] Implement CLI flag parsing in `src/cli.py` and action routing in `main.py`
     - [x] Verify test passes
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup & CLI Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup & CLI Integration' (Protocol in workflow.md) (2f759cd)
 
 ## Phase 2: Core TUI Layout and Navigation
 
