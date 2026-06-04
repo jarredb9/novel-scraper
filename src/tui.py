@@ -145,7 +145,7 @@ class ScraperApp(App[None]):
         margin-top: 1;
         margin-bottom: 1;
     }
-    #update_cover_btn, #clear_cover_btn {
+    #update_cover_btn, #open_cover_btn, #clear_cover_btn {
         width: 1fr;
         margin-right: 1;
     }
@@ -267,6 +267,7 @@ class ScraperApp(App[None]):
                         )
                         with Horizontal(classes="form-group"):
                             yield Button("Update Cover", id="update_cover_btn")
+                            yield Button("Open Cover", id="open_cover_btn")
                             yield Button("Clear Cover", id="clear_cover_btn", variant="error")
                         yield Label("Cover Art Preview:", id="cover_preview_title")
                         yield Label("No Cover Image Cached", id="cover_preview")
@@ -387,6 +388,8 @@ class ScraperApp(App[None]):
             self.start_compilation_job()
         elif event.button.id == "update_cover_btn":
             self.start_update_cover_job()
+        elif event.button.id == "open_cover_btn":
+            self.open_cover_image()
         elif event.button.id == "clear_cover_btn":
             self.clear_cover_art()
 
@@ -523,6 +526,26 @@ class ScraperApp(App[None]):
             except Exception as e:
                 self.log_to_pane(f"[red]Failed to delete cover: {str(e)}[/red]")
         self.refresh_cache(fetch_url=False)
+
+    def open_cover_image(self) -> None:
+        """Open the cached cover image in the default system viewer."""
+        cached_path = os.path.abspath(os.path.join(self.cache_dir, "cover.jpg"))
+        if os.path.exists(cached_path):
+            try:
+                if hasattr(os, "startfile"):
+                    os.startfile(cached_path)
+                else:
+                    import subprocess
+                    import sys
+                    if sys.platform == "darwin":
+                        subprocess.run(["open", cached_path])
+                    else:
+                        subprocess.run(["xdg-open", cached_path])
+                self.log_to_pane("[green]Opened cover image in system viewer.[/green]")
+            except Exception as e:
+                self.log_to_pane(f"[red]Failed to open cover image: {str(e)}[/red]")
+        else:
+            self.log_to_pane("[yellow]No cover image cached to open.[/yellow]")
 
     def start_compilation_job(self) -> None:
         """Initiate the background compilation task."""
