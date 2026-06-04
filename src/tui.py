@@ -367,9 +367,20 @@ class ScraperApp(App[None]):
         """Re-enable start button and update statuses on completion."""
         btn = self.query_one("#start_scrape_btn", Button)
         btn.disabled = False
-        self.query_one("#thread_status_text", Label).update("Finished!")
         if success:
+            self.query_one("#thread_status_text", Label).update("Finished!")
             self.log_to_pane("[green]Scraping and compilation complete![/green]")
+        else:
+            failed_chaps = [
+                ch for ch, stat in self.active_threads_status.items() if stat == "error"
+            ]
+            if failed_chaps:
+                self.query_one("#thread_status_text", Label).update(
+                    f"Failed! Errors in chapters: {', '.join(map(str, failed_chaps))}"
+                )
+            else:
+                self.query_one("#thread_status_text", Label).update("Finished with errors!")
+            self.log_to_pane("[red]Scraping failed. See scraper.log for full details.[/red]")
 
 def run_tui() -> None:
     """Run the interactive TUI application."""

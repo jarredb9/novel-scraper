@@ -49,3 +49,26 @@ def test_tui_log_handler():
     mock_write.assert_called_once()
     args, _ = mock_write.call_args
     assert "Test message for TUI" in args[0]
+
+def test_tui_finish_scrape_warning():
+    """Verify that finish_scrape displays errors/warnings on failure."""
+    from src.tui import ScraperApp
+    from textual.widgets import Label
+    import asyncio
+
+    app = ScraperApp()
+
+    async def run_test_helper():
+        async with app.run_test() as pilot:
+            # Set thread status with an error
+            app.active_threads_status[804] = "error"
+            
+            # Call finish_scrape with success=False
+            app.finish_scrape(False)
+            
+            # Check status label
+            status_text = app.query_one("#thread_status_text", Label)
+            assert "Failed! Errors in chapters: 804" in str(status_text.content)
+
+    asyncio.run(run_test_helper())
+
