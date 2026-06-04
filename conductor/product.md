@@ -41,7 +41,7 @@ For readers who want to enjoy web novels offline on their ereaders or PDF viewer
    - Reading/extracting chapters from an existing EPUB to allow merging new chapters without redownloading.
    - Preserving the landing page URL in EPUB `DC:source` and PDF `Subject` metadata to support subsequent auto-updates.
 7. **Interactive TUI Dashboard**:
-   - A visual terminal user interface utilizing the `textual` framework. Includes a Scrape Dashboard tab with download configurations, live logging, and thread state tracking, a Cache Browser tab showing range gap summaries, and an Interactive Compiler tab for selecting ranges/formats and triggering compilation.
+   - A visual terminal user interface utilizing the `textual` framework. Includes a Scrape Dashboard tab with download configurations, live logging, thread state tracking, and an accurate progress bar with stable ETA estimation (separates cache hits from active downloads, resets ETA on stop/restart). A Cache Browser tab showing range gap summaries, online chapter detection (fetches latest chapter count from the landing page on each refresh), and cover art management (update from URL/path, open in system viewer, or clear cached cover). An Interactive Compiler tab for selecting ranges/formats and triggering compilation.
 
 ## Non-Functional Requirements
 - **Performance**: Graceful recovery on socket timeouts or 404 errors.

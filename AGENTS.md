@@ -11,8 +11,8 @@ This file provides persistent, project-specific context and operational guidelin
 ### Architecture Map
 - [main.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/main.py): Entry point of the application.
 - [src/cli.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cli.py): Defines arguments (`--start`, `--end`, `--delay`, `--output`, `--format`, `--update`, `--cover`, `--threads`, `--url`, `--ad-pattern`, `--tui`).
-- [src/tui.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/tui.py): Terminal User Interface dashboard built with `textual` for visual scraper execution, log monitoring, cache scanning, and interactive compilation.
-- [src/orchestrator.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/orchestrator.py): Unified workflow runner executing parsing, caching, scraping, and compiling. Automatically parses landing pages for chapter link mapping when `--url` is specified.
+- [src/tui.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/tui.py): Terminal User Interface dashboard built with `textual` for visual scraper execution, log monitoring, cache scanning, and interactive compilation. Features accurate progress bar ETA (separates cache hits from active downloads), a Cache Browser with online chapter detection (fetches latest chapter count from landing page on refresh), and cover art management (update, open in system viewer, or clear).
+- [src/orchestrator.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/orchestrator.py): Unified workflow runner executing parsing, caching, scraping, and compiling. Automatically parses landing pages for chapter link mapping when `--url` is specified. Emits `status_callback` events (`total`, `initial_hits`, `success`, `hit`) to drive TUI progress tracking.
 - [src/scraper.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/scraper.py): Fetching engine with polite rate limiting, exponential backoff (retries on HTTP 429), and a thread lock for safe concurrent rate-limiting. Supports custom URL mapping.
 - [src/cache.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/cache.py): `CachingManager` storing/retrieving raw chapter HTML files under `./cache`.
 - [src/parser.py](file:///C:/Users/jarre/OneDrive/Documents/Code/novel-scraper/src/parser.py): `lxml` parser utilizing target XPaths for chapter text extraction, with heuristic fallbacks for titles and bodies if XPaths fail.
@@ -39,7 +39,8 @@ pip install -r requirements.txt
 # Scrape specific range and output both formats
 python main.py --start 800 --end 850 --output fantasy_novel --format both
 
-# Run the interactive TUI dashboard
+# Run the interactive TUI dashboard (includes cache browser with
+# online chapter detection and cover art management)
 python main.py --tui
 
 # Run auto-detecting chapter links from landing page URL
